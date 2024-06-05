@@ -16,6 +16,14 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, "secret123", { expiresIn: "1d" });
 };
 
+const getDevices = async () => {
+  const response = await router.get(`http:localhost:3000/devices`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
+  setDevices(response.data.devices);
+  setLoading(false);
+};
+
 router.get("/users", async (req, res) => {
   try {
     const users = [];
@@ -44,12 +52,21 @@ router.post("/signin", async (req, res) => {
         .where("email", "==", email)
         .get();
 
+      const user = login.docs[0].data();
 
-        const user = login.docs[0].data();
-        console.log("login: ", user)
+      if (login.empty) {
+        console.log("empty");
+        res.status(400).json({
+          message: "User not found",
+          status: "400 Bad Request",
+        });
+        return;
+      }
       if (!login.empty) {
-        const validPassword = await bcrypt.compare(password, user.hashedPassword);
-        console.log("hashedPassword: ", user);
+        const validPassword = await bcrypt.compare(
+          password,
+          user.hashedPassword
+        );
 
         if (!validPassword) {
           res.status(400).json({
@@ -60,21 +77,17 @@ router.post("/signin", async (req, res) => {
         }
 
         const token = createToken(user._id);
-
-        res.status(200).json({
-          name: login.name,
-          email: login.email,
-          token: token,
-        });
+        if (validPassword) {
+          console.log("User Logged in: ", user);
+          res.status(200).json({
+            name: user.name,
+            email: user.email,
+            token: token,
+            message: "User logged in",
+          });
+          
+        }
         return;
-      }
-
-      if (login.size > 0) {
-        console.log("User found");
-        res.json(login.docs[0].data());
-      } else {
-        console.log("User not found");
-        return res.status(400).send("User not found");
       }
     } catch (error) {
       console.log("error in logging user: ", error);
@@ -117,6 +130,7 @@ router.post("/register", async (req, res) => {
       res.status(201).json({
         name: newentry.name,
         email: newentry.email,
+        token: token,
       });
     }
   } catch (error) {
