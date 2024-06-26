@@ -6,6 +6,11 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -20,6 +25,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "tailwind.config.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
