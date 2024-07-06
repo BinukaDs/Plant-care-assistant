@@ -2,13 +2,12 @@ var router = require("express").Router();
 var db = require("../../db.cjs");
 
 router.post("/", async (req, res) => {
-  const { userId } = req.body;
-  console.log("userId: ", userId);
+  const { UserId } = req.body;
 
   try {
     const getPlants = await db
       .collection("userPlants")
-      .where("userid", "==", userId)
+      .where("userId", "==", UserId)
       .get();
 
     const plants = getPlants.docs.map((doc) => ({
@@ -17,18 +16,18 @@ router.post("/", async (req, res) => {
     }));
 
     //console.log(plants);
-    if (plants.empty) {
-      res.status(404).json({
-        message: "no plants were found",
-        status: "404 Bad Request",
-      });
-      return;
-    } else {
+    if (!plants.empty) {
       return res.status(200).json({
         message: "plants found",
         status: "200 OK",
         plants: plants,
       });
+    } else {
+      res.status(404).json({
+        message: "no plants were found",
+        status: "404 Bad Request",
+      });
+      return;
     }
   } catch (error) {
     console.log("Error fetching plants: ", error);
@@ -37,30 +36,30 @@ router.post("/", async (req, res) => {
 
 router.post("/plant", async (req, res) => {
   const { plantId, userId } = req.body;
-  
+
   try {
-      db
-      .collection("userPlants")
+    db.collection("userPlants")
       .doc(plantId)
       .get()
       .then((doc) => {
         if (doc.exists) {
           // Document found, access data with doc.data()
-          console.log(doc.data());
-          if(userId !== doc.data().userid){
-            res.status(404).json({
-              message: "Unauthorized",
-              status: "404 Not Found",
-            });
-            return;
-          } else {
-            return res.status(200).json({
-              message: "plant found",
-              status: "200 OK",
-              plants: doc.data(),
-            });
+          if (userId) {
+            if (userId !== doc.data().userId) {
+              res.status(404).json({
+                message: "Unauthorized",
+                status: "404 Not Found",
+              });
+              console.log("Unauthorized");
+              return;
+            } else if (userId === doc.data().userId) {
+              return res.status(200).json({
+                message: "plant found",
+                status: "200 OK",
+                plant: doc.data(),
+              });
+            }
           }
-
         } else {
           res.status(404).json({
             message: "no plants were found",

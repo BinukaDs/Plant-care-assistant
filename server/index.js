@@ -22,6 +22,8 @@ router.use("/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
 router.use("/addplant", require("./routes/Plants/addPlant.js"));
 router.use("/getplants", require("./routes/Plants/getPlants.js"))
 router.use("/getDetails", require("./routes/Gemini/gemini.js"))
+router.use("/deleteplant", require("./routes/Plants/deletePlant.js"));
+router.use("/growthlogs", require("./routes/Plants/growthLogs.js"))
 router.get("/", (req, res) => {
   res.send("Hello World");
 });

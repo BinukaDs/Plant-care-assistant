@@ -1,0 +1,147 @@
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogClose,
+    DialogFooter
+} from "@/components/ui/dialog"
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect } from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+
+
+
+function EditLog({ plantId, index }) {
+    const [preValues, setPreValues] = useState({ plantId: plantId, imageUrl: "", date: "", notes: "", height: "", leafCount: "" })
+    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState()
+    const [isChanged, setisChanged] = useState(false)
+    useEffect(() => {
+        fetch("http://localhost:3001/growthlogs/get", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ plantId: plantId, index: index })
+        }).then((res) => {
+            return res.json();
+        }).then((data) => {
+            setPreValues({ ...preValues, date: data.growthLog.date, notes: data.growthLog.notes, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
+        })
+    }, [])
+
+    const onValueChange = (e) => {
+        const value = e.target.id
+        if(preValues[value] !== e.target.value){
+            //setValuesTobeSubmitted({...ValuesTobeSubmitted,[e.target.id]: e.target.value})
+            if(!ValuesTobeSubmitted.includes(value)){
+                setValuesTobeSubmitted({...ValuesTobeSubmitted, [e.target.id]: e.target.value})
+                setisChanged(true)
+            } else {
+                console.log("already exists", ValuesTobeSubmitted[value])
+            }
+          
+        } else {
+          
+            console.log("not changed", ValuesTobeSubmitted[value])
+            setisChanged(false)
+        }
+    }
+
+    
+
+    async function submit() {
+        console.log(ValuesTobeSubmitted)
+        await fetch("http://localhost:3001/growthlogs/edit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(ValuesTobeSubmitted)
+        }).then((res) => {
+            return res.json();
+        }).then((data) => {
+            console.log(data)
+        })
+    }
+    return (
+        <div>
+            <div>
+                <h2>Growth Log</h2>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">Edit</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Add Record</DialogTitle>
+                            <DialogDescription>
+                                Add a log about your plant's growth here. Click save when you're done.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <ScrollArea className="h-72 w-full rounded-md border p-5">
+                            <div className="grid gap-4 py-4">
+
+
+                                <div className="flex flex-col gap-6">
+                                    <div className="flex flex-col gap-2">
+                                        <Label>Date: </Label>
+                                        <Input type="date" id="date" defaultValue={preValues.date} onChange={(e) => { onValueChange(e) }}></Input>
+                                        <p className="text-xs text-gray-500">Enter the Date you added the log.</p>
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <Label>Notes: </Label>
+                                        <Textarea rows={4} id="notes" defaultValue={preValues.notes} onChange={(e) => { onValueChange(e) }} />
+                                        <p className="text-xs text-gray-500">Write a note how the plant has grown.</p>
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <Separator className="my-5" />
+                                    <Label>Measurements</Label>
+
+                                    <div className="mt-5">
+                                        <div className="flex gap-4 my-3 w-full">
+                                            <div className="flex flex-col gap-2 w-full">
+                                                <Label>Height: </Label>
+                                                <Input type="number" defaultValue={preValues.height} placeholder="Height in cm" id="height" onChange={(e) => { onValueChange(e) }}></Input>
+                                                <p className="text-xs text-gray-500">Enter the height of the plant.</p>
+                                            </div>
+
+                                        </div>
+                                        <div className="flex gap-4 w-full">
+                                            <div className="flex flex-col gap-2 w-full">
+                                                <Label>Leaf Count: </Label>
+                                                <Input type="number" placeholder="Number of leaves" defaultValue={preValues.leafCount} id="leafCount" onChange={(e) => { onValueChange(e) }}></Input>
+                                                <p className="text-xs text-gray-500">Enter leaf count of the plant.</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <ScrollBar orientation="vertical" />
+                            </div>
+                        </ScrollArea>
+                        <DialogFooter>
+                            <Button type="submit" onClick={submit} disabled={isChanged ? false : true}>Save changes</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+                <div>
+
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default EditLog

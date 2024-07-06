@@ -42,7 +42,7 @@ const SignIn = () => {
 
   }
 
-
+  //authentication middleware
   fetch("http://localhost:3001/isUserAuth", {
     headers: {
       "x-access-token": localStorage.getItem("token")

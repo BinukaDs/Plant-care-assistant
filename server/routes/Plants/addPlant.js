@@ -1,24 +1,56 @@
 var router = require("express").Router();
 const db = require("../../db.cjs");
-const gemini = require("../Gemini/gemini.js")
+const gemini = require("../Gemini/gemini.js");
 
 router.post("/", async (req, res) => {
-  const { userid, nickname, location, species, environment } = req.body;
-  console.log(userid, nickname, location, species, environment);
+  const {
+    userId,
+    nickname,
+    location,
+    species,
+    environment,
+    imageUrl,
+    imageName,
+  } = req.body;
+  console.log(
+    userId,
+    nickname,
+    location,
+    species,
+    environment,
+    imageUrl,
+    imageName
+  );
 
-  if (!userid || !nickname || !location || !species || !environment) {
+  if (
+    !userId ||
+    !nickname ||
+    !location ||
+    !species ||
+    !environment ||
+    !imageUrl ||
+    !imageName
+  ) {
     return res.status(400).json({
       message: "All fields are required",
     });
   }
-  gemini(species)
-  
+  gemini(species);
 
   // Add plant to database
   try {
     const newPlant = await db
       .collection("userPlants")
-      .add({ userid, nickname, location, species, environment });
+      .add({
+        userId,
+        nickname,
+        location,
+        species,
+        environment,
+        imageUrl,
+        imageName,
+        growthLogs: [],
+      });
 
     if (newPlant) {
       return res.status(200).json({

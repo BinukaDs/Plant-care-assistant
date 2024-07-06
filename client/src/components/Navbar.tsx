@@ -12,12 +12,14 @@ const Navbar = () => {
             }
         }).then((res) => {
             return res.json()
-        }).then(data => data.isLoggedin === true ? setisLoggedin(true) : setisLoggedin(false))
+        }).then(data => { data.isLoggedin === true ? setisLoggedin(true) : setisLoggedin(false);
+            
+         })
             .catch((error) => {
                 console.error('Error:', error);
             })
 
-    },[isLoggedin])
+    }, [isLoggedin])
 
     function logOut() {
         localStorage.removeItem("token")
