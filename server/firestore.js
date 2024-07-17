@@ -19,4 +19,3 @@ const firestoreConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firestoreConfig);
-const analytics = getAnalytics(app);

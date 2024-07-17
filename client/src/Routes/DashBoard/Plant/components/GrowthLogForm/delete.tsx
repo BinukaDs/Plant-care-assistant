@@ -9,16 +9,18 @@ import {
     DialogTrigger,
     DialogClose
 } from "@/components/ui/dialog"
+import { useContext } from "react";
+import { UserContext } from "@/App";
 
-const DeleteLog = ({ plantId, index, imageUrl }) => {
-
+const DeleteLog = ({ plantId, index, imageName, userId }) => {
+    const BASE = useContext(UserContext);
     function deleteLog() {
-        fetch("http://localhost:3001/growthlogs/delete", {
+        fetch(BASE + "/growthlogs/delete", {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ plantId: plantId, index: index, imageUrl: imageUrl })
+            body: JSON.stringify({ userId: userId, plantId: plantId, index: index, imageName: imageName })
         }).then(res => {
             if (res.ok) {
                 console.log("Log Deleted!")

@@ -7,27 +7,30 @@ import {
     DialogTrigger,
     DialogFooter
 } from "@/components/ui/dialog"
+import { toast } from "sonner"
 import { PuffLoader } from "react-spinners";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import uploadImage from "@/components/uploadImage";
 
+import uploadImage from "@/components/imageHandling/uploadImage";
+import { UserContext } from "@/App";
 
 
 const AddLog = ({ plantId }: { plantId: string }) => {
-    const [Values, setValues] = useState({ plantId: plantId, imageUrl: "", date: "", notes: "", height: "", leafCount: "" })
+    const [Values, setValues] = useState({ plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: "", leafCount: "" })
     const [userId, setuserId] = useState("")
     const [isLoading, setisLoading] = useState(false)
     const [isUploaded, setisUploaded] = useState(false)
     const [Image, setImage] = useState(null)
+    const BASE = useContext(UserContext);
 
     useEffect(() => {
-        fetch("http://localhost:3001/isUserAuth/userdata", {
+        fetch(BASE + "/isUserAuth/userdata", {
             headers: {
                 "x-access-token": localStorage.getItem("token") || ""
             }
@@ -46,9 +49,16 @@ const AddLog = ({ plantId }: { plantId: string }) => {
     async function handleUpload() {
         try {
             setisLoading(true)
-            const imageUrl = await uploadImage(userId, Image);
-            console.log("image: ", imageUrl)
-            setValues({ ...Values, imageUrl: imageUrl as string })
+            if(!userId || !Image || !Values.date || !Values.notes || !Values.height || !Values.leafCount){
+                console.log("Please fill all the fields")
+                setisLoading(false)
+                toast.error("Please fill all the fields.")
+                
+            } else if(userId && Image && Values.date && Values.notes && Values.height && Values.leafCount) {
+                const { imageUrl, fileName } = await uploadImage(userId, Image);
+                console.log("image: ", fileName)
+                setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName })
+            }
 
         } catch (error) {
             console.error("Upload failed", error);
@@ -62,8 +72,7 @@ const AddLog = ({ plantId }: { plantId: string }) => {
             const postData = async () => {
                 try {
                     setisLoading(true)
-
-                    await fetch('http://localhost:3001/growthlogs/add', {
+                    await fetch(BASE + '/growthlogs/add', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -71,15 +80,16 @@ const AddLog = ({ plantId }: { plantId: string }) => {
                         body: JSON.stringify(Values)
                     }).then((response) => {
                         console.log(response)
-                        if (response.status === 200) {
-                            console.log("Log Added!")
-                            window.location.reload()
+                        response.json();
+                        if (response.status === 201) {
+                            toast.success("Log added successfully!")
+                            
                         }
                     }).catch((error) => {
                         console.error('Error:', error);
+                        toast.error("Error Adding Log!")
                     });
                     setisLoading(false)
-
                 } catch (error) {
                     console.error("Upload failed", error);
                     setisLoading(false)
@@ -116,7 +126,6 @@ const AddLog = ({ plantId }: { plantId: string }) => {
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
-
                             <div className="flex flex-col gap-2">
                                 <Label>Photo: </Label>
                                 <div className='justify-center items-center'>

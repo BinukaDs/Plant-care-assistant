@@ -1,5 +1,5 @@
 import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
-import storage from '../../firebase'
+import storage from '../../../firebase'
 
 export default async function uploadImage(userId, Image) {
     if (!Image) {

@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { useNavigate } from "react-router-dom";
 import { PuffLoader } from "react-spinners"
+import { UserContext } from "@/App";
 
 
 const SignIn = () => {
   const navigate = useNavigate()
+  const BASE = useContext(UserContext);
   const [Values, setValues] = useState({ email: "", password: "" })
   const [isLoading, setisLoading] = useState(false);
 
@@ -13,7 +15,7 @@ const SignIn = () => {
     e.preventDefault();
     // console.log(Values)
 
-    fetch('http://localhost:3001/signin', {
+    fetch(BASE + '/signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +45,7 @@ const SignIn = () => {
   }
 
   //authentication middleware
-  fetch("http://localhost:3001/isUserAuth", {
+  fetch(BASE + "/isUserAuth", {
     headers: {
       "x-access-token": localStorage.getItem("token")
     }
