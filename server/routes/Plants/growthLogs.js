@@ -2,7 +2,7 @@ var router = require("express").Router();
 const db = require("../../db.cjs");
 const gemini = require("../Gemini/gemini.js");
 const firebase = require("firebase-admin");
-const { doc, updateDoc } = require("firebase/firestore");
+const { doc, updateDoc, collection } = require("firebase/firestore");
 const { ref, deleteObject } = require("firebase/storage");
 
 const storage = require("../../firebase.js");
@@ -55,7 +55,6 @@ router.post("/get", async (req, res) => {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          // Document found, access data with doc.data()
           return res.status(200).json({
             message: "plant found",
             status: "200 OK",
@@ -84,7 +83,6 @@ router.put("/edit", async (req, res) => {
     leafCount,
     imageName,
   } = req.body;
-  console.log(req.body);
   const log = [date, imageUrl, imageName, notes, height, leafCount].every(
     (variable) => Boolean(variable)
   );
@@ -93,24 +91,35 @@ router.put("/edit", async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   } else if (log) {
     try {
-      const target = doc(db, "userPlants", plantId);
-      const snapshot = await getDoc(target);
-
-      if (!snapshot.exists()) {
-        console.log("Document does not exist!");
-        return res.status(404).send("Document not found");
-      }
-
-      const existingLogs = snapshot.data().growthLogs;
-      const updatedLogs = [...(existingLogs || []), log];
-
       const docRef = db.collection("userPlants").doc(plantId);
-      
-      docRef.update({
-        [`growthLogs.${index}`]: updatedLogs,
+      docRef.get().then(async (doc) => {
+        if (!doc.exists) {
+          console.log("Document does not exist!");
+          return res.status(404).send("Document not found");
+        } else if (doc.exists) {
+          let existingLogs = await doc.data().growthLogs;
+          if (existingLogs.length >= 1) {
+            existingLogs[index] = {
+              plantId,
+              date,
+              imageUrl,
+              notes,
+              height,
+              leafCount,
+              imageName,
+            };
+            docRef
+              .update({ growthLogs: existingLogs })
+              .then(() => {
+                console.log("GrowthLog Updated")
+                return res.status(200).send("GrowthLog Updated!");
+              })
+              .catch((error) => {
+                console.error("Error Updating GrowthLog: ", error);
+              });
+          }
+        }
       });
-
-      return res.status(200).send("Log updated successfully");
     } catch (error) {
       console.log("Error updating Log:", error);
       return res.status(500).send("Error updating log");
