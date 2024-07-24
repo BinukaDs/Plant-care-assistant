@@ -37,8 +37,8 @@ router.post("/add", async (req, res) => {
       message: "All fields are required",
     });
   }
-  const plant = `${environment}_${species} Plant`;
-  gemini(plant);
+  const plant = `${environment} ${species}`;
+  const careGuide = await gemini(plant);
 
   // Add plant to database
   try {
@@ -50,6 +50,7 @@ router.post("/add", async (req, res) => {
       environment,
       imageUrl,
       imageName,
+      careGuide,
       growthLogs: [],
     });
 

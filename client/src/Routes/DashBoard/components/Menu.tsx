@@ -32,7 +32,6 @@ const Menu = ({ plantId }) => {
         }).then(res => {
             if (res.ok) {
                 console.log("Plant Deleted!")
-                navigate('/dashboard')
                 window.location.reload()
             }
             return res.json();

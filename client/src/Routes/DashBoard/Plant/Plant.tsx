@@ -5,6 +5,13 @@ import AddLog from './components/GrowthLogForm/add'
 import EditLog from './components/GrowthLogForm/edit'
 import DeleteLog from './components/GrowthLogForm/delete'
 import { UserContext } from '@/App'
+import PlantCareGuide from './components/PlantcareGuide';
+
+const sampleCareGuide = [
+  { feature: 'Watering', details: 'Water twice a week' },
+  { feature: 'Sunlight', details: 'Indirect sunlight' },
+  { feature: 'Soil', details: 'Well-drained soil' },
+];
 const Plant = () => {
   const { plantId } = useParams()
   const [UserId, setUserId] = useState("")
@@ -14,6 +21,7 @@ const Plant = () => {
     imageUrl?: string;
     imageName?: string;
     growthLogs?: { imageUrl: string; date: string; notes: string; height: number; leafCount: number; }[];
+    careGuide: string;
   }
 
   const [PlantData, setPlantData] = useState<PlantDataType>({})
@@ -81,7 +89,7 @@ const Plant = () => {
       <div className='flex flex-col justify-center items-center'>
         <AddLog plantId={plantId || ""} />
         <div className='m-5'>
-          {PlantData.growthLogs?.length  ? (PlantData.growthLogs?.map((log, index) => {
+          {PlantData.growthLogs?.length ? (PlantData.growthLogs?.map((log, index) => {
             return (
               <div key={index} className='flex  gap-2 rounded-md border p-2 w-full'>
                 <EditLog plantId={plantId} index={index} />
@@ -98,9 +106,10 @@ const Plant = () => {
           })) : (
             <div>Add Logs...</div>
           )}
-
         </div>
-
+        <div>
+        <PlantCareGuide careGuide={sampleCareGuide} />
+        </div>
 
       </div>
     </div>
