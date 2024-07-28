@@ -2,11 +2,12 @@
 import { Suspense, useEffect } from 'react'
 import React from 'react'
 import { Toaster } from "@/components/ui/sonner"
+import { PuffLoader } from 'react-spinners'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
-const Register = React.lazy(() => import('./Routes/Register/Register'))
+const SignUp = React.lazy(() => import('./Routes/Authentication/SignUp/SignUp'))
 const Home = React.lazy(() => import('./Routes/Home/Home'))
-const SignIn = React.lazy(() => import('./Routes/SignIn/SignIn'))
+const SignIn = React.lazy(() => import('./Routes/Authentication/SignIn/SignIn'))
 const DashBoard = React.lazy(() => import('./Routes/DashBoard/DashBoard'))
 const Plant = React.lazy(() => import('./Routes/DashBoard/Plant/Plant'))
 import { useState, createContext } from "react";
@@ -29,10 +30,10 @@ export default function App() {
       <UserContext.Provider value={BASE}>
         <Toaster />
         <BrowserRouter>
-          <Suspense fallback={<div>Loading....</div>}>
+          <Suspense fallback={<div><PuffLoader /></div>}>
             <Routes>
               <Route path='/' element={<Home />}></Route>
-              <Route path='/register' element={<Register />}></Route>
+              <Route path='/register' element={<SignUp />}></Route>
               <Route path='/signin' element={<SignIn />}></Route>
               <Route path='/dashboard' element={<DashBoard />}></Route>
               <Route path='/plant/:plantId' element={<Plant />}></Route>
