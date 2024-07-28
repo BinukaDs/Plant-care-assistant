@@ -3,9 +3,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -18,13 +16,14 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
-
-
+import { useContext } from "react";
+import { UserContext } from "@/App";
 const Menu = ({ plantId }) => {
+    const BASE = useContext(UserContext);
     const navigate = useNavigate()
 
     function deletePlant() {
-        fetch("http://localhost:3001/deleteplant", {
+        fetch(BASE + "/plants/delete", {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
@@ -33,8 +32,7 @@ const Menu = ({ plantId }) => {
         }).then(res => {
             if (res.ok) {
                 console.log("Plant Deleted!")
-                navigate('/dashboard')
-                //window.location.reload()
+                window.location.reload()
             }
             return res.json();
         }).then(data => {

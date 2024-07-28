@@ -4,7 +4,10 @@ dotenv.config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+});
+
 const generationConfig = {
   temperature: 0.15,
   topP: 0.95,
@@ -12,45 +15,31 @@ const generationConfig = {
   maxOutputTokens: 8192,
   responseMimeType: "text/plain",
 };
-
 const parts = [
-  { text: "input: Care Schedule for Indoor Rose Plant" },
-  {
-    text: "output: Light: Bright, indirect light is best. Avoid direct sunlight, which can scorch the leaves.\n\nWater: soil evenly moist, but not soggy. Allow the top inch of soil to dry out between waterings.\n\nHumidity: high humidity. place on a pebble tray filled with water / mist the leaves regularly.\n\nTemperature: between 65-75°F (18-24°C). Avoid cold drafts.\n\nFertilizer:  balanced liquid fertilizer every two weeks during the growing season (spring and summer).",
-  },
-  { text: "input: Care Schedule for Indoor Lily Plant" },
-  {
-    text: "output: Light:  bright, indirect sunlight. Avoid direct sun\n\nWater: Water thoroughly until it drains, avoid letting it sit in water. water every 7-10 days.\n\nHumidity: use a pebble tray filled with water /  \n\nFertilizer: fertilize with a balanced houseplant fertilizer diluted to half strength (once a month)\n\nAdditional tips: \n. Wipe the leaves occasionally with a damp cloth to remove dust and improve their ability to absorb light.\n. Repot every 1-2 years or when the roots become pot-bound.",
-  },
-  { text: "input: Care Schedule for Indoor Snake Plant" },
-  {
-    text: "output: Light: bright, indirect sunlight. Avoid harsh, direct sun which can scorch the leaves.\n\nWatering: water when soil is dry\n\nTemperature: 65-80 Fahrenheit (They can tolerate cooler temps, but avoid letting them get below 50 degrees Fahrenheit).\n\nFertilizer: Snake plants are not heavy feeders. You can fertilize them once or twice during the growing season (spring and summer) with a diluted balanced houseplant fertilizer.",
-  },
-  {
-    text: "input: Care Schedule for Indoor rubber Plant. Response details should be short, not detailed information",
-  },
-  {
-    text: "output: Light: Bright, indirect light. Avoid direct sun.\n\nWater: Water when the top inch of soil is dry.\n\nHumidity:  Prefers moderate humidity.\n\nTemperature: 65-75°F (18-24°C). Avoid cold drafts.\n\nFertilizer: Fertilize every 4-6 weeks during the growing season.",
-  },
-  {
-    text: "input: Care Schedule for Indoor pothos Plant. Response details should be short, not detailed information",
-  },
-  {
-    text: "output: Light: Bright, indirect light. Avoid direct sun.\n\nWater: Water when the top inch of soil is dry.\n\nHumidity: Prefers moderate humidity.\n\nTemperature: 65-75°F (18-24°C). Avoid cold drafts.\n\nFertilizer: Fertilize every 4-6 weeks during the growing season.",
-  },
-  {
-    text: "input: Care Schedule for outdoor Adenium obesum Plant. Response details should be short, not detailed information",
-  },
-  {
-    text: "output: Light: Full sun to partial shade.\n\nWater: Water deeply when the soil is dry.\n\nHumidity: Prefers dry conditions.\n\nTemperature: Warm temperatures (above 60°F).\n\nFertilizer: Fertilize every 2-4 weeks during the growing season.",
-  },
+  {text: "input: indoor rose plant care guide"},
+  {text: "output: | Feature | Description |\n|---|---|\n| Light | 6-8 hours daily, bright indirect sunlight |\n| Water | When top inch of soil feels dry |\n| Temperature | 65-75°F (18-24°C) daytime, 50-60°F (10-16°C) nighttime |\n| Fertilize | Every 2-4 weeks during growing season (spring/summer) |\n| Additional tips | Deadhead spent blooms regularly. Prune in late winter/early spring. |"},
+  {text: "input: Outdoor Anthurium plant care guide"},
+  {text: "output: | Feature | Description |\n|---|---|\n| Light | Filtered sunlight, avoid direct sun |\n| Water | When top 1-2 inches of soil feels dry |\n| Temperature | 65-85°F (18-29°C) |\n| Fertilize | Monthly during spring and summer |\n| Additional tips | Monitor temperature. Bring indoors if below 60°F (15°C). |"},
+  {text: "input: Indoor Lily plant care guide"},
+  {text: "output: | Feature | Description |\n|---|---|\n| Light | Indirect light |\n| Water | Water when top 1-2 inches of soil dry |\n| Temperature | 60-75°F (15-24°C) |\n| Fertilize | Monthly during spring/summer (optional) |\n| Additional tips | Wipe leaves with damp cloth for shine. Consider using a humidifier for dry climates. |"},
+  {text: "input: Outdoor Begonia plant care guide"},
+  {text: "output: | Feature | Description |\n|---|---|\n| Light | Part shade to filtered sunlight |\n| Water | Regularly, allowing soil to dry slightly between waterings |\n| Temperature | 60-80°F (15-27°C) |\n| Fertilize | Balanced fertilizer every 2-4 weeks during spring/summer (optional) |\n| Additional tips | Deadhead spent flowers to encourage new blooms. Bring indoors before frost (if in colder climates). |"},
+  {text: "input: Indoor Cactus plant care guide"},
+  {text: "output: | Feature | Description |\n|---|---|\n| Light | Bright, indirect sunlight |\n| Water | Infrequent watering, allow soil to dry completely between waterings |\n| Temperature | 60-85°F (15-29°C) |\n| Fertilize | Monthly during spring/summer with diluted cactus fertilizer |\n| Additional tips | Repot every 2-3 years in well-draining cactus soil. |"}
 ];
 
 
 
 async function Gemini(search) {
-    const prompt = `care schedule to my ${search} Plant`;
-    console.log("search:", search);
+    const prompt = `Give me an ${search} plant care guide. Don't use any other greeting phrases or sentences. give only these specific details. and if the plant has any special care instructions, give them in short sentence in 10-30 words. at the end of the specific details. I will give you the specific details I need. and give me the answer in markdown format including these details and the special instructions into a table in markdown format.
+
+              Light: (frequency: 5-10 words)
+              water: (frequency: 5-10 words)
+              Temperature: (in F and C : 5-10 words)
+              Fertilize: (5-15 words)
+              Additional tips: (10-30 words)`;
+              
+    console.log("search:", prompt);
     
     const result = await model.generateContent(prompt, {
       contents: [{ role: "user", parts }],

@@ -12,11 +12,13 @@ import {
 import { PuffLoader } from 'react-spinners'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import uploadImage from '@/components/uploadImage'
-
+import uploadImage from '@/components/imageHandling/uploadImage'
+import { useContext } from "react"
+import { UserContext } from "@/App"
 
 
 const AddPlant = ({ userId }: { userId: string }) => {
+    const BASE = useContext(UserContext);
     const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "Indoor", imageUrl: "", imageName: "" })
     const [Image, setImage] = useState(null)
     const [isUploaded, setisUploaded] = useState(false)
@@ -35,7 +37,6 @@ const AddPlant = ({ userId }: { userId: string }) => {
             console.log("image: ", imageUrl)
             console.log(fileName)
             setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName as string })
-
             setisUploaded(true)
 
         } catch (error) {
@@ -50,7 +51,7 @@ const AddPlant = ({ userId }: { userId: string }) => {
             const postData = async () => {
                 try {
                     setisLoading(true)
-                    await fetch('http://localhost:3001/addPlant', {
+                    await fetch(BASE + '/plants/add', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

@@ -1,4 +1,3 @@
-
 import {
     Dialog,
     DialogContent,
@@ -16,16 +15,20 @@ import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-
+import { useContext } from "react";
+import { UserContext } from "@/App";
 
 
 function EditLog({ plantId, index }) {
+    const BASE = useContext(UserContext);
+
     const [preValues, setPreValues] = useState({ plantId: plantId, imageUrl: "", date: "", notes: "", height: "", leafCount: "" })
-    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState()
+    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ index: index, plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: "", leafCount: "" });
     const [isChanged, setisChanged] = useState(false)
+
+
     useEffect(() => {
-        fetch("http://localhost:3001/growthlogs/get", {
+        fetch(BASE + "/growthlogs/get", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -35,33 +38,37 @@ function EditLog({ plantId, index }) {
             return res.json();
         }).then((data) => {
             setPreValues({ ...preValues, date: data.growthLog.date, notes: data.growthLog.notes, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
+            setValuesTobeSubmitted({ ...ValuesTobeSubmitted, date: data.growthLog.date, notes: data.growthLog.notes, imageName: data.growthLog.imageName, imageUrl: data.growthLog.imageUrl, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
+            console.log(preValues)
         })
     }, [])
 
+
     const onValueChange = (e) => {
-        const value = e.target.id
-        if(preValues[value] !== e.target.value){
-            //setValuesTobeSubmitted({...ValuesTobeSubmitted,[e.target.id]: e.target.value})
-            if(!ValuesTobeSubmitted.includes(value)){
-                setValuesTobeSubmitted({...ValuesTobeSubmitted, [e.target.id]: e.target.value})
+        const id = e.target.id
+        if (preValues[id] !== e.target.value) {
+            if (ValuesTobeSubmitted[id] !== e.target.value) {
+                setValuesTobeSubmitted({ ...ValuesTobeSubmitted, [e.target.id]: e.target.value })
                 setisChanged(true)
             } else {
-                console.log("already exists", ValuesTobeSubmitted[value])
+                console.log("already exists", ValuesTobeSubmitted[id])
             }
-          
+            
+
+
         } else {
-          
-            console.log("not changed", ValuesTobeSubmitted[value])
+            console.log("not changed", ValuesTobeSubmitted[id])
             setisChanged(false)
         }
     }
 
-    
+
 
     async function submit() {
         console.log(ValuesTobeSubmitted)
-        await fetch("http://localhost:3001/growthlogs/edit", {
-            method: "POST",
+
+        await fetch(BASE + "/growthlogs/edit", {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -89,8 +96,6 @@ function EditLog({ plantId, index }) {
                         </DialogHeader>
                         <ScrollArea className="h-72 w-full rounded-md border p-5">
                             <div className="grid gap-4 py-4">
-
-
                                 <div className="flex flex-col gap-6">
                                     <div className="flex flex-col gap-2">
                                         <Label>Date: </Label>
