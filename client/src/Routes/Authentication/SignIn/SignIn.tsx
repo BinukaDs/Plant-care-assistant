@@ -82,7 +82,7 @@ const SignIn = () => {
               <div>
                 <p className="text-sm text-secondary">Sign-In With</p>
               </div>
-              <Button className=" flex justify-center items-center gap-4 p-2 w-full m-4 rounded-lg border border-border" variant={"secondary"}><img width="24" height="24" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo" />Google</Button>
+              <Button disabled className=" flex justify-center items-center gap-4 p-2 w-full m-4 rounded-lg border border-border" variant={"secondary"}><img width="24" height="24" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo" />Google</Button>
               <div>
                 <p className="text-sm text-secondary">or Continue with E-mail</p>
               </div>

@@ -45,16 +45,19 @@ router.post("/", async (req, res) => {
             id: login.docs[0].id,
             username: user.name,
           };
-          jwt.sign(payload, process.env.JWT_SECRET,{expiresIn: "1d"}, (err, token) => {
-            if (err) return res.status(500).send(err);
-            return res.status(200).json({
-              message: "User logged in",
-              token: "Bearer " + token,
-              
-            });
-          });
+          jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" },
+            (err, token) => {
+              if (err) return res.status(500).send(err);
+              return res.status(200).json({
+                message: "User logged in",
+                token: "Bearer " + token,
+              });
+            }
+          );
           console.log("Success");
-          
         }
       }
     } catch (error) {
