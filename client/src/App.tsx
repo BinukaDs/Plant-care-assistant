@@ -21,7 +21,6 @@ export default function App() {
 
   useEffect(() => {
     setBASE(BaseUrl)
-    
   }, [BASE])
 
   return (

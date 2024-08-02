@@ -9,6 +9,7 @@ import PlantCard from './components/PlantCard'
 import { FetchPlants } from '@/services/PlantService'
 import { FetchAuthentication } from '@/services/Authentication'
 import { PlantsDataTypes } from '@/types/Plant'
+import AddPlantComponent from './components/AddPlant/AddPlant'
 
 
 const DashBoard = () => {
@@ -17,56 +18,35 @@ const DashBoard = () => {
     const [UserId, setUserId] = useState("");
     const BASE = useContext(UserContext);
 
-
-    //authentication middleware
-    useEffect(() => {
-        const loadAuthentication = async () => {
-            try {
-                const data = await FetchAuthentication(BASE);
-                if (data.id) {
-                    return setUserId(data.id);
-                }
-                data.isLoggedin === true ? null : navigate('/signin')
+    //fetch Authentication middleware
+    const loadAuthentication = async () => {
+        try {
+            const data = await FetchAuthentication(BASE);
+            if (data.id) {
+                return setUserId(data.id);
             }
-            catch (error) {
-                console.error(error);
-            }
+            data.isLoggedin === true ? null : navigate('/signin')
         }
+        catch (error) {
+            console.error(error);
+        }
+    }
+    
+    //fetch Plants
+    const loadFetchPlants = async () => {
+        try {
+            const data = await FetchPlants(BASE, UserId);
+            if (data) {
+                setPlants(data)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+
+    useEffect(() => {
         loadAuthentication();
-    }, [UserId])
-
-
-    //fetch plants
-    // useEffect(() => {
-    //     fetch(BASE + "/plants/get", {
-    //         method: "POST",
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ UserId: UserId })
-    //     }).then((response) => {
-    //         return response.json()
-    //     }).then((data) => {
-    // Handle the response data
-    //         console.log(data);
-    //         setPlants(data.plants)
-    //     }).catch((error) => {
-    // Handle any errors
-    //         console.error('Error fetching plants:', error);
-    //     });
-    // }, [UserId])
-
-    useEffect(() => {
-        const loadFetchPlants = async () => {
-            try {
-                const data = await FetchPlants(BASE,UserId);
-                if (data) {
-                    setPlants(data)
-                }
-            } catch (error) {
-                console.error(error)
-            }
-        }
         loadFetchPlants();
     }, [UserId])
 
@@ -77,24 +57,15 @@ const DashBoard = () => {
         <Layout>
             <section className='flex flex-col justify-center items-center'>
                 <div className='container'>
-                    <AddPlant userId={UserId} />
+                    <AddPlantComponent userId={UserId} loadPlants={loadFetchPlants}/>
                 </div>
                 <div className='grid grid-cols-3'>
-                    {Plants ? Plants.map((plant) => {
+                    {Plants.length > 0 ? Plants.map((plant) => {
                         return (
                             <div key={plant.id} className='flex flex-col bg-slate-200 rounded-md p-5 justify-center items-start m-5'>
-                                <div className='flex justify-center items-end m-2'>
-                                    <Menu plantId={plant.id} />
-                                </div>
-                                <div>
-                                    <Link to={`/plant/${plant.id}`}>
-                                        <img src={plant.imageUrl} alt="Plant" />
-                                    </Link>
-                                    <h1>{plant.nickname}</h1>
-                                    <h2>{plant.location}</h2>
-                                    <h3>{plant.species}</h3>
-                                    <h4>{plant.environment}</h4>
-                                </div>
+                               <a href={`/plant/${plant.id}`}>
+                               <img src={`${plant.imageUrl}`} alt="" />
+                               <p>{plant.nickname}</p></a>     
                             </div>
 
                         )

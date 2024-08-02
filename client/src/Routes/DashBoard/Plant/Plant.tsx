@@ -8,13 +8,16 @@ import { UserContext } from '@/App'
 import PlantCareGuide from './components/PlantcareGuide';
 import { PlantDataTypes } from '@/types/Plant'
 import { FetchAuthentication } from '@/services/Authentication'
-import { FetchPlantDetails } from '@/services/PlantService'
+import { FetchPlantDetails, DeletePlant } from '@/services/PlantService'
 import Layout from '../Layout'
+import { toast } from 'sonner'
+
 const sampleCareGuide = [
   { feature: 'Watering', details: 'Water twice a week' },
   { feature: 'Sunlight', details: 'Indirect sunlight' },
   { feature: 'Soil', details: 'Well-drained soil' },
 ];
+
 const Plant = () => {
   const { plantId } = useParams();
   const [UserId, setUserId] = useState("");
@@ -23,59 +26,59 @@ const Plant = () => {
   const navigate = useNavigate();
 
   //authentication middleware
-  useEffect(() => {
-    const loadAuthentication = async () => {
-      try {
-        const data = await FetchAuthentication(BASE);
-        if (data.id) {
-          console.log("UserId: ", data.id);
-          return setUserId(data.id);
-        }
-        data.isLoggedin === true ? null : navigate('/signin')
-        return console.log("Data:", data)
+  const loadAuthentication = async () => {
+    try {
+      const data = await FetchAuthentication(BASE);
+      if (data.id) {
+        console.log("UserId: ", data.id);
+        return setUserId(data.id);
       }
-      catch (error) {
-        console.error(error);
-      }
+      data.isLoggedin === true ? null : navigate('/signin')
+      return console.log("Data:", data)
     }
-    loadAuthentication();
-  }, [UserId])
-
-
-  //fetch plant details
-  useEffect(() => {
-    fetch(BASE + "/plants/get/plant", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ plantId: plantId, userId: UserId })
-    }).then((res) => {
-      return res.json()
-    }).then(data => {
-      console.log(data);
-      setPlantData(data.plant)
-    })
-  }, [UserId])
-
-  function deletePlant() {
-    fetch(BASE + "/plants/delete", {
-      method: "DELETE",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userId: UserId, plantId: plantId, imageName: PlantData?.imageName })
-    }).then(res => {
-      if (res.ok) {
-        console.log("Plant Deleted!")
-        navigate('/dashboard')
-      }
-      return res.json();
-    }).then(data => {
-      console.log(data)
-
-    })
+    catch (error) {
+      console.error(error);
+    }
   }
+
+
+  const loadFetchPlantDetails = async () => {
+    try {
+      const data = await FetchPlantDetails(BASE, plantId, UserId);
+      if (data) {
+        setPlantData(data)
+      } else {
+        console.error("Error:404")
+        toast.error("Error: 404 | Oops. Couldn't find the plant!")
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const loadDeletePlant = async () => {
+    try {
+      const response = await DeletePlant(BASE, UserId, plantId, PlantData.imageName)
+      console.log('response', response)
+      if(response.status == "200") {
+        console.log("✅ Plant deleted successfully! ")
+        navigate("/dashboard")
+        toast.success("✅ Plant deleted successfully! ")
+      } else if(response.status == "400") {
+        console.log("ℹ️ Error deleting plant!")
+        navigate("/dashboard")
+        toast.success("ℹ️ Error deleting plant!")
+      }
+    } catch (error) {
+      navigate("/dashboard")
+      return console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    loadAuthentication();
+    loadFetchPlantDetails()
+  }, [UserId])
 
 
   return (
@@ -84,15 +87,15 @@ const Plant = () => {
         <h1>Plant ID: {plantId}</h1>
         <h1>Plant Data: {PlantData.nickname}</h1>
         <img src={PlantData.imageUrl} alt="Plant Image" />
-        <button className='bg-red-500 p-2 rounded-md text-white' onClick={deletePlant}>Delete</button>
+        <button className='bg-red-500 p-2 rounded-md text-white' onClick={loadDeletePlant}>Delete</button>
         <div className='flex flex-col justify-center items-center'>
-          <AddLog plantId={plantId || ""} />
+          <AddLog plantId={plantId || ""} userId={UserId} loadPlant={loadFetchPlantDetails}/>
           <div className='m-5'>
             {PlantData.growthLogs?.length ? (PlantData.growthLogs?.map((log, index) => {
               return (
                 <div key={index} className='flex  gap-2 rounded-md border p-2 w-full'>
                   <EditLog plantId={plantId} index={index} />
-                  <DeleteLog userId={UserId} plantId={plantId} index={index} imageName={PlantData.imageName} />
+                  <DeleteLog userId={UserId} plantId={plantId} index={index} imageName={log.imageName} loadPlant={loadFetchPlantDetails}/>
                   <img src={log.imageUrl} alt="Plant Image" width={100} />
                   <div className='flex flex-col text-left'>
                     <h1>{log.date}</h1>
