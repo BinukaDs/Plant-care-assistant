@@ -35,7 +35,9 @@ router.post("/add", async (req, res) => {
           growthLogs: firebase.firestore.FieldValue.arrayUnion(newLog),
         })
         .then(() => {
-          return res.status(201).send("Log added successfully");
+          return res.status(201).json({
+            message: "Log Added successfully",
+          });
         });
     } catch (error) {
       console.log("error: ", error);
@@ -56,13 +58,13 @@ router.post("/get", async (req, res) => {
       .then((doc) => {
         if (doc.exists) {
           return res.status(200).json({
-            message: "plant found",
-            status: "200 OK",
+            message: "log found",
+            status: "200",
             growthLog: doc.data().growthLogs[index],
           });
         } else {
           return res.status(404).json({
-            message: "plant not found",
+            message: "log not found",
             status: "404 Not Found",
           });
         }
@@ -111,11 +113,16 @@ router.put("/edit", async (req, res) => {
             docRef
               .update({ growthLogs: existingLogs })
               .then(() => {
-                console.log("GrowthLog Updated")
-                return res.status(200).send("GrowthLog Updated!");
+                console.log("GrowthLog Updated");
+                return res.status(200).json({
+                  message: "GrowthLog Updated Successfully!",
+                });
               })
               .catch((error) => {
                 console.error("Error Updating GrowthLog: ", error);
+                return res.status(400).json({
+                  message: "error updating growthlog!"
+                })
               });
           }
         }
@@ -136,7 +143,6 @@ router.delete("/delete", async (req, res) => {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          // Document found, access data with doc.data()
           const growthLogs = doc.data().growthLogs;
           growthLogs.splice(index, 1);
           db.collection("userPlants")
@@ -147,7 +153,7 @@ router.delete("/delete", async (req, res) => {
             .then(() => {
               const imageRef = ref(storage, `images/${userId}/${imageName}`);
 
-              // Delete the file
+              // Delete the image
               deleteObject(imageRef)
                 .then(() => {
                   return res.status(200).json({
@@ -165,7 +171,6 @@ router.delete("/delete", async (req, res) => {
         } else {
           return res.status(404).json({
             message: "plant not found",
-            status: "404 Not Found",
           });
         }
       });

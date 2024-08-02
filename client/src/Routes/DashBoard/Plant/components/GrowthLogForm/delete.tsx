@@ -9,29 +9,31 @@ import {
     DialogTrigger,
     DialogClose
 } from "@/components/ui/dialog"
+import { toast } from "sonner";
 import { useContext } from "react";
 import { UserContext } from "@/App";
-
-const DeleteLog = ({ plantId, index, imageName, userId }) => {
+import { DeleteGrowthLog } from "@/services/GrowthLogService";
+const DeleteLog = ({plantId, index, imageName, userId, loadPlant}: {plantId: string, index: string, imageName:string, userId:string, loadPlant: () => Promise<void>}) => {
     const BASE = useContext(UserContext);
-    function deleteLog() {
-        fetch(BASE + "/growthlogs/delete", {
-            method: "DELETE",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId: userId, plantId: plantId, index: index, imageName: imageName })
-        }).then(res => {
-            if (res.ok) {
-                console.log("Log Deleted!")
-                window.location.reload()
+
+    async function deleteLog() {
+        try {
+            const response = await DeleteGrowthLog(BASE, plantId, index, imageName, userId)
+            console.log("response:",response)
+            if (response.status == "200") {
+                console.log("✅ Log Deleted Successfully!")
+                toast.success("Log Deleted Successfully!")
+                loadPlant()  
+            } else if (response.status == "401") {
+                console.log("ℹ️ Error deleting log")
+                toast.error("Error Deleting Log!")
+                loadPlant()
             }
-            return res.json();
+            console.log(response)
+        } catch (error) {
+            console.log("Error deleting Log!", error)
 
-        }).catch((err) => {
-            console.log(err)
-
-        })
+        }
     }
 
     return (
@@ -45,7 +47,7 @@ const DeleteLog = ({ plantId, index, imageName, userId }) => {
                             This action cannot be undone. This will permanently delete this record from our servers.
                         </DialogDescription>
                         <div className="flex w-full gap-6">
-                            <Button onClick={deleteLog} variant={"destructive"} className="w-full">Yes</Button>
+                            <Button type="submit" onClick={deleteLog} variant={"destructive"} className="w-full">Yes</Button>
                             <DialogClose className="w-full"><Button variant={"outline"} className="w-full">No</Button></DialogClose>
                         </div>
                     </DialogHeader>

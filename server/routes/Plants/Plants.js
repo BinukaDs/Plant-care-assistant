@@ -38,7 +38,7 @@ router.post("/add", async (req, res) => {
     });
   }
   const plant = `${environment} ${species}`;
-  const careGuide = await gemini(plant);
+  //const careGuide = await gemini(plant);
 
   // Add plant to database
   try {
@@ -50,13 +50,13 @@ router.post("/add", async (req, res) => {
       environment,
       imageUrl,
       imageName,
-      careGuide,
+      //careGuide,
       growthLogs: [],
     });
 
     if (newPlant) {
       return res.status(201).json({
-        message: "Plant Created",
+        message: "Plant Created"
       });
     }
   } catch (err) {
@@ -91,7 +91,7 @@ router.post("/get", async (req, res) => {
     } else {
       res.status(404).json({
         message: "no plants were found",
-        status: "404 Bad Request",
+        status: "404",
       });
       return;
     }

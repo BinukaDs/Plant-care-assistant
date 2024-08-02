@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -12,18 +13,18 @@ import {
 import { PuffLoader } from 'react-spinners'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import uploadImage from '@/components/imageHandling/uploadImage'
+import uploadImage from "@/services/imageHandle";
 import { useContext } from "react"
 import { UserContext } from "@/App"
+import { FetchPlants } from "@/services/PlantService"
+import { AddPlant } from "@/services/PlantService"
 
-
-const AddPlant = ({ userId }: { userId: string }) => {
+const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants: () => Promise<void> }) => {
     const BASE = useContext(UserContext);
     const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "Indoor", imageUrl: "", imageName: "" })
     const [Image, setImage] = useState(null)
     const [isUploaded, setisUploaded] = useState(false)
     const [isLoading, setisLoading] = useState(false)
-    //console.log("userid: ", Values.userId)
 
 
     const onValueChange = (e) => {
@@ -48,32 +49,21 @@ const AddPlant = ({ userId }: { userId: string }) => {
 
     useEffect(() => {
         if (Values.imageUrl) {
-            const postData = async () => {
-                try {
-                    setisLoading(true)
-                    await fetch(BASE + '/plants/add', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(Values)
-                    }).then((response) => {
-                        console.log(response)
-                        if (response.status === 200) {
-                            console.log("Plant Added!")
-                            window.location.reload()
-                        }
-                    }).catch((error) => {
-                        console.error('Error:', error);
-                    });
-                    setisLoading(false)
-
-                } catch (error) {
-                    console.error("Upload failed", error);
-                    setisLoading(false)
+            const addPlant = async () => {
+                setisLoading(true)
+                const response = await AddPlant(BASE, Values)
+                setisLoading(false)
+                if (response.status === 201) {
+                    console.log("Plant Addded successfully")
+                    toast.success("Plant Added successfully! ✅")
+                    loadPlants()
+                } else if (response.status === 400) {
+                    console.log("Error adding plant")
+                    toast.error("Error Adding Plant! ℹ️")
+                    loadPlants()
                 }
             }
-            postData()
+            addPlant()
         }
     }, [Values.imageUrl])
 
@@ -152,4 +142,4 @@ const AddPlant = ({ userId }: { userId: string }) => {
     )
 }
 
-export default AddPlant
+export default AddPlantComponent

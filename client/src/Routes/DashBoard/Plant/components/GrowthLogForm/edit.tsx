@@ -8,6 +8,7 @@ import {
     DialogClose,
     DialogFooter
 } from "@/components/ui/dialog"
+import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,9 +16,11 @@ import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { GetGrowthLogDetails } from "@/services/GrowthLogService";
 import { useContext } from "react";
 import { UserContext } from "@/App";
-
+import { GrowthLogDataTypes } from "@/types/GrowthLog";
+import { EditGrowthLog } from "@/services/GrowthLogService";
 
 function EditLog({ plantId, index }) {
     const BASE = useContext(UserContext);
@@ -26,21 +29,17 @@ function EditLog({ plantId, index }) {
     const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ index: index, plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: "", leafCount: "" });
     const [isChanged, setisChanged] = useState(false)
 
+    const loadGetGrowthLogDetails = async () => {
+        const data = await GetGrowthLogDetails(BASE, plantId, index)
 
-    useEffect(() => {
-        fetch(BASE + "/growthlogs/get", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ plantId: plantId, index: index })
-        }).then((res) => {
-            return res.json();
-        }).then((data) => {
+        if (data) {
             setPreValues({ ...preValues, date: data.growthLog.date, notes: data.growthLog.notes, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
             setValuesTobeSubmitted({ ...ValuesTobeSubmitted, date: data.growthLog.date, notes: data.growthLog.notes, imageName: data.growthLog.imageName, imageUrl: data.growthLog.imageUrl, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
             console.log(preValues)
-        })
+        }
+    }
+    useEffect(() => {
+        loadGetGrowthLogDetails()
     }, [])
 
 
@@ -50,14 +49,9 @@ function EditLog({ plantId, index }) {
             if (ValuesTobeSubmitted[id] !== e.target.value) {
                 setValuesTobeSubmitted({ ...ValuesTobeSubmitted, [e.target.id]: e.target.value })
                 setisChanged(true)
-            } else {
-                console.log("already exists", ValuesTobeSubmitted[id])
             }
-            
-
 
         } else {
-            console.log("not changed", ValuesTobeSubmitted[id])
             setisChanged(false)
         }
     }
@@ -66,18 +60,29 @@ function EditLog({ plantId, index }) {
 
     async function submit() {
         console.log(ValuesTobeSubmitted)
+        try {
+            const response = await fetch(BASE + "/growthlogs/edit", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(ValuesTobeSubmitted)
+            })
+            console.log(response)
+            response.json()
+            if (response.status == "200") {
+                console.log("✅ GrowthLog Updated Successfully!")
+                toast.success("GrowthLog Updated Successfully!")
+            } else if (response.status == "400") {
+                console.log("ℹ️ Error Updating GrowthLog!")
+                toast.error("Error Updating GrowthLog!")
+            }
+        } catch (error) {
+            console.error("Error updating Log:", error)
+            toast.error("Error updating Log!")
+        }
 
-        await fetch(BASE + "/growthlogs/edit", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ValuesTobeSubmitted)
-        }).then((res) => {
-            return res.json();
-        }).then((data) => {
-            console.log(data)
-        })
+
     }
     return (
         <div>

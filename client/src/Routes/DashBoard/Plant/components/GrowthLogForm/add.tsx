@@ -1,3 +1,6 @@
+import { useState, useEffect, useContext } from "react";
+import { toast } from "sonner"
+import { PuffLoader } from "react-spinners";
 import {
     Dialog,
     DialogContent,
@@ -7,40 +10,26 @@ import {
     DialogTrigger,
     DialogFooter
 } from "@/components/ui/dialog"
-import { toast } from "sonner"
-import { PuffLoader } from "react-spinners";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { useState, useEffect, useContext } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-import uploadImage from "@/components/imageHandling/uploadImage";
+import uploadImage from "@/services/imageHandle";
+import { AddGrowthLog } from "@/services/GrowthLogService";
 import { UserContext } from "@/App";
 
 
-const AddLog = ({ plantId }: { plantId: string }) => {
+const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: string, loadPlant: () => Promise<void> }) => {
     const [Values, setValues] = useState({ plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: "", leafCount: "" })
-    const [userId, setuserId] = useState("")
+    
     const [isLoading, setisLoading] = useState(false)
     const [isUploaded, setisUploaded] = useState(false)
     const [Image, setImage] = useState(null)
     const BASE = useContext(UserContext);
 
-    useEffect(() => {
-        fetch(BASE + "/isUserAuth/userdata", {
-            headers: {
-                "x-access-token": localStorage.getItem("token") || ""
-            }
-        }).then((res) => {
-            return res.json()
-        }).then(data => { setuserId(data.id) })
-            .catch((error) => {
-                console.error('Error:', error);
-            })
-    }, [userId])
+   
 
     const onValueChange = (e) => {
         setValues({ ...Values, [e.target.id]: e.target.value })
@@ -49,14 +38,13 @@ const AddLog = ({ plantId }: { plantId: string }) => {
     async function handleUpload() {
         try {
             setisLoading(true)
-            if(!userId || !Image || !Values.date || !Values.notes || !Values.height || !Values.leafCount){
-                console.log("Please fill all the fields")
+            if (!userId || !Image || !Values.date || !Values.notes || !Values.height || !Values.leafCount) {
                 setisLoading(false)
-                toast.error("Please fill all the fields.")
-                
-            } else if(userId && Image && Values.date && Values.notes && Values.height && Values.leafCount) {
+                console.log("ℹ️ Please fill all the fields.")
+                toast.error("ℹ️ Please fill all the fields.")
+
+            } else if (userId && Image && Values.date && Values.notes && Values.height && Values.leafCount) {
                 const { imageUrl, fileName } = await uploadImage(userId, Image);
-                console.log("image: ", fileName)
                 setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName })
             }
 
@@ -72,25 +60,20 @@ const AddLog = ({ plantId }: { plantId: string }) => {
             const postData = async () => {
                 try {
                     setisLoading(true)
-                    await fetch(BASE + '/growthlogs/add', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(Values)
-                    }).then((response) => {
-                        console.log(response)
-                        response.json();
-                        if (response.status === 201) {
-                            toast.success("Log added successfully!")
-                            
-                        }
-                    }).catch((error) => {
-                        console.error('Error:', error);
-                        toast.error("Error Adding Log!")
-                    });
+                    const response = await AddGrowthLog(BASE, Values)
+                    console.log("Response:", response)
+                     if (response.status == "201") {
+                         setisLoading(false)
+                         toast.success("Log Added successfully!")
+                         loadPlant();
+                     } else if (response.status == "401") {
+                         setisLoading(false)
+                         toast.error("Error Adding Log!")
+                         loadPlant();
+                     } 
                     setisLoading(false)
                 } catch (error) {
+                    toast.error("ℹError Adding Log!")
                     console.error("Upload failed", error);
                     setisLoading(false)
 
