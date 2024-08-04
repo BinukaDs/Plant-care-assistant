@@ -28,6 +28,7 @@ export default function App() {
 
       <UserContext.Provider value={BASE}>
         <Toaster />
+        
         <BrowserRouter>
           <Suspense fallback={<div><PuffLoader /></div>}>
             <Routes>

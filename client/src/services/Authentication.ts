@@ -14,10 +14,9 @@ export const FetchAuthentication = (BASE: string):Promise<ExportDataTypes> => {
     })
     .then((data) => {
       if (data.id) {
-        return { id: data.id, isLoggedin: data.isLoggedin };
+        return { id: data.id, isLoggedin: data.isLoggedin, username: data.username };
       } else {
-        // return { id: null, isLoggedin: false };
-        return data
+        return { id: null, isLoggedin: false };
       }
       
     })

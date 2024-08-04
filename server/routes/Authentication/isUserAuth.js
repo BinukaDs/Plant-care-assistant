@@ -44,7 +44,7 @@ const verifyJWT = async (req, res, next) => {
 };
 
 router.get("/", verifyJWT, (req, res) => {
-  res.json({ isLoggedin: true, id: req.user.id });
+  res.json({ isLoggedin: true, id: req.user.id, username: req.user.username });
 });
 
 router.get("/userdata", verifyJWT, (req, res) => {

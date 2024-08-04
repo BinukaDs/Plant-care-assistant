@@ -29,7 +29,7 @@ const Navbar = () => {
     return (
         <nav>
             <div className='container'>
-                <div className='nav-content flex justify-between text-center '>
+                <div className='nav-content flex justify-between text-center p-6'>
                     <div className='nav-logo'>
                         <a href='/'>Plant-Care</a>
                     </div>

@@ -10,12 +10,13 @@ import { FetchPlants } from '@/services/PlantService'
 import { FetchAuthentication } from '@/services/Authentication'
 import { PlantsDataTypes } from '@/types/Plant'
 import AddPlantComponent from './components/AddPlant/AddPlant'
-
+import Navbar from '@/components/Navbar'
 
 const DashBoard = () => {
     const navigate = useNavigate();
     const [Plants, setPlants] = useState<PlantsDataTypes>([]);
     const [UserId, setUserId] = useState("");
+    const [isLoading, setisLoading] = useState(false);
     const BASE = useContext(UserContext);
 
     //fetch Authentication middleware
@@ -35,12 +36,15 @@ const DashBoard = () => {
     //fetch Plants
     const loadFetchPlants = async () => {
         try {
+            setisLoading(true)
             const data = await FetchPlants(BASE, UserId);
             if (data) {
                 setPlants(data)
+                setisLoading(true)
             }
         } catch (error) {
             console.error(error)
+            setisLoading(true)
         }
     }
 
@@ -55,21 +59,17 @@ const DashBoard = () => {
 
     return (
         <Layout>
-            <section className='flex flex-col justify-center items-center'>
+            
+            <section className='flex flex-col w-full'>
                 <div className='container'>
                     <AddPlantComponent userId={UserId} loadPlants={loadFetchPlants}/>
                 </div>
-                <div className='grid grid-cols-3'>
+                <div className='grid grid-cols-3 w-full'>
                     {Plants.length > 0 ? Plants.map((plant) => {
                         return (
-                            <div key={plant.id} className='flex flex-col bg-slate-200 rounded-md p-5 justify-center items-start m-5'>
-                               <a href={`/plant/${plant.id}`}>
-                               <img src={`${plant.imageUrl}`} alt="" />
-                               <p>{plant.nickname}</p></a>     
-                            </div>
-
+                               <PlantCard key={plant.id} plant={plant}/>
                         )
-                    }) : <PuffLoader />}
+                    }) : <p>No Plants...</p>}
                 </div>
             </section>
         </Layout>

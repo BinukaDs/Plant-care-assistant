@@ -1,20 +1,18 @@
 import Navbar from "@/components/Navbar";
 import SideBar from "./Plant/components/SideBar";
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   return (
-    <>
-      <Navbar />
-      <div className="flex m-auto gap-6">
-          <div className='flex'>
-              <SideBar />
-          </div>
-          <div className='flex items-center justify-center m-5 md:w-full '>
-  
+    <div>
+      <div className="flex w-full gap-6">
+        <div>
+          <SideBar />
+        </div>
+        <div className="m-5">
           {children}
-          </div>
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 
