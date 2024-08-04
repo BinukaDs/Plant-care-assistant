@@ -14,7 +14,7 @@ const PlantCareGuide = ({ careGuide }) => {
     <div className="care-panel">
       {careGuide.map((item, index) => (
         <div key={index} className="care-section">
-          <div className="icon">{icons[item.feature]}</div>
+          <div className="icon">{[item.feature]}</div>
           <div className="details">
             <h3>{item.feature}</h3>
             <p>{item.details}</p>
