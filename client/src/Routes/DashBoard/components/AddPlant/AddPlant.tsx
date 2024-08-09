@@ -16,7 +16,6 @@ import { Label } from '@/components/ui/label'
 import uploadImage from "@/services/imageHandle";
 import { useContext } from "react"
 import { UserContext } from "@/App"
-import { FetchPlants } from "@/services/PlantService"
 import { AddPlant } from "@/services/PlantService"
 
 const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants: () => Promise<void> }) => {
@@ -35,8 +34,8 @@ const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants:
         try {
             setisLoading(true)
             const { imageUrl, fileName } = await uploadImage(userId, Image);
-            console.log("image: ", imageUrl)
-            console.log(fileName)
+            // console.log("image: ", imageUrl)
+            // console.log(fileName)
             setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName as string })
             setisUploaded(true)
 
@@ -54,12 +53,12 @@ const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants:
                 const response = await AddPlant(BASE, Values)
                 setisLoading(false)
                 if (response.status === 201) {
-                    console.log("Plant Addded successfully")
-                    toast.success("Plant Added successfully! ✅")
+                    console.log("✅ Plant Addded successfully")
+                    toast.success("Plant Added successfully! ")
                     loadPlants()
                 } else if (response.status === 400) {
-                    console.log("Error adding plant")
-                    toast.error("Error Adding Plant! ℹ️")
+                    console.log("ℹ️ Error adding plant")
+                    toast.error("Error Adding Plant!")
                     loadPlants()
                 }
             }

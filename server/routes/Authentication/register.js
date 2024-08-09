@@ -2,8 +2,16 @@ const db = require("../../db.cjs");
 const dotenv = require("dotenv");
 dotenv.config();
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken");
 const router = require("express").Router();
 const validator = require('validator');
+
+
+const createToken = (_id) => {
+  // expiresIn is set to 1 day
+  // JWT_SECRET is a secret string that is used to sign the token
+  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+};
 
 router.post("/", async (req, res) => {
   console.log("register hit!")
@@ -40,8 +48,8 @@ router.post("/", async (req, res) => {
       });
       const token = createToken(newUser._id);
       res.status(201).json({
-        name: newentry.name,
-        email: newentry.email,
+        name: newUser.name,
+        email: newUser.email,
         token: token,
       });
     }

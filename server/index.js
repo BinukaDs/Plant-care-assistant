@@ -3,28 +3,25 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-const router = express();
-router.use(cors({ origin: true }));
-router.use(express.json());
+const app = express();
+app.use(cors({ origin: true }));
+app.use(express.json());
 
 const getDevices = async () => {
-  const response = await router.get(`http:localhost:3000/devices`, {
+  const response = await app.get(`http:localhost:3000/devices`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
   setDevices(response.data.devices);
   setLoading(false);
 };
 
-router.use("/users", require("./routes/users.js"));
-router.use("/signin", require("./routes/Authentication/signin.js"));
-router.use("/register", require("./routes/Authentication/register.js"));
-router.use("/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
-router.use("/plants", require("./routes/Plants/Plants.js"));
-router.use("/growthlogs", require("./routes/Plants/growthLogs.js"))
-router.get("/", (req, res) => {
-  res.send("Hello World");
-});
+app.use("/users", require("./routes/users.js"));
+app.use("/signin", require("./routes/Authentication/signin.js"));
+app.use("/register", require("./routes/Authentication/register.js"));
+app.use("/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
+app.use("/plants", require("./routes/Plants/Plants.js"));
+app.use("/growthlogs", require("./routes/Plants/growthLogs.js"));
 
-router.listen(3001, () => {
+app.listen(3001, () => {
   console.log(`App is listening to port: ${3001}`);
 });

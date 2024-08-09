@@ -2,11 +2,11 @@ import { PlantDataTypes } from "@/types/Plant";
 import { PlantsDataTypes } from "@/types/Plant";
 import { StringFormat } from "firebase/storage";
 
-export const FetchPlants = (
+export const FetchPlants = async(
   BASE: string,
   UserId: string
 ): Promise<PlantsDataTypes> => {
-  const data = fetch(BASE + "/plants/get", {
+  const data = await fetch(BASE + "/plants/get", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -26,13 +26,39 @@ export const FetchPlants = (
 
   return data;
 };
+export const SearchPlants = (
+  BASE: string,
+  UserId: string,
+  searchPrompt: string
+): Promise<PlantsDataTypes> => {
+  const data = fetch(BASE + "/plants/get/search", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId: UserId, searchPrompt: searchPrompt }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      return data.plants;
+    })
+    .catch((error) => {
+      console.error("Error fetching plants:", error);
+      return error;
+    });
+
+  return data;
+};
 
 export const FetchPlantDetails = (
   BASE: string,
   plantId: string,
   UserId: string
 ): Promise<PlantDataTypes> => {
-  const data = fetch(BASE + "/plants/get/plant", {
+  const data = fetch(BASE + "/plants/plant/get", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -73,8 +99,13 @@ export const AddPlant = async (BASE: string, Values: Array<PlantDataTypes>) => {
   return response;
 };
 
-export const DeletePlant = async (BASE: string,UserId: string,plantId: string,imageName: string): Promise<void> => {
-  const response = await fetch(BASE + "/plants/delete", {
+export const DeletePlant = async (
+  BASE: string,
+  UserId: string,
+  plantId: string,
+  imageName: string
+): Promise<void> => {
+  const response = await fetch(BASE + "/plants/plant/delete", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

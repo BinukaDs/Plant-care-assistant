@@ -1,10 +1,11 @@
 var router = require("express").Router();
 const db = require("../../db.cjs");
 const gemini = require("../Gemini/gemini.js");
+const removeBg = require("../imageUpdate/bgremoval.js");
 const { ref, deleteObject } = require("firebase/storage");
 const storage = require("../../firebase.js");
 
-router.post("/add", async (req, res) => {
+const addPlant = async (req, res) => {
   const {
     userId,
     nickname,
@@ -55,8 +56,9 @@ router.post("/add", async (req, res) => {
     });
 
     if (newPlant) {
+      //removeBg(imageUrl)
       return res.status(201).json({
-        message: "Plant Created"
+        message: "Plant Created",
       });
     }
   } catch (err) {
@@ -65,24 +67,24 @@ router.post("/add", async (req, res) => {
       message: "Error Creating plant",
     });
   }
-});
+};
 
-router.post("/get", async (req, res) => {
+const getPlants = async (req, res) => {
   const { UserId } = req.body;
 
   try {
+   
     const getPlants = await db
       .collection("userPlants")
       .where("userId", "==", UserId)
       .get();
 
-    const plants = getPlants.docs.map((doc) => ({
+    const plants = await getPlants.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    //console.log(plants);
-    if (!plants.empty) {
+    if (plants.length > 0) {
       return res.status(200).json({
         message: "plants found",
         status: "200 OK",
@@ -98,9 +100,9 @@ router.post("/get", async (req, res) => {
   } catch (error) {
     console.log("Error fetching plants: ", error);
   }
-});
+};
 
-router.post("/get/plant", async (req, res) => {
+const getPlant = async (req, res) => {
   const { plantId, userId } = req.body;
 
   try {
@@ -141,9 +143,9 @@ router.post("/get/plant", async (req, res) => {
   } catch (error) {
     console.log("Error Fetching Plant: ", error);
   }
-});
+};
 
-router.delete("/delete", async (req, res) => {
+const deletePlant = async (req, res) => {
   const { userId, plantId, imageName } = req.body;
   console.log("PlantId: ", plantId);
 
@@ -184,6 +186,12 @@ router.delete("/delete", async (req, res) => {
       message: "Error deleting plant",
     });
   }
-});
+};
+
+router.post("/add", addPlant);
+router.post("/get", getPlants);
+router.post("/plant/get", getPlant);
+router.delete("/plant/delete", deletePlant);
 
 module.exports = router;
+module.exports = getPlants;

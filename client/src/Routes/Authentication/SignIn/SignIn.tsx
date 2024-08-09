@@ -6,60 +6,50 @@ import { UserContext } from "@/App";
 import { Input } from "@/components/ui/input";
 import FadeIn from "../Components/transitions/FadeIn"
 import { Button } from "@/components/ui/button"
-
+import { FetchAuthentication } from "@/services/Authentication";
+import { FetchSignIn } from "@/services/Authentication";
 const SignIn = () => {
   const navigate = useNavigate()
   const BASE = useContext(UserContext);
   const [Values, setValues] = useState({ email: "", password: "" })
+  const [UserId, setUserId] = useState("")
   const [isLoading, setisLoading] = useState(false);
 
-  async function onSubmit(e) {
-
-    e.preventDefault();
-    // console.log(Values)
-
-    fetch(BASE + '/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(Values)
-    }).then((response) => {
-      if (!response.ok) {
-        return response.json().then(error => {
-          throw new Error(error.message);
-        });
+  const loadAuthentication = async () => {
+    try {
+      const data = await FetchAuthentication(BASE);
+      if (data.id) {
+        setUserId(data.id);
+        data.isLoggedin === true ? navigate('/dashboard') : null
       }
-      return response.json()
-
-    }).then(data => {
-      // console.log('Success:', data);
-      console.log("Logged In!")
-      setisLoading(false)
-      localStorage.setItem(
-        "token", data.token
-      );
-
-    }).catch((error) => {
-      console.error('Error:', error);
-    })
-
-
+    }
+    catch (error) {
+      console.error(error);
+    }
   }
 
-  //authentication middleware
-  fetch(BASE + "/isUserAuth", {
-    headers: {
-      "x-access-token": localStorage.getItem("token")
+
+
+  const loadFetchSignIn = async (e: React.ChangeEvent<HTMLElement>) => {
+    e.preventDefault();
+    try {
+      setisLoading(true)
+      const response = await FetchSignIn(BASE, Values)
+      if(response.status == "400") {
+        setisLoading(false)
+        localStorage.setItem("token", response.token);
+        navigate("/dashboard")
+      }
+    } catch (error) {
+      console.error("Error signining in:", error)
     }
-  }).then((res) => {
-    return res.json()
-  }).then(data => data.isLoggedin === true ? navigate('/dashboard') : null)
-    .catch((error) => {
-      console.error('Error:', error);
-    })
+  }
+  useEffect(() => {
+    loadAuthentication()
+  }, [UserId])
 
 
+  
 
   const handleChange = (e) => {
     setValues({ ...Values, [e.target.id]: e.target.value })
@@ -96,7 +86,7 @@ const SignIn = () => {
                   <Input id="password" name="password" type="password" placeholder="password" onChange={handleChange} />
                 </div>
               </div>
-              <Button className="w-full topic" onClick={onSubmit}>Sign-In</Button>
+              <Button className="w-full topic" onClick={loadFetchSignIn}>Sign-In</Button>
               <p className="text-sm mt-3">New here? <span><a href="/register" className="text-primary underline">Sign-Up</a></span></p>
             </div>
           </div>
