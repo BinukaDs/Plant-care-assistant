@@ -36,6 +36,7 @@ export const FetchSignIn = (
   BASE: string,
   Values: PlantDataTypes
 ): Promise<string> => {
+
   const response = fetch(BASE + "/signin", {
     method: "POST",
     headers: {
@@ -44,20 +45,15 @@ export const FetchSignIn = (
     body: JSON.stringify(Values),
   })
     .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.message);
-        });
-      }
       return response.json();
     })
     .then((data) => {
-      // console.log('Success:', data);
-      console.log("Logged In!");
-      return { status: "400", message: "Logged In!", token: data.token };
+       //console.log("Success:", data);
+      // console.log("Logged In!");
+      return data;
     })
     .catch((error) => {
-      console.error("Error:", error);
+      // console.error("Error:", error);
       return error;
     });
 
@@ -75,23 +71,18 @@ export const FetchRegister = async (
     },
     body: JSON.stringify(Values),
   })
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.message);
-        });
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Signed Up!");
-      //localStorage.setItem("token", data.token);
-      return { status: "201", message: "Signed Up!", token: data.token };
-    })
-    .catch((error) => {
-      console.error(error);
-      return error;
-    });
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+     //console.log("Success:", data);
+    // console.log("Logged In!");
+    return data;
+  })
+  .catch((error) => {
+    // console.error("Error:", error);
+    return error;
+  });
 
   return response;
 };

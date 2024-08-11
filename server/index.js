@@ -21,7 +21,9 @@ app.use("/register", require("./routes/Authentication/register.js"));
 app.use("/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
 app.use("/plants", require("./routes/Plants/Plants.js"));
 app.use("/growthlogs", require("./routes/Plants/growthLogs.js"));
-
+app.post("/hello", (req, res) => {
+  res.json({ message: "Hello World" });
+});
 app.listen(3001, () => {
   console.log(`App is listening to port: ${3001}`);
 });

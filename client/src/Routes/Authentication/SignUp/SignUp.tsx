@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { UserContext } from "@/App";
 import { Input } from "@/components/ui/input";
-import FadeIn from "../Components/transitions/FadeIn"
+import FadeIn from "../../../components/transitions/FadeIn"
 import { Button } from "@/components/ui/button"
-import { FetchRegister } from "@/services/Authentication";
+import { FetchRegister } from "@/services/AuthenticationService";
 const SignUp = () => {
 
       const navigate = useNavigate()
@@ -17,12 +17,21 @@ const SignUp = () => {
       const loadFetchRegister = async (e: React.ChangeEvent<HTMLElement>) => {
             e.preventDefault();
             setisLoading(true)
+            if (!Values.email || !Values.username || !Values.password || !Values.pwdRepeat) {
+                  return toast.error("Please fill in all fields!")
+            } else if (typeof Values.email != "string" || typeof Values.username != "string" || typeof Values.password != "string" || typeof Values.pwdRepeat != "string") {
+                  return toast.error("Please enter the values in correct type!")
+            }
             try {
                   const response = await FetchRegister(BASE, Values)
+                  console.log(response)
                   if (response.status == "201") {
                         setisLoading(false)
                         localStorage.setItem("token", response.token);
                         navigate("/dashboard")
+                  } else if (response.status) {
+                        setisLoading(false)
+                        toast.error(response.message)
                   }
             } catch (error) {
                   console.error("Error signing up:", error)

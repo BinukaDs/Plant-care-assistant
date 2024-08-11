@@ -6,9 +6,10 @@ import { PuffLoader } from 'react-spinners'
 
 import PlantCard from './components/PlantCard'
 import { FetchPlants } from '@/services/PlantService'
-import { FetchAuthentication } from '@/services/Authentication'
+import { FetchAuthentication } from '@/services/AuthenticationService'
 import { PlantsDataTypes } from '@/types/Plant'
 import AddPlantComponent from './components/AddPlant/AddPlant'
+import { FetchingErrors } from 'errorcodes'
 
 export const PlantsContext = createContext("")
 const DashBoard = () => {
@@ -26,8 +27,7 @@ const DashBoard = () => {
                 return setUserId(data.id);
             }
             data.isLoggedin === true ? null : navigate('/signin')
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
         }
     }
@@ -54,7 +54,7 @@ const DashBoard = () => {
 
 
     return (
-        <PlantsContext.Provider value={{Plants, setPlants}}>
+        <PlantsContext.Provider value={{ Plants, setPlants }}>
             <Layout>
                 <section className='flex flex-col w-full justify-center items-center h-full '>
                     <div className='container w-full justify-center items-center my-12'>
@@ -66,7 +66,7 @@ const DashBoard = () => {
                             }) : <p>No Plants...</p>}
                         </div>
                         <div className='m-5 w-full flex fixed bottom-12 right-2 justify-end '>
-                           <div className=''> <AddPlantComponent userId={UserId} loadPlants={loadFetchPlants} /></div>
+                            <div className=''> <AddPlantComponent userId={UserId} loadPlants={loadFetchPlants} /></div>
                         </div>
                     </div>
                 </section>

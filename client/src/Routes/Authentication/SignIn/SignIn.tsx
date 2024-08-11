@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { PuffLoader } from "react-spinners"
 import { UserContext } from "@/App";
 import { Input } from "@/components/ui/input";
-import FadeIn from "../Components/transitions/FadeIn"
+import FadeIn from "../../../components/transitions/FadeIn"
 import { Button } from "@/components/ui/button"
-import { FetchAuthentication } from "@/services/Authentication";
-import { FetchSignIn } from "@/services/Authentication";
+import { FetchAuthentication } from "@/services/AuthenticationService";
+import { FetchSignIn } from "@/services/AuthenticationService";
 const SignIn = () => {
   const navigate = useNavigate()
   const BASE = useContext(UserContext);
@@ -29,19 +29,31 @@ const SignIn = () => {
   }
 
 
-
   const loadFetchSignIn = async (e: React.ChangeEvent<HTMLElement>) => {
     e.preventDefault();
-    try {
-      setisLoading(true)
-      const response = await FetchSignIn(BASE, Values)
-      if(response.status == "400") {
-        setisLoading(false)
-        localStorage.setItem("token", response.token);
-        navigate("/dashboard")
+
+    if (!Values.email || !Values.password) {
+      return toast.error("Please fill in all fields!")
+    } else if (typeof Values.email != "string" || typeof Values.password != "string") {
+      return toast.error("Please enter the values in correct type!")
+    } else {
+      try {
+        setisLoading(true)
+        const response = await FetchSignIn(BASE, Values)
+        console.log("response:", response)
+        if (response.status == "200") {
+          setisLoading(false)
+          localStorage.setItem("token", response.token);
+          return navigate("/dashboard")
+        } else if (response.status) {
+          setisLoading(false)
+          return toast.error(response.message)
+        }
+        return setisLoading(false)
+      } catch (error) {
+        setisLoading(false);
+        console.error("Error signining in:", error);
       }
-    } catch (error) {
-      console.error("Error signining in:", error)
     }
   }
   useEffect(() => {
@@ -49,7 +61,7 @@ const SignIn = () => {
   }, [UserId])
 
 
-  
+
 
   const handleChange = (e) => {
     setValues({ ...Values, [e.target.id]: e.target.value })
@@ -86,7 +98,7 @@ const SignIn = () => {
                   <Input id="password" name="password" type="password" placeholder="password" onChange={handleChange} />
                 </div>
               </div>
-              <Button className="w-full topic" onClick={loadFetchSignIn}>Sign-In</Button>
+              <Button className="w-full topic" onClick={loadFetchSignIn}>{isLoading ? <PuffLoader /> : "Sign-in"}</Button>
               <p className="text-sm mt-3">New here? <span><a href="/register" className="text-primary underline">Sign-Up</a></span></p>
             </div>
           </div>

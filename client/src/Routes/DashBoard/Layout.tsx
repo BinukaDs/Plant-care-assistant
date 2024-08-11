@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import SideBar from "./Plant/components/SideBar";
+import SideBar from "../../components/SideBar";
 
 const Layout = ({ children }) => {
   return (

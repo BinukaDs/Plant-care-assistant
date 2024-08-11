@@ -54,11 +54,11 @@ const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants:
                 setisLoading(false)
                 if (response.status === 201) {
                     console.log("✅ Plant Addded successfully")
-                    toast.success("Plant Added successfully! ")
+                    toast.success(response.message)
                     loadPlants()
-                } else if (response.status === 400) {
+                } else if (response.status) {
                     console.log("ℹ️ Error adding plant")
-                    toast.error("Error Adding Plant!")
+                    toast.error(response.message)
                     loadPlants()
                 }
             }

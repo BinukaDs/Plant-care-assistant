@@ -1,13 +1,13 @@
-import React from "react"
+import React, { useId } from "react"
 import { useEffect, useState, useContext } from "react"
-import { FetchAuthentication } from "@/services/Authentication"
+import { FetchAuthentication } from "@/services/AuthenticationService"
 import { DoubleArrowLeftIcon, DoubleArrowRightIcon, DashboardIcon, ArchiveIcon, MixIcon, PersonIcon, DesktopIcon, GearIcon } from '@radix-ui/react-icons'
 import { Button } from "@/components/ui/button"
 import { UserContext } from '@/App'
 import { Input } from "@/components/ui/input"
 import { FaSignOutAlt } from "react-icons/fa"
-import SearchComponent from "../../components/SearchBox/SearchComponent"
-
+import SearchComponent from "../Routes/DashBoard/components/Sidebar/SearchComponent"
+import FiltersComponent from "@/Routes/DashBoard/components/Sidebar/FiltersComponent"
 import { useNavigate, useLocation } from "react-router-dom"
 
 const SideBar = () => {
@@ -34,7 +34,7 @@ const SideBar = () => {
       }
     }
     loadAuthentication();
-  }, [])
+  }, [UserId])
 
   function logOut() {
     localStorage.removeItem("token")
@@ -78,18 +78,21 @@ const SideBar = () => {
     <aside className='fixed justify-between top-0 left-0 h-full border-r bg-white overflow-hidden transition-all w-[256px]'>
       <div className='flex flex-col h-full w-full px-6  items-start'>
         <div className="w-full border-b border-gray-200 flex justify-between items-center gap-3 p-2 mt-12">
-          <SearchComponent UserId={UserId}/>
+          <SearchComponent UserId={UserId} />
         </div>
         <div className="w-full h-full">
-          <ul className='flex flex-col mt-12 justify-start items-center text-start w-full'>
-            {listItems.map((item, index) => {
-              return (
-                <li key={index} className="flex justify-start gap-2 w-full">
-                  <a href={item.href} className={`flex w-full justify-start items-center gap-3 p-2 rounded-md transition-all hover:bg-gray-50 ${location.pathname == item.href && "bg-gray-50 text-primary"}`}>  {React.createElement(listItemIcons[item.icon])} {item.title}</a>
-                </li>
-              )
-            })}
-          </ul>
+          <div className="flex flex-col gap-6 items-start">
+            <ul className='flex flex-col mt-12 justify-start items-center text-start w-full'>
+              {listItems.map((item, index) => {
+                return (
+                  <li key={index} className="flex justify-start gap-2 w-full">
+                    <a href={item.href} className={`flex w-full justify-start items-center gap-3 p-2 rounded-md transition-all hover:bg-gray-50 ${location.pathname == item.href && "bg-gray-50 text-primary"}`}>  {React.createElement(listItemIcons[item.icon])} {item.title}</a>
+                  </li>
+                )
+              })}
+            </ul>
+            <FiltersComponent />
+          </div>
         </div>
 
         <div className="w-full border-t border-gray-200 flex  justify-between items-center p-2 mb-12">
