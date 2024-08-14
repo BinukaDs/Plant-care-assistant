@@ -9,6 +9,7 @@ import PlantCareGuide from './components/PlantcareGuide';
 import { PlantDataTypes } from '@/types/Plant'
 import { FetchAuthentication } from '@/services/AuthenticationService'
 import { FetchPlantDetails, DeletePlant } from '@/services/PlantService'
+import Cookies from 'universal-cookie'
 import Layout from '../Layout'
 import { toast } from 'sonner'
 
@@ -19,6 +20,7 @@ const sampleCareGuide = [
 ];
 
 const Plant = () => {
+  const cookies = new Cookies()
   const { plantId } = useParams();
   const [UserId, setUserId] = useState("");
   const BASE = useContext(UserContext);
@@ -28,7 +30,7 @@ const Plant = () => {
   //authentication middleware
   const loadAuthentication = async () => {
     try {
-      const data = await FetchAuthentication(BASE);
+      const data = await FetchAuthentication(BASE, cookies.get("token"));
       if (data.id) {
         // console.log("UserId: ", data.id);
         return setUserId(data.id);

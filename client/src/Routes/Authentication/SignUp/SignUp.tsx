@@ -4,10 +4,11 @@ import { toast } from "sonner";
 import { UserContext } from "@/App";
 import { Input } from "@/components/ui/input";
 import FadeIn from "../../../components/transitions/FadeIn"
+import Cookies from 'universal-cookie';
 import { Button } from "@/components/ui/button"
 import { FetchRegister } from "@/services/AuthenticationService";
 const SignUp = () => {
-
+      const cookies = new Cookies()
       const navigate = useNavigate()
       const BASE = useContext(UserContext);
       const [Values, setValues] = useState({ email: "", username: "", password: "", pwdRepeat: "" })
@@ -28,6 +29,7 @@ const SignUp = () => {
                   if (response.status == "201") {
                         setisLoading(false)
                         localStorage.setItem("token", response.token);
+                        cookies.set("token", response.token, {expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365)})
                         navigate("/dashboard")
                   } else if (response.status) {
                         setisLoading(false)

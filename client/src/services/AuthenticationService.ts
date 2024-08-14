@@ -1,14 +1,15 @@
 import { RegisterDataTypes } from "@/types/Authentication";
+import Cookies from "universal-cookie";
 import { PlantDataTypes } from "@/types/Plant";
 interface ExportDataTypes {
   id: string;
   isLoggedin: boolean;
 }
 
-export const FetchAuthentication = (BASE: string): Promise<ExportDataTypes> => {
+export const FetchAuthentication = (BASE: string, token:string): Promise<ExportDataTypes> => {
   const data = fetch(BASE + "/isUserAuth", {
     headers: {
-      "x-access-token": localStorage.getItem("token") || "",
+      "x-access-token": token || "",
     },
   })
     .then((res) => {
@@ -36,7 +37,6 @@ export const FetchSignIn = (
   BASE: string,
   Values: PlantDataTypes
 ): Promise<string> => {
-
   const response = fetch(BASE + "/signin", {
     method: "POST",
     headers: {
@@ -48,7 +48,7 @@ export const FetchSignIn = (
       return response.json();
     })
     .then((data) => {
-       //console.log("Success:", data);
+      //console.log("Success:", data);
       // console.log("Logged In!");
       return data;
     })
@@ -58,6 +58,12 @@ export const FetchSignIn = (
     });
 
   return response;
+};
+
+export const SignOut = () => {
+  const cookies = new Cookies();
+  cookies.remove("token");
+  window.location.reload();
 };
 
 export const FetchRegister = async (
@@ -71,18 +77,18 @@ export const FetchRegister = async (
     },
     body: JSON.stringify(Values),
   })
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-     //console.log("Success:", data);
-    // console.log("Logged In!");
-    return data;
-  })
-  .catch((error) => {
-    // console.error("Error:", error);
-    return error;
-  });
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      //console.log("Success:", data);
+      // console.log("Logged In!");
+      return data;
+    })
+    .catch((error) => {
+      // console.error("Error:", error);
+      return error;
+    });
 
   return response;
 };

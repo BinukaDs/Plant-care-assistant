@@ -8,8 +8,7 @@ const validator = require("validator");
 const AuthenticationErrors = require("../../responseCodes");
 
 const createToken = (_id) => {
-  // expiresIn is set to 1 day
-  // JWT_SECRET is a secret string that is used to sign the token
+  
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 

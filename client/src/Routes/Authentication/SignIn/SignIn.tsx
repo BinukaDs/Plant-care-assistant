@@ -8,8 +8,10 @@ import FadeIn from "../../../components/transitions/FadeIn"
 import { Button } from "@/components/ui/button"
 import { FetchAuthentication } from "@/services/AuthenticationService";
 import { FetchSignIn } from "@/services/AuthenticationService";
+import Cookies from "universal-cookie";
 const SignIn = () => {
   const navigate = useNavigate()
+  const cookies = new Cookies()
   const BASE = useContext(UserContext);
   const [Values, setValues] = useState({ email: "", password: "" })
   const [UserId, setUserId] = useState("")
@@ -17,7 +19,7 @@ const SignIn = () => {
 
   const loadAuthentication = async () => {
     try {
-      const data = await FetchAuthentication(BASE);
+      const data = await FetchAuthentication(BASE, cookies.get("token"));
       if (data.id) {
         setUserId(data.id);
         data.isLoggedin === true ? navigate('/dashboard') : null
@@ -44,6 +46,7 @@ const SignIn = () => {
         if (response.status == "200") {
           setisLoading(false)
           localStorage.setItem("token", response.token);
+          cookies.set("token", response.token, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), secure: true, httpOnly:false })
           return navigate("/dashboard")
         } else if (response.status) {
           setisLoading(false)

@@ -17,7 +17,7 @@ const getDevices = async () => {
 
 app.use("/users", require("./routes/users.js"));
 app.use("/signin", require("./routes/Authentication/signin.js"));
-app.use("/register", require("./routes/Authentication/register.js"));
+app.use("/register", require("./routes/Authentication/signup.js"));
 app.use("/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
 app.use("/plants", require("./routes/Plants/Plants.js"));
 app.use("/growthlogs", require("./routes/Plants/growthLogs.js"));
