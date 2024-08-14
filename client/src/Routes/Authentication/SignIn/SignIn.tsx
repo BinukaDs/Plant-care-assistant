@@ -4,60 +4,65 @@ import { useNavigate } from "react-router-dom";
 import { PuffLoader } from "react-spinners"
 import { UserContext } from "@/App";
 import { Input } from "@/components/ui/input";
-import FadeIn from "../Components/transitions/FadeIn"
+import FadeIn from "../../../components/transitions/FadeIn"
 import { Button } from "@/components/ui/button"
-
+import { FetchAuthentication } from "@/services/AuthenticationService";
+import { FetchSignIn } from "@/services/AuthenticationService";
+import Cookies from "universal-cookie";
 const SignIn = () => {
   const navigate = useNavigate()
+  const cookies = new Cookies()
   const BASE = useContext(UserContext);
   const [Values, setValues] = useState({ email: "", password: "" })
+  const [UserId, setUserId] = useState("")
   const [isLoading, setisLoading] = useState(false);
 
-  async function onSubmit(e) {
-
-    e.preventDefault();
-    // console.log(Values)
-
-    fetch(BASE + '/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(Values)
-    }).then((response) => {
-      if (!response.ok) {
-        return response.json().then(error => {
-          throw new Error(error.message);
-        });
+  const loadAuthentication = async () => {
+    try {
+      const data = await FetchAuthentication(BASE, cookies.get("token"));
+      if (data.id) {
+        setUserId(data.id);
+        data.isLoggedin === true ? navigate('/dashboard') : null
       }
-      return response.json()
-
-    }).then(data => {
-      // console.log('Success:', data);
-      console.log("Logged In!")
-      setisLoading(false)
-      localStorage.setItem(
-        "token", data.token
-      );
-
-    }).catch((error) => {
-      console.error('Error:', error);
-    })
-
-
+    }
+    catch (error) {
+      console.error(error);
+    }
   }
 
-  //authentication middleware
-  fetch(BASE + "/isUserAuth", {
-    headers: {
-      "x-access-token": localStorage.getItem("token")
+
+  const loadFetchSignIn = async (e: React.ChangeEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    if (!Values.email || !Values.password) {
+      return toast.error("Please fill in all fields!")
+    } else if (typeof Values.email != "string" || typeof Values.password != "string") {
+      return toast.error("Please enter the values in correct type!")
+    } else {
+      try {
+        setisLoading(true)
+        const response = await FetchSignIn(BASE, Values)
+        console.log("response:", response)
+        if (response.status == "200") {
+          setisLoading(false)
+          localStorage.setItem("token", response.token);
+          cookies.set("token", response.token, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), secure: true, httpOnly:false })
+          return navigate("/dashboard")
+        } else if (response.status) {
+          setisLoading(false)
+          return toast.error(response.message)
+        }
+        return setisLoading(false)
+      } catch (error) {
+        setisLoading(false);
+        console.error("Error signining in:", error);
+      }
     }
-  }).then((res) => {
-    return res.json()
-  }).then(data => data.isLoggedin === true ? navigate('/dashboard') : null)
-    .catch((error) => {
-      console.error('Error:', error);
-    })
+  }
+  useEffect(() => {
+    loadAuthentication()
+  }, [UserId])
+
 
 
 
@@ -96,7 +101,7 @@ const SignIn = () => {
                   <Input id="password" name="password" type="password" placeholder="password" onChange={handleChange} />
                 </div>
               </div>
-              <Button className="w-full topic" onClick={onSubmit}>Sign-In</Button>
+              <Button className="w-full topic" onClick={loadFetchSignIn}>{isLoading ? <PuffLoader /> : "Sign-in"}</Button>
               <p className="text-sm mt-3">New here? <span><a href="/register" className="text-primary underline">Sign-Up</a></span></p>
             </div>
           </div>

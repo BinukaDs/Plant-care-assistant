@@ -7,8 +7,9 @@ import DeleteLog from './components/GrowthLogForm/delete'
 import { UserContext } from '@/App'
 import PlantCareGuide from './components/PlantcareGuide';
 import { PlantDataTypes } from '@/types/Plant'
-import { FetchAuthentication } from '@/services/Authentication'
+import { FetchAuthentication } from '@/services/AuthenticationService'
 import { FetchPlantDetails, DeletePlant } from '@/services/PlantService'
+import Cookies from 'universal-cookie'
 import Layout from '../Layout'
 import { toast } from 'sonner'
 
@@ -19,6 +20,7 @@ const sampleCareGuide = [
 ];
 
 const Plant = () => {
+  const cookies = new Cookies()
   const { plantId } = useParams();
   const [UserId, setUserId] = useState("");
   const BASE = useContext(UserContext);
@@ -28,9 +30,9 @@ const Plant = () => {
   //authentication middleware
   const loadAuthentication = async () => {
     try {
-      const data = await FetchAuthentication(BASE);
+      const data = await FetchAuthentication(BASE, cookies.get("token"));
       if (data.id) {
-        console.log("UserId: ", data.id);
+        // console.log("UserId: ", data.id);
         return setUserId(data.id);
       }
       data.isLoggedin === true ? null : navigate('/signin')
@@ -60,11 +62,11 @@ const Plant = () => {
     try {
       const response = await DeletePlant(BASE, UserId, plantId, PlantData.imageName)
       console.log('response', response)
-      if(response.status == "200") {
+      if (response.status == "200") {
         console.log("✅ Plant deleted successfully! ")
         navigate("/dashboard")
         toast.success("✅ Plant deleted successfully! ")
-      } else if(response.status == "400") {
+      } else if (response.status == "400") {
         console.log("ℹ️ Error deleting plant!")
         navigate("/dashboard")
         toast.success("ℹ️ Error deleting plant!")
@@ -89,13 +91,13 @@ const Plant = () => {
         <img src={PlantData.imageUrl} alt="Plant Image" />
         <button className='bg-red-500 p-2 rounded-md text-white' onClick={loadDeletePlant}>Delete</button>
         <div className='flex flex-col justify-center items-center'>
-          <AddLog plantId={plantId || ""} userId={UserId} loadPlant={loadFetchPlantDetails}/>
+          <AddLog plantId={plantId || ""} userId={UserId} loadPlant={loadFetchPlantDetails} />
           <div className='m-5'>
             {PlantData.growthLogs?.length ? (PlantData.growthLogs?.map((log, index) => {
               return (
                 <div key={index} className='flex  gap-2 rounded-md border p-2 w-full'>
                   <EditLog plantId={plantId} index={index} />
-                  <DeleteLog userId={UserId} plantId={plantId} index={index} imageName={log.imageName} loadPlant={loadFetchPlantDetails}/>
+                  <DeleteLog userId={UserId} plantId={plantId} index={index} imageName={log.imageName} loadPlant={loadFetchPlantDetails} />
                   <img src={log.imageUrl} alt="Plant Image" width={100} />
                   <div className='flex flex-col text-left'>
                     <h1>{log.date}</h1>

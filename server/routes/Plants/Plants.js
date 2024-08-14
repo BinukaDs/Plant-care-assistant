@@ -4,7 +4,7 @@ const gemini = require("../Gemini/gemini.js");
 const { ref, deleteObject } = require("firebase/storage");
 const storage = require("../../firebase.js");
 
-router.post("/add", async (req, res) => {
+const addPlant = async (req, res) => {
   const {
     userId,
     nickname,
@@ -55,8 +55,9 @@ router.post("/add", async (req, res) => {
     });
 
     if (newPlant) {
+      //removeBg(imageUrl)
       return res.status(201).json({
-        message: "Plant Created"
+        message: "Plant Created",
       });
     }
   } catch (err) {
@@ -65,24 +66,23 @@ router.post("/add", async (req, res) => {
       message: "Error Creating plant",
     });
   }
-});
+};
 
-router.post("/get", async (req, res) => {
+const getPlants = async (req, res) => {
   const { UserId } = req.body;
-
+  console.log("userId:", UserId)
   try {
     const getPlants = await db
       .collection("userPlants")
       .where("userId", "==", UserId)
       .get();
 
-    const plants = getPlants.docs.map((doc) => ({
+    const plants = await getPlants.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    //console.log(plants);
-    if (!plants.empty) {
+    if (plants.length > 0) {
       return res.status(200).json({
         message: "plants found",
         status: "200 OK",
@@ -91,59 +91,55 @@ router.post("/get", async (req, res) => {
     } else {
       res.status(404).json({
         message: "no plants were found",
+
         status: "404",
       });
       return;
     }
   } catch (error) {
     console.log("Error fetching plants: ", error);
+    res.status(500).send(error);
   }
-});
+};
 
-router.post("/get/plant", async (req, res) => {
+const getPlant = async (req, res) => {
   const { plantId, userId } = req.body;
 
-  try {
-    db.collection("userPlants")
-      .doc(plantId)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          // Document found, access data with doc.data()
-          if (userId) {
-            if (userId !== doc.data().userId) {
-              res.status(404).json({
-                message: "Unauthorized",
-                status: "404 Not Found",
-              });
-              console.log("Unauthorized");
-              return;
-            } else if (userId === doc.data().userId) {
-              return res.status(200).json({
-                message: "plant found",
-                status: "200 OK",
-                plant: doc.data(),
-              });
-            }
+  db.collection("userPlants")
+    .doc(plantId)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        // Document found, access data with doc.data()
+        if (userId) {
+          if (userId !== doc.data().userId) {
+            res.status(404).json({
+              message: "Unauthorized",
+              status: "404 Not Found",
+            });
+            console.log("Unauthorized");
+            return;
+          } else if (userId === doc.data().userId) {
+            console.log("plantfound:", doc.data());
+            return res.status(200).json({
+              message: "plant found",
+              status: "200 OK",
+              plant: doc.data(),
+            });
           }
-        } else {
-          res.status(404).json({
-            message: "no plants were found",
-            status: "404 Bad Request",
-          });
-          console.log("No Plants were found!");
-          return;
         }
-      })
-      .catch((error) => {
-        console.error("Error getting document:", error);
-      });
-  } catch (error) {
-    console.log("Error Fetching Plant: ", error);
-  }
-});
+      } else {
+        res.status(404).json({
+          message: "couldn't find the plant!",
+          status: "404 Bad Request",
+        });
+        console.log("couldn't find the plant!");
+        return;
+      }
+    });
+};
 
-router.delete("/delete", async (req, res) => {
+const deletePlant = async (req, res) => {
   const { userId, plantId, imageName } = req.body;
   console.log("PlantId: ", plantId);
 
@@ -154,36 +150,41 @@ router.delete("/delete", async (req, res) => {
   }
 
   // Delete plant from database
-  try {
-    db.collection("userPlants")
-      .doc(plantId)
-      .delete()
-      .then(() => {
-        const imageRef = ref(storage, `images/${userId}/${imageName}`);
-        // Delete the file
-        deleteObject(imageRef)
-          .then(() => {
-            return res.status(200).json({
-              message: "Plant Deleted!",
-            });
-          })
-          .catch((error) => {
-            console.log("Error deleting Image: ", error);
-            return res.status(401).json({
-              message: "Error deleting Image",
-              fileName: imageName,
-            });
+
+  db.collection("userPlants")
+    .doc(plantId)
+    .delete()
+    .then(() => {
+      const imageRef = ref(storage, `images/${userId}/${imageName}`);
+      // Delete the file
+      deleteObject(imageRef)
+        .then(() => {
+          return res.status(200).json({
+            message: "Plant Deleted!",
+            status: 200,
           });
-      })
-      .catch((error) => {
-        console.log("Error deleting document: ", error);
+        })
+        .catch((error) => {
+          console.log("Error deleting Image: ", error);
+          return res.status(401).json({
+            message: "Error deleting Image",
+            fileName: imageName,
+            status: 401,
+          });
+        });
+    })
+    .catch((error) => {
+      console.log("Error deleting document: ", error);
+      return res.status(401).json({
+        message: "Error deleting plant",
+        status: 401,
       });
-  } catch (err) {
-    console.log("err: ", err);
-    return res.status(401).json({
-      message: "Error deleting plant",
     });
-  }
-});
+};
+
+router.post("/add", addPlant);
+router.post("/", getPlants);
+router.post("/plant", getPlant);
+router.delete("/plant/delete", deletePlant);
 
 module.exports = router;

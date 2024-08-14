@@ -3,49 +3,42 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { UserContext } from "@/App";
 import { Input } from "@/components/ui/input";
-import FadeIn from "../Components/transitions/FadeIn"
+import FadeIn from "../../../components/transitions/FadeIn"
+import Cookies from 'universal-cookie';
 import { Button } from "@/components/ui/button"
+import { FetchRegister } from "@/services/AuthenticationService";
 const SignUp = () => {
-
+      const cookies = new Cookies()
       const navigate = useNavigate()
       const BASE = useContext(UserContext);
       const [Values, setValues] = useState({ email: "", username: "", password: "", pwdRepeat: "" })
       const [isLoading, setisLoading] = useState(false);
 
-      async function onSubmit(e) {
+
+      const loadFetchRegister = async (e: React.ChangeEvent<HTMLElement>) => {
             e.preventDefault();
-            console.log(Values)
-
-            if (Values.password !== Values.pwdRepeat) {
-                  return toast.info("Passwords Doesn't Match!")
+            setisLoading(true)
+            if (!Values.email || !Values.username || !Values.password || !Values.pwdRepeat) {
+                  return toast.error("Please fill in all fields!")
+            } else if (typeof Values.email != "string" || typeof Values.username != "string" || typeof Values.password != "string" || typeof Values.pwdRepeat != "string") {
+                  return toast.error("Please enter the values in correct type!")
             }
-
-            fetch(BASE + '/register', {
-                  method: 'POST',
-                  headers: {
-                        'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(Values)
-            }).then((response) => {
-                  if (!response.ok) {
-                        return response.json().then(error => {
-                              throw new Error(error.message);
-                        });
+            try {
+                  const response = await FetchRegister(BASE, Values)
+                  console.log(response)
+                  if (response.status == "201") {
+                        setisLoading(false)
+                        localStorage.setItem("token", response.token);
+                        cookies.set("token", response.token, {expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365)})
+                        navigate("/dashboard")
+                  } else if (response.status) {
+                        setisLoading(false)
+                        toast.error(response.message)
                   }
-                  return response.json()
-
-            }).then(data => {
-                  console.log("Signed Up!")
-                  setisLoading(false)
-                  localStorage.setItem(
-                        "token", data.token
-                  );
-
-            }).catch((error) => {
-                  console.error(error);
-            })
+            } catch (error) {
+                  console.error("Error signing up:", error)
+            }
       }
-
 
       const handleChange = (e) => {
             setValues({ ...Values, [e.target.id]: e.target.value })
@@ -61,7 +54,7 @@ const SignUp = () => {
                                     {/* Top */}
                                     <div className="flex flex-col justify-center items-start">
                                           <h1 className="text-2xl topic">Create an account</h1>
-                                          <p className="text-sm text-secondary text-start">Enter your email below to create your account!</p>
+                                          <p className="text-sm text-secondary text-start">Enter your details below to create your account!</p>
                                     </div>
 
                                     {/* Bottom */}
@@ -91,7 +84,7 @@ const SignUp = () => {
                                                       <Input id="pwdRepeat" name="pwdRepeat" type="password" placeholder="Repeat-Password" onChange={handleChange} />
                                                 </div>
                                           </div>
-                                          <Button className="w-full topic" onClick={onSubmit}>Sign-Up</Button>
+                                          <Button className="w-full topic" onClick={loadFetchRegister}>Sign-Up</Button>
                                           <p className="text-sm mt-3">Already have an account <span><a href="/signin" className="text-primary underline">Sign-In</a></span></p>
                                     </div>
                               </div>

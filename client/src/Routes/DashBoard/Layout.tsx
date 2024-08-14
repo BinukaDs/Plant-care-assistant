@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import SideBar from "./Plant/components/SideBar";
+import SideBar from "../../components/SideBar";
 
 const Layout = ({ children }) => {
   return (
@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
         <div>
           <SideBar />
         </div>
-        <div className="m-5">
+        <div className="m-5 ml-64 w-full">
           {children}
         </div>
       </div>
