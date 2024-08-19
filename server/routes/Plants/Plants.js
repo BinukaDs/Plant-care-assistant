@@ -70,35 +70,39 @@ const addPlant = async (req, res) => {
 
 const getPlants = async (req, res) => {
   const { UserId } = req.body;
-  console.log("userId:", UserId)
-  try {
-    const getPlants = await db
-      .collection("userPlants")
-      .where("userId", "==", UserId)
-      .get();
+  console.log("userId:", UserId);
 
-    const plants = await getPlants.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+  if (!UserId) {
+    return res.status(400).json({ message: "userId is required" });
+  } else if (UserId) {
+    try {
+      const getPlants = await db
+        .collection("userPlants")
+        .where("userId", "==", UserId)
+        .get();
 
-    if (plants.length > 0) {
-      return res.status(200).json({
-        message: "plants found",
-        status: "200 OK",
-        plants: plants,
-      });
-    } else {
-      res.status(404).json({
-        message: "no plants were found",
+      const plants = await getPlants.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-        status: "404",
-      });
-      return;
+      if (plants.length > 0) {
+        return res.status(200).json({
+          message: "plants found",
+          status: "200 OK",
+          plants: plants,
+        });
+      } else {
+        res.status(404).json({
+          message: "no plants were found",
+          status: "404",
+        });
+        return;
+      }
+    } catch (error) {
+      console.log("Error fetching plants: ", error);
+      res.status(500).send(error);
     }
-  } catch (error) {
-    console.log("Error fetching plants: ", error);
-    res.status(500).send(error);
   }
 };
 
@@ -148,8 +152,6 @@ const deletePlant = async (req, res) => {
       message: "All fields are required",
     });
   }
-
-  // Delete plant from database
 
   db.collection("userPlants")
     .doc(plantId)

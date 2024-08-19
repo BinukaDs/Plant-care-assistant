@@ -6,9 +6,8 @@ import PlantCard from './components/PlantCard'
 import { FetchPlants } from '@/services/PlantService'
 import { FetchAuthentication } from '@/services/AuthenticationService'
 import { PlantsDataTypes } from '@/types/Plant'
-import AddPlantComponent from './components/AddPlant/AddPlant'
 import Cookies from 'universal-cookie'
-
+import { fetchLocations } from '@/services/LocationsService'
 export const PlantsContext = createContext("")
 const DashBoard = () => {
     const navigate = useNavigate();
@@ -17,6 +16,7 @@ const DashBoard = () => {
     const [Plants, setPlants] = useState<PlantsDataTypes>([]);
     const [UserId, setUserId] = useState("");
     const [isLoading, setisLoading] = useState(false);
+    const [Locations, setLocations] = useState<string[]>([])
     const BASE = useContext(UserContext);
 
     //fetch Authentication middleware
@@ -24,7 +24,9 @@ const DashBoard = () => {
         try {
             const data = await FetchAuthentication(BASE, cookies.get("token"));
             if (data.id) {
-                return setUserId(data.id);
+                if (data.isLoggedin === true) {
+                    return setUserId(data.id);
+                }
             }
             data.isLoggedin === true ? null : navigate('/signin')
         } catch (error) {
@@ -32,26 +34,50 @@ const DashBoard = () => {
         }
     }
 
+
+
     //fetch Plants
     const loadFetchPlants = async () => {
         try {
             setisLoading(true)
             const data = await FetchPlants(BASE, UserId);
-            if (data.length > 0) {
-                console.log("Useeffect")
+            if (data) {
+                setisLoading(true)
                 setPlants(data)
                 await setData(data)
-                setisLoading(true)
-            }
+                setisLoading(false)
+            } else return setisLoading(false)
         } catch (error) {
             console.error(error)
             setisLoading(true)
         }
     }
+
+    const loadFetchLocations = async () => {
+        try {
+            const data = await fetchLocations(BASE)
+            if (data) {
+                data.map((Location) => {
+                    setLocations((Locations) => {
+                        const uniqueLocations = [...new Set([...Locations, Location.location])];
+                        return uniqueLocations
+                    })
+                })
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+        loadFetchLocations()
+    }, [Data])
+
     useEffect(() => {
         const load = async () => {
             await loadAuthentication();
-            loadFetchPlants();
+            await loadFetchPlants();
+
         }
         load()
     }, [UserId])
@@ -59,7 +85,7 @@ const DashBoard = () => {
 
 
     return (
-        <PlantsContext.Provider value={{ setData, Data, Plants, setPlants }}>
+        <PlantsContext.Provider value={{ setData, Data, Plants, setPlants, Locations }}>
             <Layout>
                 <section className='flex flex-col w-full justify-center items-center h-full '>
                     <div className='container w-full justify-center items-center my-12'>
@@ -70,9 +96,7 @@ const DashBoard = () => {
                                 )
                             }) : <p>No Plants...</p>}
                         </div>
-                        <div className='m-5 w-full flex fixed bottom-12 right-2 justify-end '>
-                            <div className=''> <AddPlantComponent userId={UserId} loadPlants={loadFetchPlants} /></div>
-                        </div>
+
                     </div>
                 </section>
             </Layout>

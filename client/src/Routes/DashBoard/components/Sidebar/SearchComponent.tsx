@@ -4,22 +4,12 @@ import { UserContext } from '@/App'
 import { FetchPlants } from '@/services/PlantService'
 import { PlantsContext } from '../../DashBoard'
 import { Cross2Icon } from '@radix-ui/react-icons'
+import { PlantsDataTypes } from '@/types/Plant'
 const SearchComponent = (UserId: string) => {
     const BASE = useContext(UserContext);
-    const { setData, Plants} = useContext(PlantsContext)
+    const { Data, setData, Plants } = useContext(PlantsContext)
     const [searchTerm, setSearchTerm] = useState<string>("")
-    // const loadFetchPlants = async () => {
-    //     try {
-    //         const data = await FetchPlants(BASE, UserId.UserId);
-    //         if (data) {
-    //             setPlants(data)
-    //             console.log("fetched:", data)
-    //         }
-    //     } catch (error) {
-    //         //console.error(error)
 
-    //     }
-    // }
     useEffect(() => {
         setTimeout(async function () {
             if (searchTerm.length >= 2) {
@@ -38,7 +28,7 @@ const SearchComponent = (UserId: string) => {
         setData(Plants)
     }
     return (
-        <div>
+        <div className='w-full'>
             <div className='flex border p-1 rounded-md justify-center items-center w-full focus-visible:ring-1 focus-visible:ring-primary'>
                 <Input type="search" placeholder="Search plants..." className="border-none shadow-none focus-visible:ring-0" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} />
                 {searchTerm.length > 0 && <button className='mr-3' onClick={clearInput}><Cross2Icon></Cross2Icon></button>}
