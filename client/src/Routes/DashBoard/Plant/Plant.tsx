@@ -65,11 +65,11 @@ const Plant = () => {
       if (response.status == "200") {
         console.log("✅ Plant deleted successfully! ")
         navigate("/dashboard")
-        toast.success("✅ Plant deleted successfully! ")
+        toast.success("Plant deleted successfully! ")
       } else if (response.status == "400") {
         console.log("ℹ️ Error deleting plant!")
         navigate("/dashboard")
-        toast.success("ℹ️ Error deleting plant!")
+        toast.success("Error deleting plant!")
       }
     } catch (error) {
       navigate("/dashboard")

@@ -17,12 +17,17 @@ import uploadImage from "@/services/imageHandle";
 import { useContext } from "react"
 import { UserContext } from "@/App"
 import { AddPlant } from "@/services/PlantService"
+import { PlantsContext } from "../../DashBoard"
+import { FetchPlants } from "@/services/PlantService"
+import LocationInput from "./LocationInput"
 
-const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants: () => Promise<void> }) => {
+
+
+const AddPlantComponent = ({ userId }: { userId: string }) => {
     const BASE = useContext(UserContext);
+    const { setData } = useContext(PlantsContext)
     const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "Indoor", imageUrl: "", imageName: "" })
     const [Image, setImage] = useState(null)
-    const [isUploaded, setisUploaded] = useState(false)
     const [isLoading, setisLoading] = useState(false)
 
 
@@ -30,6 +35,23 @@ const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants:
         setValues({ ...Values, userId: userId, [e.target.id]: e.target.value })
     }
 
+    //fetch Plants
+    const loadFetchPlants = async () => {
+        try {
+            setisLoading(true)
+            const data = await FetchPlants(BASE, userId);
+            if (data) {
+                setisLoading(true)
+                await setData(data)
+                setisLoading(false)
+            } else return setisLoading(false)
+        } catch (error) {
+            console.error(error)
+            setisLoading(false)
+        }
+    }
+
+    //handle imageUpload
     async function handleUpload() {
         try {
             setisLoading(true)
@@ -37,7 +59,8 @@ const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants:
             // console.log("image: ", imageUrl)
             // console.log(fileName)
             setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName as string })
-            setisUploaded(true)
+            console.log(Values)
+            setisLoading(false)
 
         } catch (error) {
             console.error("Upload failed", error);
@@ -55,16 +78,22 @@ const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants:
                 if (response.status === 201) {
                     console.log("✅ Plant Addded successfully")
                     toast.success(response.message)
-                    loadPlants()
+                    loadFetchPlants()
                 } else if (response.status) {
                     console.log("ℹ️ Error adding plant")
                     toast.error(response.message)
-                    loadPlants()
+                    loadFetchPlants()
                 }
             }
             addPlant()
         }
     }, [Values.imageUrl])
+
+    const handleLocationChange = (value: string[] | null) => {
+        if (value.value) {
+            setValues({ ...Values, location: value.value })
+        }
+    }
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -75,8 +104,8 @@ const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants:
     return (
         <div>
             <Dialog>
-                <DialogTrigger>
-                    <Button type='button'>Add Plant</Button>
+                <DialogTrigger className="w-full">
+                    <Button className="w-full">Add Plant</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
@@ -102,12 +131,13 @@ const AddPlantComponent = ({ userId, loadPlants }: { userId: string, loadPlants:
                                 <Label htmlFor="location" >
                                     Location
                                 </Label>
-                                <Input
+                                {/* <Input
                                     name='location'
                                     id="location"
                                     placeholder='Living Room'
                                     onChange={(e) => { onValueChange(e) }}
-                                />
+                                /> */}
+                                <LocationInput onValueChange={handleLocationChange} />
                             </div>
                         </div>
                         <div className="w-full">

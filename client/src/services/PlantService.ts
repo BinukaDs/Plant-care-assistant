@@ -1,12 +1,11 @@
 import { PlantDataTypes } from "@/types/Plant";
 import { PlantsDataTypes } from "@/types/Plant";
 
-
-export const FetchPlants = async(
+export const FetchPlants = async (
   BASE: string,
   UserId: string
 ): Promise<PlantsDataTypes> => {
-  const data = await fetch(BASE + "/plants", {
+  return await fetch(BASE + "/plants", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,15 +16,14 @@ export const FetchPlants = async(
       return response.json();
     })
     .then((data) => {
-     // console.log(data);
+      // console.log(data);
       return data.plants;
     })
     .catch((error) => {
-      //return console.error("Error fetching plants:", error);
+      return console.error("Error fetching plants:", error);
     });
-
-  return data;
 };
+
 
 
 export const FetchPlantDetails = (
@@ -33,7 +31,7 @@ export const FetchPlantDetails = (
   plantId: string,
   UserId: string
 ): Promise<PlantDataTypes> => {
-  const data = fetch(BASE + "/plants/plant", {
+  return fetch(BASE + "/plants/plant", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -44,19 +42,18 @@ export const FetchPlantDetails = (
       return res.json();
     })
     .then((data) => {
-      console.log(data);
-      return data.plant;
+      if(data.plant) {
+        console.log(data);
+        return data.plant;
+      }
     })
     .catch((error) => {
       return console.error("Error fetching plant details:", error);
     });
-
-  return data;
 };
 
-
 export const AddPlant = async (BASE: string, Values: Array<PlantDataTypes>) => {
-  const response = await fetch(BASE + "/plants/add", {
+  return await fetch(BASE + "/plants/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -71,8 +68,6 @@ export const AddPlant = async (BASE: string, Values: Array<PlantDataTypes>) => {
       console.error("Error:", error);
       return error;
     });
-
-  return response;
 };
 
 export const DeletePlant = async (
@@ -81,7 +76,7 @@ export const DeletePlant = async (
   plantId: string,
   imageName: string
 ): Promise<void> => {
-  const response = await fetch(BASE + "/plants/plant/delete", {
+  return await fetch(BASE + "/plants/plant/delete", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -99,6 +94,4 @@ export const DeletePlant = async (
       console.error("Error deleting plant:", error);
       return error;
     });
-
-  return response;
 };

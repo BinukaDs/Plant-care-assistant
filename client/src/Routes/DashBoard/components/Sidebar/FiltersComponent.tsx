@@ -1,55 +1,33 @@
-import React from 'react'
-import { Badge } from '@/components/ui/badge'
-import LocationBadges from './LocationBadges'
+import LocationBadge from './LocationBadge'
 import { useContext, useEffect, useState } from 'react'
+import { PlantsContext } from '../../DashBoard'
+import { fetchLocations } from '@/services/LocationsService'
 import { UserContext } from '@/App'
-import { FetchPlants } from '@/services/PlantService'
-import { PlantsDataTypes } from '@/types/Plant'
-import { PlantDataTypes } from '@/types/Plant'
-const FiltersComponent = ({ BASE, UserId }: { BASE: string, UserId: string }) => {
-    const [Plants, setPlants] = useState<PlantsDataTypes>([])
-    const [Locations, setLocations] = useState<string>([])
 
-    const loadFetchPlants = async () => {
-        try {
-            const data = await FetchPlants(BASE, UserId.UserId);
-            if (data) {
-                setPlants(data)
-                // console.log("fetched:", data)
-            }
-        } catch (error) {
-            //console.error(error)
 
-        }
-    }
+const FiltersComponent = () => {
+    const { Data, Locations } = useContext(PlantsContext)
+    const BASE = useContext(UserContext)
 
-    const filterLocations = () => {
-        Plants.map((Plant:PlantDataTypes) => {
-            console.log("Plant:", Plant)
-            if (Plant.location) {
-                console.log("Location:",Plant.location)
-                setLocations([...Locations, Plant.location])
-            }
-        })
-        console.log("Locations:",Locations)
-    }
-    useEffect(() => {
-        const load = async() => {
-            await loadFetchPlants()
-            await filterLocations()
-        } 
-        load()
-    }, [Plants,Locations])
+
+
     return (
-        <div>
-            <p>Filters</p>
-            <div className='flex flex-col gap-2'>
+
+        <div className='flex flex-col justify-center items-start'>
+            <p className='topic text-lg text-secondary'>Filters</p>
+            <div className='flex flex-col gap-2 justify-start items-start'>
                 <p>Location:</p>
-                <div>
-                    <LocationBadges />
+                <div className='grid grid-cols-3'>
+                    {
+                        Locations.map((Location) => {
+                            return <LocationBadge Location={Location} key={Location} />
+                        })
+                    }
+
                 </div>
             </div>
         </div>
+
     )
 }
 
