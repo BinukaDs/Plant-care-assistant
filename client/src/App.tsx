@@ -36,7 +36,7 @@ export default function App() {
               <Route path='/register' element={<SignUp />}></Route>
               <Route path='/signin' element={<SignIn />}></Route>
               <Route path='/dashboard' element={<DashBoard />}></Route>
-              <Route path='/plant/:plantId' element={<Plant />}></Route>
+              <Route path='/dashboard/plant/:plantId' element={<Plant />}></Route>
             </Routes>
           </Suspense>
         </BrowserRouter>

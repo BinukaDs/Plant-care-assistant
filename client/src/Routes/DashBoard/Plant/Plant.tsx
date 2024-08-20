@@ -6,6 +6,7 @@ import EditLog from './components/GrowthLogForm/edit'
 import DeleteLog from './components/GrowthLogForm/delete'
 import { UserContext } from '@/App'
 import PlantCareGuide from './components/PlantcareGuide';
+import BreadCrumbNav from '@/components/BreadCrumbNav'
 import { PlantDataTypes } from '@/types/Plant'
 import { FetchAuthentication } from '@/services/AuthenticationService'
 import { FetchPlantDetails, DeletePlant } from '@/services/PlantService'
@@ -85,37 +86,40 @@ const Plant = () => {
 
   return (
     <Layout>
-      <div>
-        <h1>Plant ID: {plantId}</h1>
-        <h1>Plant Data: {PlantData.nickname}</h1>
-        <img src={PlantData.imageUrl} alt="Plant Image" />
-        <button className='bg-red-500 p-2 rounded-md text-white' onClick={loadDeletePlant}>Delete</button>
-        <div className='flex flex-col justify-center items-center'>
-          <AddLog plantId={plantId || ""} userId={UserId} loadPlant={loadFetchPlantDetails} />
-          <div className='m-5'>
-            {PlantData.growthLogs?.length ? (PlantData.growthLogs?.map((log, index) => {
-              return (
-                <div key={index} className='flex  gap-2 rounded-md border p-2 w-full'>
-                  <EditLog plantId={plantId} index={index} />
-                  <DeleteLog userId={UserId} plantId={plantId} index={index} imageName={log.imageName} loadPlant={loadFetchPlantDetails} />
-                  <img src={log.imageUrl} alt="Plant Image" width={100} />
-                  <div className='flex flex-col text-left'>
-                    <h1>{log.date}</h1>
-                    <p>{log.notes}</p>
-                    <p>Height: {log.height}</p>
-                    <p>Leaf Count: {log.leafCount}</p>
+      <div className='container w-full justify-center items-center my-12 gap-y-5'>
+        <section className='flex flex-col w-full justify-center items-start h-full mx-5'>
+          <BreadCrumbNav />
+          <h1>Plant ID: {plantId}</h1>
+          <h1>Plant Data: {PlantData.nickname}</h1>
+          <img src={PlantData.imageUrl} alt="Plant Image" />
+          <button className='bg-red-500 p-2 rounded-md text-white' onClick={loadDeletePlant}>Delete</button>
+          <div className='flex flex-col justify-center items-center'>
+            <AddLog plantId={plantId || ""} userId={UserId} loadPlant={loadFetchPlantDetails} />
+            <div className='m-5'>
+              {PlantData.growthLogs?.length ? (PlantData.growthLogs?.map((log, index) => {
+                return (
+                  <div key={index} className='flex  gap-2 rounded-md border p-2 w-full'>
+                    <EditLog plantId={plantId} index={index} />
+                    <DeleteLog userId={UserId} plantId={plantId} index={index} imageName={log.imageName} loadPlant={loadFetchPlantDetails} />
+                    <img src={log.imageUrl} alt="Plant Image" width={100} />
+                    <div className='flex flex-col text-left'>
+                      <h1>{log.date}</h1>
+                      <p>{log.notes}</p>
+                      <p>Height: {log.height}</p>
+                      <p>Leaf Count: {log.leafCount}</p>
+                    </div>
                   </div>
-                </div>
-              )
-            })) : (
-              <div>Add Logs...</div>
-            )}
-          </div>
-          <div>
-            <PlantCareGuide careGuide={sampleCareGuide} />
-          </div>
+                )
+              })) : (
+                <div>Add Logs...</div>
+              )}
+            </div>
+            <div>
+              <PlantCareGuide careGuide={sampleCareGuide} />
+            </div>
 
-        </div>
+          </div>
+        </section>
       </div>
     </Layout>
   )

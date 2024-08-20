@@ -74,7 +74,7 @@ const SideBar = () => {
   return (
     <aside className='fixed justify-between top-0 left-0 h-full border-r bg-white overflow-hidden transition-all w-[312px]'>
       <div className='flex flex-col h-full w-full px-6  items-start'>
-        <div className="w-full border-b border-gray-200 flex justify-between items-center gap-3 p-2 mt-12">
+        <div className="w-full border-b border-gray-200 flex justify-between items-center gap-3 p-2 mt-5">
           <SearchComponent UserId={UserId} />
         </div>
 
@@ -98,7 +98,7 @@ const SideBar = () => {
         <div className="w-full mb-5">
           <AddPlantComponent userId={UserId} />
         </div>
-        <div className="w-full border-t border-gray-200 flex  justify-between items-center p-2 mb-12">
+        <div className="w-full border-t border-gray-200 flex  justify-between items-center p-2 mb-5">
           <img src="https://via.placeholder.com/150" alt="User" className="rounded-full w-12 h-12" />
           <div className="flex flex-col  text-start">
             <h1 className="text-sm">{Username}</h1>

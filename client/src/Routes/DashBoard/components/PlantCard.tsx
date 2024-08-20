@@ -4,8 +4,8 @@ import "../../../App.css"
 const PlantCard = ({ plant }: PlantDataTypes) => {
     return (
         <div className='container relative flex flex-col w-full'>
-            <a href={`plant/${plant.id}`}>
-                <div className='relative bg-white border rounded-md h-48 w-48 m-12 '>
+            <a href={`dashboard/plant/${plant.id}`}>
+                <div className='relative bg-white border rounded-md h-48 w-48 my-12 '>
                     <div className='absolute bottom-24 p-6'>
                         <img src={plant.imageUrl} alt={plant.imageName} className='rounded-md' />
                     </div>

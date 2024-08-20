@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect, useContext, createContext } from 'react'
 import { UserContext } from '@/App'
 import PlantCard from './components/PlantCard'
+import BreadCrumbNav from '@/components/BreadCrumbNav'
 import { FetchPlants } from '@/services/PlantService'
 import { FetchAuthentication } from '@/services/AuthenticationService'
 import { PlantsDataTypes } from '@/types/Plant'
@@ -87,9 +88,12 @@ const DashBoard = () => {
     return (
         <PlantsContext.Provider value={{ setData, Data, Plants, setPlants, Locations }}>
             <Layout>
-                <section className='flex flex-col w-full justify-center items-center h-full '>
-                    <div className='container w-full justify-center items-center my-12'>
-                        <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full my-auto justify-center items-center h-full'>
+                <div className='container w-full justify-center items-center my-12 gap-y-5'>
+                    <section className='flex flex-col w-full justify-center items-start h-full mx-5'>
+                        <BreadCrumbNav />
+                        <h1 className='text-3xl topic text-start font-bold'>DashBoard</h1>
+                        <p className='text-sm text-secondary'>Manage Your Plants.</p>
+                        <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full my-12 justify-center items-center h-full'>
                             {Data.length > 0 ? Data.map((plant) => {
                                 return (
                                     <PlantCard key={plant.id} plant={plant} />
@@ -97,8 +101,8 @@ const DashBoard = () => {
                             }) : <p>No Plants...</p>}
                         </div>
 
-                    </div>
-                </section>
+                    </section>
+                </div>
             </Layout>
         </PlantsContext.Provider>
     )
