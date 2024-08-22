@@ -33,6 +33,7 @@ const addPlant = async (req, res) => {
     !imageUrl ||
     !imageName
   ) {
+    console.log(userId, nickname, location, species, environment, imageUrl, imageName)
     return res.status(400).json({
       message: "All fields are required",
     });
@@ -57,13 +58,15 @@ const addPlant = async (req, res) => {
     if (newPlant) {
       //removeBg(imageUrl)
       return res.status(201).json({
-        message: "Plant Created",
+        message: "Plant created successfully!",
+        status: "201",
       });
     }
   } catch (err) {
     console.log("err: ", err);
     return res.status(401).json({
       message: "Error Creating plant",
+      status: "201",
     });
   }
 };
@@ -153,13 +156,13 @@ const deletePlant = async (req, res) => {
     });
   }
 
-  db.collection("userPlants")
-    .doc(plantId)
-    .delete()
+  const imageRef = ref(storage, `images/${userId}/${imageName}`);
+  // Delete the file
+  deleteObject(imageRef)
     .then(() => {
-      const imageRef = ref(storage, `images/${userId}/${imageName}`);
-      // Delete the file
-      deleteObject(imageRef)
+      db.collection("userPlants")
+        .doc(plantId)
+        .delete()
         .then(() => {
           return res.status(200).json({
             message: "Plant Deleted!",
@@ -167,18 +170,18 @@ const deletePlant = async (req, res) => {
           });
         })
         .catch((error) => {
-          console.log("Error deleting Image: ", error);
+          console.log("Error deleting Plant: ", error);
           return res.status(401).json({
-            message: "Error deleting Image",
+            message: "Error deleting Plant",
             fileName: imageName,
             status: 401,
           });
         });
     })
     .catch((error) => {
-      console.log("Error deleting document: ", error);
+      console.log("Error deleting Image: ", error);
       return res.status(401).json({
-        message: "Error deleting plant",
+        message: "Error deleting Image",
         status: 401,
       });
     });

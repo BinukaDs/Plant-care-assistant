@@ -63,14 +63,14 @@ const Plant = () => {
     try {
       const response = await DeletePlant(BASE, UserId, plantId, PlantData.imageName)
       console.log('response', response)
-      if (response.status == "200") {
-        console.log("✅ Plant deleted successfully! ")
+      if (response.status == 200) {
+        console.log("✅", response.message)
         navigate("/dashboard")
-        toast.success("Plant deleted successfully! ")
-      } else if (response.status == "400") {
-        console.log("ℹ️ Error deleting plant!")
+        toast.success(response.message)
+      } else if (response.status != 200) {
+        console.log("ℹ️", response.message)
         navigate("/dashboard")
-        toast.success("Error deleting plant!")
+        toast.success(response.message)
       }
     } catch (error) {
       navigate("/dashboard")

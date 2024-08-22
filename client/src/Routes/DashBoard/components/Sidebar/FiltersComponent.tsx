@@ -1,20 +1,27 @@
 import LocationBadge from './LocationBadge'
 import { useContext, useEffect, useState } from 'react'
 import { PlantsContext } from '../../DashBoard'
-import { fetchLocations } from '@/services/LocationsService'
 import { UserContext } from '@/App'
 
 
 const FiltersComponent = () => {
-    const { Data, Locations } = useContext(PlantsContext)
+    const { Data, Plants } = useContext(PlantsContext)
     const BASE = useContext(UserContext)
+    const [Locations, setLocations] = useState([])
 
+    const filterLocation = async () => {
+        Plants.map((plant) => {
+            setLocations((prev) => [...new Set([...prev, plant.location])])
+        })
+    }
 
+    useEffect(() => {
+        filterLocation()
+    }, [Plants])
 
     return (
-
         <div className='flex flex-col gap-y-3 justify-center items-start'>
-            <p className='topic  text-secondary'>Filters</p>
+            <p className='topic  text-secondary'>Locations</p>
             <div className='flex flex-col gap-2 justify-start items-start'>
                 <div className='grid grid-cols-3'>
                     {

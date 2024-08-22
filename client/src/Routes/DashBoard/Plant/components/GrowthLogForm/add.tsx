@@ -62,18 +62,20 @@ const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: strin
                     setisLoading(true)
                     const response = await AddGrowthLog(BASE, Values)
                     console.log("Response:", response)
-                     if (response.status == "201") {
+                     if (response.status == 201) {
                          setisLoading(false)
-                         toast.success("Log Added successfully!")
+                         console.log("✅", response.message)
+                         toast.success(response.message)
                          loadPlant();
-                     } else if (response.status == "401") {
+                     } else if (response.status == 401) {
                          setisLoading(false)
-                         toast.error("Error Adding Log!")
+                         console.log("ℹ️", response.message)
+                         toast.error(response.message)
                          loadPlant();
                      } 
                     setisLoading(false)
                 } catch (error) {
-                    toast.error("ℹError Adding Log!")
+                    toast.error("Error Adding Log!")
                     console.error("Upload failed", error);
                     setisLoading(false)
 

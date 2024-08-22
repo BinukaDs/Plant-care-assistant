@@ -9,7 +9,7 @@ export const fetchLocations = (BASE: string): Promise<[]> => {
       return response.json();
     })
     .then((data) => {
-      return data.locations;
+      return data;
     })
     .catch((error) => {
       return console.error("Error fetching locations:", error);
@@ -18,14 +18,15 @@ export const fetchLocations = (BASE: string): Promise<[]> => {
 
 export const addLocation = (
   BASE: string,
-  location: string
+  location: string,
+  environment: string
 ): Promise<JSON | string> => {
   return fetch(BASE + "/locations/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ location: location }),
+    body: JSON.stringify({ location: location, environment: environment }),
   })
     .then((response) => {
       return response.json();

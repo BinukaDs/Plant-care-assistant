@@ -10,8 +10,6 @@ import { useLocation } from "react-router-dom"
 
 const BreadCrumbNav = () => {
     const location = useLocation()
-    console.log("location:", location.pathname.split("/"))
-
     const breadCrumbLocation = location.pathname.split("/")
     return (
         <Breadcrumb className="mb-5">

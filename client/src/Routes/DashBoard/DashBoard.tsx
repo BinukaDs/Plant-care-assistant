@@ -1,6 +1,6 @@
 import Layout from './Layout'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect, useContext, createContext } from 'react'
+import { useState, useEffect, useContext, createContext, useRef } from 'react'
 import { UserContext } from '@/App'
 import PlantCard from './components/PlantCard'
 import BreadCrumbNav from '@/components/BreadCrumbNav'
@@ -10,6 +10,11 @@ import { PlantsDataTypes } from '@/types/Plant'
 import Cookies from 'universal-cookie'
 import { fetchLocations } from '@/services/LocationsService'
 export const PlantsContext = createContext("")
+
+interface LocationTypes {
+    location: string;
+    environment: string;
+}
 const DashBoard = () => {
     const navigate = useNavigate();
     const cookies = new Cookies()
@@ -18,6 +23,7 @@ const DashBoard = () => {
     const [UserId, setUserId] = useState("");
     const [isLoading, setisLoading] = useState(false);
     const [Locations, setLocations] = useState<string[]>([])
+    const [Environments, setEnvironments] = useState<LocationTypes[]>([])
     const BASE = useContext(UserContext);
 
     //fetch Authentication middleware
@@ -35,8 +41,7 @@ const DashBoard = () => {
         }
     }
 
-
-
+   
     //fetch Plants
     const loadFetchPlants = async () => {
         try {
@@ -58,20 +63,26 @@ const DashBoard = () => {
         try {
             const data = await fetchLocations(BASE)
             if (data) {
-                data.map((Location) => {
-                    setLocations((Locations) => {
-                        const uniqueLocations = [...new Set([...Locations, Location.location])];
+                data.locations.map((Item) => {
+                    setLocations((Location) => {
+                        const uniqueLocations = [...new Set([...Location,  { location: Item.location, environment: Item.environment }])];
                         return uniqueLocations
                     })
                 })
+                //console.log("fetched:", Locations)
             }
         } catch (error) {
             console.error(error)
         }
     }
 
+    const hasRunRef = useRef(false);
+
     useEffect(() => {
-        loadFetchLocations()
+        if (!hasRunRef.current) {
+            loadFetchLocations();
+            hasRunRef.current = true;
+        }
     }, [Data])
 
     useEffect(() => {

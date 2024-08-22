@@ -20,14 +20,16 @@ import { AddPlant } from "@/services/PlantService"
 import { PlantsContext } from "../../DashBoard"
 import { FetchPlants } from "@/services/PlantService"
 import LocationInput from "./LocationInput"
-
+import { addLocation } from "@/services/LocationsService"
 
 
 const AddPlantComponent = ({ userId }: { userId: string }) => {
     const BASE = useContext(UserContext);
     const { setData } = useContext(PlantsContext)
-    const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "Indoor", imageUrl: "", imageName: "" })
+    const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "", imageUrl: "", imageName: "" })
     const [Image, setImage] = useState(null)
+    const [open, setOpen] = useState(false)
+    const [isLocationAvailable, setisLocationAvailable] = useState(false)
     const [isLoading, setisLoading] = useState(false)
 
 
@@ -59,7 +61,7 @@ const AddPlantComponent = ({ userId }: { userId: string }) => {
             // console.log("image: ", imageUrl)
             // console.log(fileName)
             setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName as string })
-            console.log(Values)
+            //console.log(Values)
             setisLoading(false)
 
         } catch (error) {
@@ -73,26 +75,45 @@ const AddPlantComponent = ({ userId }: { userId: string }) => {
         if (Values.imageUrl) {
             const addPlant = async () => {
                 setisLoading(true)
+                if (isLocationAvailable == false) {
+                    const response = await addLocation(BASE, Values.location, Values.environment)
+                    if (response.status != 201) {
+                        console.log("ℹ️", response.message)
+                    }
+                }
                 const response = await AddPlant(BASE, Values)
                 setisLoading(false)
-                if (response.status === 201) {
-                    console.log("✅ Plant Addded successfully")
+                if (response.status == 201) {
+                    console.log("✅", response.message)
+                    setOpen(!open)
                     toast.success(response.message)
-                    loadFetchPlants()
-                } else if (response.status) {
-                    console.log("ℹ️ Error adding plant")
+                    return loadFetchPlants()
+                } else if (response.status != 201) {
+                    console.log("ℹ️", response.message)
+                    setOpen(!open)
                     toast.error(response.message)
-                    loadFetchPlants()
+                    return loadFetchPlants()
                 }
             }
             addPlant()
         }
     }, [Values.imageUrl])
 
-    const handleLocationChange = (value: string[] | null) => {
-        if (value.value) {
-            setValues({ ...Values, location: value.value })
+
+    const handleLocationChange = ( location: string, environment: string | null ) => {
+        
+        setValues((prevValues) => ({
+            ...prevValues,
+            location: location,
+            ...(environment && { environment: environment })
+          }));
+          
+        if (environment) {
+            setisLocationAvailable(true)
+        } else {
+            setisLocationAvailable(false)
         }
+        
     }
 
     const handleImageChange = (e) => {
@@ -103,7 +124,7 @@ const AddPlantComponent = ({ userId }: { userId: string }) => {
     }
     return (
         <div>
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger className="w-full">
                     <Button className="w-full">Add Plant</Button>
                 </DialogTrigger>
@@ -131,12 +152,6 @@ const AddPlantComponent = ({ userId }: { userId: string }) => {
                                 <Label htmlFor="location" >
                                     Location
                                 </Label>
-                                {/* <Input
-                                    name='location'
-                                    id="location"
-                                    placeholder='Living Room'
-                                    onChange={(e) => { onValueChange(e) }}
-                                /> */}
                                 <LocationInput onValueChange={handleLocationChange} />
                             </div>
                         </div>
@@ -155,14 +170,14 @@ const AddPlantComponent = ({ userId }: { userId: string }) => {
                             <Label htmlFor="location" >
                                 Environment
                             </Label>
-                            <select name="environment" id="environment" className='flex my-1 p-2 rounded-md border w-full' onChange={(e) => { onValueChange(e) }}>
+                            <select disabled={isLocationAvailable} value={Values.environment} name="environment" id="environment" className='flex my-1 p-2 rounded-md border w-full' onChange={(e) => { onValueChange(e) }}>
                                 <option value="Indoor">Indoor</option>
                                 <option value="Outdoor">Outdoor</option>
                             </select>
                         </div>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button type="submit" onClick={handleUpload} >{isLoading ? <PuffLoader /> : "Save"}</Button>
+                        <Button type="submit" className="w-full" onClick={handleUpload} >{isLoading ? <PuffLoader /> : "Save"}</Button>
                     </DialogFooter>
 
                 </DialogContent>

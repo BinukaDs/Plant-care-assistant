@@ -13,20 +13,20 @@ import { toast } from "sonner";
 import { useContext } from "react";
 import { UserContext } from "@/App";
 import { DeleteGrowthLog } from "@/services/GrowthLogService";
-const DeleteLog = ({plantId, index, imageName, userId, loadPlant}: {plantId: string, index: string, imageName:string, userId:string, loadPlant: () => Promise<void>}) => {
+const DeleteLog = ({ plantId, index, imageName, userId, loadPlant }: { plantId: string, index: string, imageName: string, userId: string, loadPlant: () => Promise<void> }) => {
     const BASE = useContext(UserContext);
 
     async function deleteLog() {
         try {
             const response = await DeleteGrowthLog(BASE, plantId, index, imageName, userId)
-            console.log("response:",response)
-            if (response.status == "200") {
-                console.log("✅ Log Deleted Successfully!")
-                toast.success("Log Deleted Successfully!")
-                loadPlant()  
-            } else if (response.status == "401") {
-                console.log("ℹ️ Error deleting log")
-                toast.error("Error Deleting Log!")
+            console.log("response:", response)
+            if (response.status == 200) {
+                console.log("✅", response.message)
+                toast.success(response.message)
+                loadPlant()
+            } else if (response.status == 401) {
+                console.log("ℹ️", response.message)
+                toast.error(response.message)
                 loadPlant()
             }
             console.log(response)

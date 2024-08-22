@@ -16,7 +16,7 @@ export const FetchPlants = async (
       return response.json();
     })
     .then((data) => {
-      // console.log(data);
+      
       return data.plants;
     })
     .catch((error) => {
@@ -38,9 +38,10 @@ export const FetchPlantDetails = (
     },
     body: JSON.stringify({ plantId: plantId, userId: UserId }),
   })
-    .then((res) => {
-      return res.json();
-    })
+  .then((response) => {
+    //console.log(response);
+    return response.json();
+  })
     .then((data) => {
       if(data.plant) {
         console.log(data);
@@ -61,8 +62,8 @@ export const AddPlant = async (BASE: string, Values: Array<PlantDataTypes>) => {
     body: JSON.stringify(Values),
   })
     .then((response) => {
-      console.log(response);
-      return response;
+      //console.log(response);
+      return response.json();
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -87,9 +88,10 @@ export const DeletePlant = async (
       imageName: imageName,
     }),
   })
-    .then((response) => {
-      return response;
-    })
+  .then((response) => {
+    //console.log(response);
+    return response.json();
+  })
     .catch((error) => {
       console.error("Error deleting plant:", error);
       return error;

@@ -12,7 +12,7 @@ const getLocations = async (req, res) => {
 
     if (locations.length > 0) {
      
-      console.log(locations);
+      //console.log(locations);
       return res.status(200).json({
         message: "locations found",
         status: "200 OK",
@@ -32,13 +32,13 @@ const getLocations = async (req, res) => {
 };
 
 const addLocation = async (req, res) => {
-  const { location } = req.body;
-  console.log(location);
-  if (!location) {
-    return res.status(400).json({ message: "location is required" });
+  const { location, environment } = req.body;
+  //console.log(location);
+  if (!location || !environment) {
+    return res.status(400).json({ message: "location and environment are required" });
   } else if (location) {
     try {
-      const addLocation = await db.collection("locations").add({ location });
+      const addLocation = await db.collection("locations").add({ location, environment });
 
       if (addLocation) {
         return res.status(201).json({

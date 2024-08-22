@@ -70,12 +70,12 @@ function EditLog({ plantId, index }) {
             })
             console.log(response)
             response.json()
-            if (response.status == "200") {
-                console.log("✅ GrowthLog Updated Successfully!")
-                toast.success("GrowthLog Updated Successfully!")
-            } else if (response.status == "400") {
-                console.log("ℹ️ Error Updating GrowthLog!")
-                toast.error("Error Updating GrowthLog!")
+            if (response.status == 200) {
+                console.log("✅",response.message)
+                toast.success(response.message)
+            } else if (response.status == 400) {
+                console.log("ℹ️",response.message)
+                toast.error(response.message)
             }
         } catch (error) {
             console.error("Error updating Log:", error)
