@@ -1,6 +1,5 @@
-import Navbar from "@/components/Navbar";
 import SideBar from "../../components/SideBar";
-
+import FadeIn from "@/components/transitions/FadeIn";
 const Layout = ({ children }) => {
   return (
     <div>
@@ -8,8 +7,8 @@ const Layout = ({ children }) => {
         <div>
           <SideBar />
         </div>
-        <div className="m-5 ml-64 w-full">
-          {children}
+        <div className="ml-64 w-full">
+          <FadeIn> {children} </FadeIn>
         </div>
       </div>
     </div>

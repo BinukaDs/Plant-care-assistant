@@ -1,19 +1,15 @@
 import { useState, useEffect, useContext, useRef } from "react";
-import { PlantsContext } from "../../DashBoard"
+import { PlantsContext } from "@/App"
 import CreatableSelect from 'react-select/creatable';
-import { addLocation } from "@/services/LocationsService";
-import { UserContext } from "@/App";
-
-interface Option {
-    readonly label: string;
-    readonly value: string;
-}
 
 
-const LocationInput = ({ onValueChange }: { onValueChange: (location: string, environment: string | null) => void }) => {
+
+
+const LocationInput = ({ onValueChange, defaultValue }: { onValueChange: (location: string, environment: string | null) => void, defaultValue?: string | null }) => {
 
     const { Locations } = useContext(PlantsContext)
     const [options, setOptions] = useState([]);
+    const [defaultOption, setdefaultOption] = useState()
     const [value, setValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -33,7 +29,7 @@ const LocationInput = ({ onValueChange }: { onValueChange: (location: string, en
     }
     const handleCreate = async (inputValue: string) => {
         setIsLoading(true);
-        console.log("input:", inputValue)
+        //console.log("input:", inputValue)
         const newOption = createOption(inputValue);
         setOptions((prev) => [...prev, newOption]);
         setValue(newOption);
@@ -49,6 +45,7 @@ const LocationInput = ({ onValueChange }: { onValueChange: (location: string, en
         } else {
             onValueChange(value.label, null);
         }
+
     }, [value])
 
     const hasRunfilter = useRef(false);
@@ -58,6 +55,10 @@ const LocationInput = ({ onValueChange }: { onValueChange: (location: string, en
             filterLocations();
             hasRunfilter.current = true;
         }
+        if (defaultValue) {
+            const Value = createOption(defaultValue)
+            setdefaultOption(Value)
+        }
     }, []);
     return (
         <CreatableSelect
@@ -66,6 +67,7 @@ const LocationInput = ({ onValueChange }: { onValueChange: (location: string, en
             onCreateOption={handleCreate}
             isDisabled={isLoading}
             value={value}
+           
         />
     )
 }

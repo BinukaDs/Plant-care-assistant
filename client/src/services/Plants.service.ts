@@ -15,16 +15,13 @@ export const FetchPlants = async (
     .then((response) => {
       return response.json();
     })
-    .then((data) => {
-      
-      return data.plants;
+    .then((payload) => {
+      return payload.plants;
     })
     .catch((error) => {
       return console.error("Error fetching plants:", error);
     });
 };
-
-
 
 export const FetchPlantDetails = (
   BASE: string,
@@ -38,14 +35,14 @@ export const FetchPlantDetails = (
     },
     body: JSON.stringify({ plantId: plantId, userId: UserId }),
   })
-  .then((response) => {
-    //console.log(response);
-    return response.json();
-  })
-    .then((data) => {
-      if(data.plant) {
-        console.log(data);
-        return data.plant;
+    .then((response) => {
+      //console.log(response);
+      return response.json();
+    })
+    .then((payload) => {
+      if (payload.plant) {
+        console.log(payload);
+        return payload.plant;
       }
     })
     .catch((error) => {
@@ -56,6 +53,27 @@ export const FetchPlantDetails = (
 export const AddPlant = async (BASE: string, Values: Array<PlantDataTypes>) => {
   return await fetch(BASE + "/plants/add", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(Values),
+  })
+    .then((response) => {
+      //console.log(response);
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return error;
+    });
+};
+
+export const UpdatePlant = async (
+  BASE: string,
+  Values: Array<PlantDataTypes>
+) => {
+  return await fetch(BASE + "/plant/update", {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
@@ -88,10 +106,10 @@ export const DeletePlant = async (
       imageName: imageName,
     }),
   })
-  .then((response) => {
-    //console.log(response);
-    return response.json();
-  })
+    .then((response) => {
+      //console.log(response);
+      return response.json();
+    })
     .catch((error) => {
       console.error("Error deleting plant:", error);
       return error;

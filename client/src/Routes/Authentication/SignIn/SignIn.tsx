@@ -6,9 +6,13 @@ import { UserContext } from "@/App";
 import { Input } from "@/components/ui/input";
 import FadeIn from "../../../components/transitions/FadeIn"
 import { Button } from "@/components/ui/button"
-import { FetchAuthentication } from "@/services/AuthenticationService";
-import { FetchSignIn } from "@/services/AuthenticationService";
+import { FetchAuthentication } from "@/services/Authentication.service";
+import { FetchSignIn } from "@/services/Authentication.service";
+import { responseDataTypes } from "@/types/Plant";
 import Cookies from "universal-cookie";
+import { tailspin } from 'ldrs'
+tailspin.register()
+
 const SignIn = () => {
   const navigate = useNavigate()
   const cookies = new Cookies()
@@ -41,14 +45,14 @@ const SignIn = () => {
     } else {
       try {
         setisLoading(true)
-        const response = await FetchSignIn(BASE, Values)
+        const response: responseDataTypes = await FetchSignIn(BASE, Values)
         console.log("response:", response)
-        if (response.status == "200") {
+        if (response.status == 200) {
           setisLoading(false)
           localStorage.setItem("token", response.token);
-          cookies.set("token", response.token, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), secure: true, httpOnly:false })
+          cookies.set("token", response.token, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), secure: true, httpOnly: false })
           return navigate("/dashboard")
-        } else if (response.status) {
+        } else if (response.status != 200) {
           setisLoading(false)
           return toast.error(response.message)
         }
@@ -66,7 +70,7 @@ const SignIn = () => {
 
 
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...Values, [e.target.id]: e.target.value })
 
   }
@@ -101,7 +105,12 @@ const SignIn = () => {
                   <Input id="password" name="password" type="password" placeholder="password" onChange={handleChange} />
                 </div>
               </div>
-              <Button className="w-full topic" onClick={loadFetchSignIn}>{isLoading ? <PuffLoader /> : "Sign-in"}</Button>
+              <Button className="w-full topic" onClick={loadFetchSignIn}>{isLoading ? <l-tailspin
+                size="28"
+                stroke="5"
+                speed="0.9"
+                color="white"
+              ></l-tailspin> : "Sign-in"}</Button>
               <p className="text-sm mt-3">New here? <span><a href="/register" className="text-primary underline">Sign-Up</a></span></p>
             </div>
           </div>

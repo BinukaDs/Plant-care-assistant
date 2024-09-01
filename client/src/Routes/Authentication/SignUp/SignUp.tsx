@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import FadeIn from "../../../components/transitions/FadeIn"
 import Cookies from 'universal-cookie';
 import { Button } from "@/components/ui/button"
-import { FetchRegister } from "@/services/AuthenticationService";
+import { responseDataTypes } from "@/types/Plant";
+import { FetchRegister } from "@/services/Authentication.service";
 const SignUp = () => {
       const cookies = new Cookies()
       const navigate = useNavigate()
@@ -24,12 +25,12 @@ const SignUp = () => {
                   return toast.error("Please enter the values in correct type!")
             }
             try {
-                  const response = await FetchRegister(BASE, Values)
+                  const response: responseDataTypes = await FetchRegister(BASE, Values)
                   console.log(response)
                   if (response.status == "201") {
                         setisLoading(false)
                         localStorage.setItem("token", response.token);
-                        cookies.set("token", response.token, {expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365)})
+                        cookies.set("token", response.token, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365) })
                         navigate("/dashboard")
                   } else if (response.status) {
                         setisLoading(false)
@@ -40,7 +41,7 @@ const SignUp = () => {
             }
       }
 
-      const handleChange = (e) => {
+      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             setValues({ ...Values, [e.target.id]: e.target.value })
       }
 

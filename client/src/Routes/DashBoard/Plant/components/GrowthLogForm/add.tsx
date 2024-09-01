@@ -16,20 +16,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import uploadImage from "@/services/imageHandle";
-import { AddGrowthLog } from "@/services/GrowthLogService";
+import uploadImage from "@/services/imageHandle.service";
+import { AddGrowthLog } from "@/services/GrowthLog.service";
 import { UserContext } from "@/App";
 
 
 const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: string, loadPlant: () => Promise<void> }) => {
     const [Values, setValues] = useState({ plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: "", leafCount: "" })
-    
+
     const [isLoading, setisLoading] = useState(false)
     const [isUploaded, setisUploaded] = useState(false)
     const [Image, setImage] = useState(null)
     const BASE = useContext(UserContext);
 
-   
+
 
     const onValueChange = (e) => {
         setValues({ ...Values, [e.target.id]: e.target.value })
@@ -62,17 +62,17 @@ const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: strin
                     setisLoading(true)
                     const response = await AddGrowthLog(BASE, Values)
                     console.log("Response:", response)
-                     if (response.status == 201) {
-                         setisLoading(false)
-                         console.log("✅", response.message)
-                         toast.success(response.message)
-                         loadPlant();
-                     } else if (response.status == 401) {
-                         setisLoading(false)
-                         console.log("ℹ️", response.message)
-                         toast.error(response.message)
-                         loadPlant();
-                     } 
+                    if (response.status == 201) {
+                        setisLoading(false)
+                        console.log("✅", response.message)
+                        toast.success(response.message)
+                        loadPlant();
+                    } else if (response.status == 401) {
+                        setisLoading(false)
+                        console.log("ℹ️", response.message)
+                        toast.error(response.message)
+                        loadPlant();
+                    }
                     setisLoading(false)
                 } catch (error) {
                     toast.error("Error Adding Log!")

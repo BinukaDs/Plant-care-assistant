@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { useContext } from "react";
 import { UserContext } from "@/App";
-import { DeleteGrowthLog } from "@/services/GrowthLogService";
+import { DeleteGrowthLog } from "@/services/GrowthLog.service";
 const DeleteLog = ({ plantId, index, imageName, userId, loadPlant }: { plantId: string, index: string, imageName: string, userId: string, loadPlant: () => Promise<void> }) => {
     const BASE = useContext(UserContext);
 

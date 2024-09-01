@@ -1,29 +1,19 @@
 import Layout from './Layout'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect, useContext, createContext, useRef } from 'react'
-import { UserContext } from '@/App'
+import { useState, useEffect, useContext, useRef } from 'react'
+import { UserContext, PlantsContext } from '@/App'
 import PlantCard from './components/PlantCard'
 import BreadCrumbNav from '@/components/BreadCrumbNav'
-import { FetchPlants } from '@/services/PlantService'
-import { FetchAuthentication } from '@/services/AuthenticationService'
-import { PlantsDataTypes } from '@/types/Plant'
+import { FetchAuthentication } from '@/services/Authentication.service'
 import Cookies from 'universal-cookie'
-import { fetchLocations } from '@/services/LocationsService'
-export const PlantsContext = createContext("")
+import FadeIn from '@/components/transitions/FadeIn'
 
-interface LocationTypes {
-    location: string;
-    environment: string;
-}
+
 const DashBoard = () => {
     const navigate = useNavigate();
     const cookies = new Cookies()
-    const [Data, setData] = useState<PlantsDataTypes>([]);
-    const [Plants, setPlants] = useState<PlantsDataTypes>([]);
     const [UserId, setUserId] = useState("");
-    const [isLoading, setisLoading] = useState(false);
-    const [Locations, setLocations] = useState<string[]>([])
-    const [Environments, setEnvironments] = useState<LocationTypes[]>([])
+    const { Data, loadFetchPlants, loadFetchLocations } = useContext(PlantsContext)
     const BASE = useContext(UserContext);
 
     //fetch Authentication middleware
@@ -41,43 +31,9 @@ const DashBoard = () => {
         }
     }
 
-   
-    //fetch Plants
-    const loadFetchPlants = async () => {
-        try {
-            setisLoading(true)
-            const data = await FetchPlants(BASE, UserId);
-            if (data) {
-                setisLoading(true)
-                setPlants(data)
-                await setData(data)
-                setisLoading(false)
-            } else return setisLoading(false)
-        } catch (error) {
-            console.error(error)
-            setisLoading(true)
-        }
-    }
 
-    const loadFetchLocations = async () => {
-        try {
-            const data = await fetchLocations(BASE)
-            if (data) {
-                data.locations.map((Item) => {
-                    setLocations((Location) => {
-                        const uniqueLocations = [...new Set([...Location,  { location: Item.location, environment: Item.environment }])];
-                        return uniqueLocations
-                    })
-                })
-                //console.log("fetched:", Locations)
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
+    //make sure the Locations Fetch only once.
     const hasRunRef = useRef(false);
-
     useEffect(() => {
         if (!hasRunRef.current) {
             loadFetchLocations();
@@ -85,20 +41,17 @@ const DashBoard = () => {
         }
     }, [Data])
 
-    useEffect(() => {
-        const load = async () => {
-            await loadAuthentication();
-            await loadFetchPlants();
 
-        }
-        load()
+    useEffect(() => {
+        loadAuthentication();
+        loadFetchPlants();
     }, [UserId])
 
 
-
     return (
-        <PlantsContext.Provider value={{ setData, Data, Plants, setPlants, Locations }}>
-            <Layout>
+
+        <Layout>
+            <FadeIn>
                 <div className='container w-full justify-center items-center my-12 gap-y-5'>
                     <section className='flex flex-col w-full justify-center items-start h-full mx-5'>
                         <BreadCrumbNav />
@@ -111,11 +64,11 @@ const DashBoard = () => {
                                 )
                             }) : <p>No Plants...</p>}
                         </div>
-
                     </section>
                 </div>
-            </Layout>
-        </PlantsContext.Provider>
+            </FadeIn>
+        </Layout>
+
     )
 }
 

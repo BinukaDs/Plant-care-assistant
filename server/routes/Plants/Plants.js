@@ -4,7 +4,7 @@ const gemini = require("../Gemini/gemini.js");
 const { ref, deleteObject } = require("firebase/storage");
 const storage = require("../../firebase.js");
 
-const addPlant = async (req, res) => {
+const AddPlant = async (req, res) => {
   const {
     userId,
     nickname,
@@ -14,26 +14,18 @@ const addPlant = async (req, res) => {
     imageUrl,
     imageName,
   } = req.body;
-  console.log(
+
+  const Plant = [
     userId,
     nickname,
     location,
     species,
     environment,
     imageUrl,
-    imageName
-  );
+    imageName,
+  ].every((variable) => Boolean(variable));
 
-  if (
-    !userId ||
-    !nickname ||
-    !location ||
-    !species ||
-    !environment ||
-    !imageUrl ||
-    !imageName
-  ) {
-    console.log(userId, nickname, location, species, environment, imageUrl, imageName)
+  if (!Plant) {
     return res.status(400).json({
       message: "All fields are required",
     });
@@ -51,12 +43,11 @@ const addPlant = async (req, res) => {
       environment,
       imageUrl,
       imageName,
-      //careGuide,
+      // careGuide,
       growthLogs: [],
     });
 
     if (newPlant) {
-      //removeBg(imageUrl)
       return res.status(201).json({
         message: "Plant created successfully!",
         status: "201",
@@ -71,7 +62,7 @@ const addPlant = async (req, res) => {
   }
 };
 
-const getPlants = async (req, res) => {
+const GetPlants = async (req, res) => {
   const { UserId } = req.body;
   console.log("userId:", UserId);
 
@@ -79,12 +70,21 @@ const getPlants = async (req, res) => {
     return res.status(400).json({ message: "userId is required" });
   } else if (UserId) {
     try {
-      const getPlants = await db
+      const GetPlants = await db
         .collection("userPlants")
         .where("userId", "==", UserId)
+        .select(
+          "nickname",
+          "location",
+          "species",
+          "environment",
+          "imageUrl",
+          "imageName",
+          "userId"
+        )
         .get();
 
-      const plants = await getPlants.docs.map((doc) => ({
+      const plants = await GetPlants.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -109,7 +109,29 @@ const getPlants = async (req, res) => {
   }
 };
 
-const getPlant = async (req, res) => {
+const UpdatePlant = async (req, res) => {
+  const {
+    userId,
+    nickname,
+    location,
+    species,
+    environment,
+    imageUrl,
+    imageName,
+  } = req.body;
+
+  console.log(
+    userId,
+    nickname,
+    location,
+    species,
+    environment,
+    imageUrl,
+    imageName
+  );
+};
+
+const GetPlant = async (req, res) => {
   const { plantId, userId } = req.body;
 
   db.collection("userPlants")
@@ -146,7 +168,61 @@ const getPlant = async (req, res) => {
     });
 };
 
-const deletePlant = async (req, res) => {
+const EditPlant = async (req, res) => {
+  const {
+    plantId,
+    nickname,
+    location,
+    species,
+    environment,
+    imageUrl,
+    imageName,
+  } = req.body;
+
+  const Plant = [
+    plantId,
+    nickname,
+    location,
+    species,
+    environment,
+    imageUrl,
+    imageName,
+  ].every((variable) => Boolean(variable));
+
+  if (!Plant) {
+    return res.status(400).json({
+      message: "All fields are required",
+    });
+  }
+
+  const plant = `${environment} ${species}`;
+  const careGuide = await gemini(plant);
+
+  try {
+    db.collection("userPlants")
+      .doc(plantId)
+      .update({
+        nickname,
+        location,
+        species,
+        environment,
+        imageUrl,
+        imageName,
+        careGuide,
+      })
+      .then(() => {
+        return res.status(200).json({
+          message: "Plant updated successfully!",
+          status: "200",
+        });
+      });
+  } catch (error) {
+    console.log("Error updating plant: ", error);
+    res.status(500).send(error);
+  }
+};
+
+const DeletePlant = async (req, res) => {
   const { userId, plantId, imageName } = req.body;
   console.log("PlantId: ", plantId);
 
@@ -187,9 +263,10 @@ const deletePlant = async (req, res) => {
     });
 };
 
-router.post("/add", addPlant);
-router.post("/", getPlants);
-router.post("/plant", getPlant);
-router.delete("/plant/delete", deletePlant);
+router.post("/add", AddPlant);
+router.post("/", GetPlants);
+router.post("/plant", GetPlant);
+router.put("/plant/update", UpdatePlant)
+router.delete("/plant/delete", DeletePlant);
 
 module.exports = router;

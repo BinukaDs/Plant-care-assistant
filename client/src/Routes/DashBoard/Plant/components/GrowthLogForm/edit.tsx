@@ -16,26 +16,38 @@ import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { GetGrowthLogDetails } from "@/services/GrowthLogService";
+import { GetGrowthLogDetails } from "@/services/GrowthLog.service";
 import { useContext } from "react";
 import { UserContext } from "@/App";
-import { GrowthLogDataTypes } from "@/types/GrowthLog";
-import { EditGrowthLog } from "@/services/GrowthLogService";
+import { EditGrowthLog } from "@/services/GrowthLog.service";
+import { responseDataTypes } from "@/types/Plant";
+
+interface dataTypes {
+    growthLog:
+    {
+        date: string,
+        notes: string,
+        height: number,
+        leafCount: number,
+        imageName: string,
+        imageUrl: string
+    }
+    ;
+}
 
 function EditLog({ plantId, index }) {
     const BASE = useContext(UserContext);
-
     const [preValues, setPreValues] = useState({ plantId: plantId, imageUrl: "", date: "", notes: "", height: "", leafCount: "" })
     const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ index: index, plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: "", leafCount: "" });
     const [isChanged, setisChanged] = useState(false)
 
     const loadGetGrowthLogDetails = async () => {
-        const data = await GetGrowthLogDetails(BASE, plantId, index)
+        const data: dataTypes = await GetGrowthLogDetails(BASE, plantId, index)
 
         if (data) {
             setPreValues({ ...preValues, date: data.growthLog.date, notes: data.growthLog.notes, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
             setValuesTobeSubmitted({ ...ValuesTobeSubmitted, date: data.growthLog.date, notes: data.growthLog.notes, imageName: data.growthLog.imageName, imageUrl: data.growthLog.imageUrl, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
-            console.log(preValues)
+            //console.log(preValues)
         }
     }
     useEffect(() => {
@@ -43,7 +55,7 @@ function EditLog({ plantId, index }) {
     }, [])
 
 
-    const onValueChange = (e) => {
+    const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const id = e.target.id
         if (preValues[id] !== e.target.value) {
             if (ValuesTobeSubmitted[id] !== e.target.value) {
@@ -61,20 +73,13 @@ function EditLog({ plantId, index }) {
     async function submit() {
         console.log(ValuesTobeSubmitted)
         try {
-            const response = await fetch(BASE + "/growthlogs/edit", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(ValuesTobeSubmitted)
-            })
-            console.log(response)
-            response.json()
+            const response: responseDataTypes = await EditGrowthLog(BASE, ValuesTobeSubmitted)
+            //console.log(response)
             if (response.status == 200) {
-                console.log("✅",response.message)
+                console.log("✅", response.message)
                 toast.success(response.message)
             } else if (response.status == 400) {
-                console.log("ℹ️",response.message)
+                console.log("ℹ️", response.message)
                 toast.error(response.message)
             }
         } catch (error) {
@@ -94,9 +99,9 @@ function EditLog({ plantId, index }) {
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
-                            <DialogTitle>Add Record</DialogTitle>
+                            <DialogTitle>Update Record</DialogTitle>
                             <DialogDescription>
-                                Add a log about your plant's growth here. Click save when you're done.
+                                Update a log about your plant's growth here. Click save when you're done.
                             </DialogDescription>
                         </DialogHeader>
                         <ScrollArea className="h-72 w-full rounded-md border p-5">

@@ -2,6 +2,7 @@ import { RegisterDataTypes } from "@/types/Authentication";
 import Cookies from "universal-cookie";
 import { PlantDataTypes } from "@/types/Plant";
 interface ExportDataTypes {
+  username(username: any): unknown;
   id: string;
   isLoggedin: boolean;
 }
