@@ -52,12 +52,12 @@ const DashBoard = () => {
 
         <Layout>
             <FadeIn>
-                <div className='container w-full justify-center items-center my-12 gap-y-5'>
+                <div className=' w-full justify-center items-center my-12 gap-y-5'>
                     <section className='flex flex-col w-full justify-center items-start h-full mx-5'>
                         <BreadCrumbNav />
                         <h1 className='text-3xl topic text-start font-bold'>DashBoard</h1>
                         <p className='text-sm text-secondary'>Manage Your Plants.</p>
-                        <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full my-12 justify-center items-center h-full'>
+                        <div className='grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 w-full my-12 justify-center items-center h-full gap-24'>
                             {Data.length > 0 ? Data.map((plant) => {
                                 return (
                                     <PlantCard key={plant.id} plant={plant} />

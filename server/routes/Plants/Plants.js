@@ -92,7 +92,7 @@ const GetPlants = async (req, res) => {
       if (plants.length > 0) {
         return res.status(200).json({
           message: "plants found",
-          status: "200 OK",
+          status: "200",
           plants: plants,
         });
       } else {
@@ -120,15 +120,25 @@ const UpdatePlant = async (req, res) => {
     imageName,
   } = req.body;
 
-  console.log(
-    userId,
-    nickname,
-    location,
-    species,
-    environment,
-    imageUrl,
-    imageName
-  );
+  // console.log("data: ",
+  //   userId,
+  //   nickname,
+  //   location,
+  //   species,
+  //   environment,
+  //   imageUrl,
+  //   imageName
+  // );
+  console.log("userId:", req.body);
+  const plant = [nickname, location, species, environment, imageUrl, imageName].every((variable) => Boolean(variable))
+  if (!plant) {
+    console.log("ℹ️ All fields are required!")
+    return res.status(400).json({ message: "All fields are required" });
+  }
+  return res.status(200).json({
+    message: "plant updated",
+    status: "200",
+  });
 };
 
 const GetPlant = async (req, res) => {
@@ -144,12 +154,12 @@ const GetPlant = async (req, res) => {
           if (userId !== doc.data().userId) {
             res.status(404).json({
               message: "Unauthorized",
-              status: "404 Not Found",
+              status: "401 User Unauthorized",
             });
             console.log("Unauthorized");
             return;
           } else if (userId === doc.data().userId) {
-            console.log("plantfound:", doc.data());
+            // console.log("plantfound:", doc.data());
             return res.status(200).json({
               message: "plant found",
               status: "200 OK",
@@ -166,60 +176,6 @@ const GetPlant = async (req, res) => {
         return;
       }
     });
-};
-
-const EditPlant = async (req, res) => {
-  const {
-    plantId,
-    nickname,
-    location,
-    species,
-    environment,
-    imageUrl,
-    imageName,
-  } = req.body;
-
-  const Plant = [
-    plantId,
-    nickname,
-    location,
-    species,
-    environment,
-    imageUrl,
-    imageName,
-  ].every((variable) => Boolean(variable));
-
-  if (!Plant) {
-    return res.status(400).json({
-      message: "All fields are required",
-    });
-  }
-
-  const plant = `${environment} ${species}`;
-  const careGuide = await gemini(plant);
-
-  try {
-    db.collection("userPlants")
-      .doc(plantId)
-      .update({
-        nickname,
-        location,
-        species,
-        environment,
-        imageUrl,
-        imageName,
-        careGuide,
-      })
-      .then(() => {
-        return res.status(200).json({
-          message: "Plant updated successfully!",
-          status: "200",
-        });
-      });
-  } catch (error) {
-    console.log("Error updating plant: ", error);
-    res.status(500).send(error);
-  }
 };
 
 const DeletePlant = async (req, res) => {
@@ -266,7 +222,7 @@ const DeletePlant = async (req, res) => {
 router.post("/add", AddPlant);
 router.post("/", GetPlants);
 router.post("/plant", GetPlant);
-router.put("/plant/update", UpdatePlant)
+router.put("/plant/update", UpdatePlant);
 router.delete("/plant/delete", DeletePlant);
 
 module.exports = router;

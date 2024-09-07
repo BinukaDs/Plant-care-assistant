@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import uploadImage from "@/services/imageHandle.service";
+import uploadImage from "@/services/Images.service";
 import { useContext } from "react"
 import { UserContext } from "@/App"
 import { AddPlant } from "@/services/Plants.service"
@@ -37,8 +37,6 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
     const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...Values, userId: userId, [e.target.id]: e.target.value })
     }
-
-
 
     //handle imageUpload
     async function handleUpload() {
@@ -85,7 +83,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
 
 
     const handleLocationChange = (location: string, environment: string | null) => {
-
+      
         setValues((prevValues) => ({
             ...prevValues,
             location: location,
@@ -136,7 +134,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                                 <Label htmlFor="location" >
                                     Location
                                 </Label>
-                                <LocationInput onValueChange={handleLocationChange}/>
+                                <LocationInput onValueChange={handleLocationChange} />
                             </div>
                         </div>
                         <div className="w-full">

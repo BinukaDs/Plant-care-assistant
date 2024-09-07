@@ -16,8 +16,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import uploadImage from "@/services/imageHandle.service";
+import uploadImage from "@/services/Images.service";
 import { AddGrowthLog } from "@/services/GrowthLog.service";
+import { PlusIcon } from "@radix-ui/react-icons";
 import { UserContext } from "@/App";
 
 
@@ -98,10 +99,9 @@ const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: strin
     return (
         <div>
             <div>
-                <h2>Growth Log</h2>
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button type="button" variant="outline">Add Record</Button>
+                        <Button type="button" variant="secondary" className="text-primary"><PlusIcon /></Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>

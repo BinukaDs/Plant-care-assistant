@@ -85,6 +85,7 @@ const EditLog = async (req, res) => {
     leafCount,
     imageName,
   } = req.body;
+  console.log(req.body);
   const log = [date, imageUrl, imageName, notes, height, leafCount].every(
     (variable) => Boolean(variable)
   );
@@ -116,12 +117,14 @@ const EditLog = async (req, res) => {
                 console.log("GrowthLog Updated");
                 return res.status(200).json({
                   message: "GrowthLog Updated Successfully!",
+                  status: 200,
                 });
               })
               .catch((error) => {
                 console.error("Error Updating GrowthLog: ", error);
                 return res.status(400).json({
-                  message: "error updating growthlog!"
+                  message: "error updating growthlog!",
+                  status: 400,
                 });
               });
           }
@@ -179,10 +182,9 @@ const DeleteLog = async (req, res) => {
   }
 };
 
-router.post('/add', AddLog)
-router.post('/get', GetLog)
-router.put('/edit', EditLog)
-router.delete('/delete', DeleteLog)
-
+router.post("/add", AddLog);
+router.post("/get", GetLog);
+router.put("/edit", EditLog);
+router.delete("/delete", DeleteLog);
 
 module.exports = router;

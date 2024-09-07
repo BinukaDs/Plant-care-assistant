@@ -24,7 +24,7 @@ export const FetchAuthentication = (BASE: string, token:string): Promise<ExportD
           username: data.username,
         };
       } else {
-        return { id: null, isLoggedin: false };
+        return { id: null, isLoggedin: false, data: data };
       }
     })
     .catch((error) => {

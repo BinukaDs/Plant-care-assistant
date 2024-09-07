@@ -5,9 +5,9 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    DialogClose,
     DialogFooter
 } from "@/components/ui/dialog"
+import { Pencil1Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -19,10 +19,10 @@ import { Button } from "@/components/ui/button";
 import { GetGrowthLogDetails } from "@/services/GrowthLog.service";
 import { useContext } from "react";
 import { UserContext } from "@/App";
-import { EditGrowthLog } from "@/services/GrowthLog.service";
+import { UpdateGrowthLog } from "@/services/GrowthLog.service";
 import { responseDataTypes } from "@/types/Plant";
 
-interface dataTypes {
+interface payloadTypes {
     growthLog:
     {
         date: string,
@@ -35,31 +35,30 @@ interface dataTypes {
     ;
 }
 
-function EditLog({ plantId, index }) {
+const EditLog = ({ plantId, index }: {plantId: string, index: number}) => {
     const BASE = useContext(UserContext);
-    const [preValues, setPreValues] = useState({ plantId: plantId, imageUrl: "", date: "", notes: "", height: "", leafCount: "" })
-    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ index: index, plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: "", leafCount: "" });
+    const [preValues, setpreValues] = useState({ plantId: plantId, imageUrl: "", date: "", notes: "", height: 0, leafCount: 0 })
+    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ index: index, plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: 0, leafCount: 0 });
     const [isChanged, setisChanged] = useState(false)
+    const [open, setOpen] = useState(false)
 
     const loadGetGrowthLogDetails = async () => {
-        const data: dataTypes = await GetGrowthLogDetails(BASE, plantId, index)
-
-        if (data) {
-            setPreValues({ ...preValues, date: data.growthLog.date, notes: data.growthLog.notes, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
-            setValuesTobeSubmitted({ ...ValuesTobeSubmitted, date: data.growthLog.date, notes: data.growthLog.notes, imageName: data.growthLog.imageName, imageUrl: data.growthLog.imageUrl, height: data.growthLog.height, leafCount: data.growthLog.leafCount })
-            //console.log(preValues)
+        const payload: payloadTypes = await GetGrowthLogDetails(BASE, plantId, index)
+        if (payload) {
+            setpreValues({ ...preValues, date: payload.growthLog.date, notes: payload.growthLog.notes, height: payload.growthLog.height, leafCount: payload.growthLog.leafCount })
+            setValuesTobeSubmitted({ ...ValuesTobeSubmitted, date: payload.growthLog.date, notes: payload.growthLog.notes, imageName: payload.growthLog.imageName, imageUrl: payload.growthLog.imageUrl, height: payload.growthLog.height, leafCount: payload.growthLog.leafCount })
         }
     }
     useEffect(() => {
         loadGetGrowthLogDetails()
-    }, [])
+    }, []) 
 
 
     const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const id = e.target.id
-        if (preValues[id] !== e.target.value) {
-            if (ValuesTobeSubmitted[id] !== e.target.value) {
-                setValuesTobeSubmitted({ ...ValuesTobeSubmitted, [e.target.id]: e.target.value })
+        const inputId = e.target.id
+        if (preValues[inputId] !== e.target.value) {
+            if (ValuesTobeSubmitted[inputId] !== e.target.value) {
+                setValuesTobeSubmitted({ ...ValuesTobeSubmitted, [inputId]: e.target.value })
                 setisChanged(true)
             }
 
@@ -71,31 +70,33 @@ function EditLog({ plantId, index }) {
 
 
     async function submit() {
-        console.log(ValuesTobeSubmitted)
         try {
-            const response: responseDataTypes = await EditGrowthLog(BASE, ValuesTobeSubmitted)
+            const response: responseDataTypes = await UpdateGrowthLog(BASE, ValuesTobeSubmitted)
             //console.log(response)
             if (response.status == 200) {
                 console.log("✅", response.message)
+                setOpen(!open)
                 toast.success(response.message)
+                loadGetGrowthLogDetails()
             } else if (response.status == 400) {
                 console.log("ℹ️", response.message)
+                setOpen(!open)
                 toast.error(response.message)
+                loadGetGrowthLogDetails()
             }
         } catch (error) {
             console.error("Error updating Log:", error)
+            setOpen(!open)
             toast.error("Error updating Log!")
         }
 
 
     }
     return (
-        <div>
-            <div>
-                <h2>Growth Log</h2>
-                <Dialog>
+            
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
-                        <Button variant="outline">Edit</Button>
+                        <Button variant="ghost"><Pencil1Icon /></Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
@@ -151,11 +152,9 @@ function EditLog({ plantId, index }) {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-                <div>
-
-                </div>
-            </div>
-        </div>
+               
+           
+       
     )
 }
 

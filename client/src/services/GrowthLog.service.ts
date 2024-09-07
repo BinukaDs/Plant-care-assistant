@@ -2,7 +2,7 @@ import { GrowthLogDataTypes } from "@/types/GrowthLog";
 import { PlantDataTypes } from "@/types/Plant";
 
 export const AddGrowthLog = (BASE: string, Values: any): Promise<void> => {
-  const response = fetch(BASE + "/growthlogs/add", {
+  return fetch(BASE + "/growthlogs/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -10,13 +10,12 @@ export const AddGrowthLog = (BASE: string, Values: any): Promise<void> => {
     body: JSON.stringify(Values),
   })
     .then((response) => {
-      return response;
+      return response.json();
     })
     .catch((error) => {
       console.error("Error:", error);
       return error;
     });
-  return response;
 };
 
 export const GetGrowthLogDetails = (
@@ -24,7 +23,7 @@ export const GetGrowthLogDetails = (
   plantId: string,
   index: string
 ): Promise<GrowthLogDataTypes> => {
-  const response = fetch(BASE + "/growthlogs/get", {
+  return fetch(BASE + "/growthlogs/get", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -40,15 +39,13 @@ export const GetGrowthLogDetails = (
     .catch((error) => {
       return error;
     });
-
-  return response;
 };
 
-export const EditGrowthLog = async (
+export const UpdateGrowthLog = async (
   BASE: string,
   Values: PlantDataTypes
 ): Promise<void> => {
-  const response = await fetch(BASE + "/growthlogs/edit", {
+  return await fetch(BASE + "/growthlogs/edit", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -56,14 +53,12 @@ export const EditGrowthLog = async (
     body: JSON.stringify(Values),
   })
     .then((response) => {
-      return response;
+      return response.json();
     })
     .catch((error) => {
-      console.error(error)
-      return error
-    })
-
-  return response;
+      console.error("Error:",error);
+      return error;
+    });
 };
 
 export const DeleteGrowthLog = (
@@ -73,7 +68,7 @@ export const DeleteGrowthLog = (
   imageName: string,
   userId: string
 ): Promise<void> => {
-  const response = fetch(BASE + "/growthlogs/delete", {
+  return fetch(BASE + "/growthlogs/delete", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -86,12 +81,10 @@ export const DeleteGrowthLog = (
     }),
   })
     .then((response) => {
-      return response;
+      return response.json();
     })
     .catch((error) => {
       console.error("Error:", error);
       return error;
     });
-
-  return response;
 };

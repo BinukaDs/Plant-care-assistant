@@ -50,7 +50,7 @@ export const FetchPlantDetails = (
     });
 };
 
-export const AddPlant = async (BASE: string, Values: Array<PlantDataTypes>) => {
+export const AddPlant = async (BASE: string, Values: PlantDataTypes) => {
   return await fetch(BASE + "/plants/add", {
     method: "POST",
     headers: {
@@ -70,9 +70,9 @@ export const AddPlant = async (BASE: string, Values: Array<PlantDataTypes>) => {
 
 export const UpdatePlant = async (
   BASE: string,
-  Values: Array<PlantDataTypes>
-) => {
-  return await fetch(BASE + "/plant/update", {
+  Values: PlantDataTypes
+): Promise<void> => {
+  return await fetch(BASE + "/plants/plant/update", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -80,7 +80,6 @@ export const UpdatePlant = async (
     body: JSON.stringify(Values),
   })
     .then((response) => {
-      //console.log(response);
       return response.json();
     })
     .catch((error) => {

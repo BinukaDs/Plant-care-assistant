@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { FetchPlants } from '@/services/Plants.service'
 import { PlantsDataTypes } from '@/types/Plant'
 import { fetchLocations } from '@/services/Locations.service'
+import { FetchWallpaper } from "./services/Images.service"
 import './App.css'
 import Base from '../endpoints.config';
 import Cookies from 'universal-cookie'
@@ -21,6 +22,7 @@ export default function App() {
   const [Data, setData] = useState<PlantsDataTypes>([]);
   const [UserId, setUserId] = useState("");
   const [Plants, setPlants] = useState<PlantsDataTypes>([]);
+  const [Wallpapers, setWallpapers] = useState<string>()
   const [isLoading, setisLoading] = useState(false);
   const [Locations, setLocations] = useState<(string | { location: string; environment: string })[]>([])
 
@@ -71,17 +73,22 @@ export default function App() {
     }
   }
 
+  const loadFetchWallpapers = async() => {
+    const results: string = await FetchWallpaper()
+    setWallpapers(results)
+  } 
 
 
 
   useEffect(() => {
     setBASE(BaseUrl)
     loadAuthentication();
+    loadFetchWallpapers()
   }, [BASE])
 
   return (
     <>
-      <PlantsContext.Provider value={{ setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading }}>
+      <PlantsContext.Provider value={{ setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading, Wallpapers }}>
         <UserContext.Provider value={BASE}>
           <Toaster />
           <BrowserRouter>

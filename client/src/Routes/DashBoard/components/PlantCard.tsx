@@ -55,9 +55,9 @@ const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
     return (
         <div className='container relative flex flex-col w-full'>
 
-            <div className='relative bg-card rounded-xl h-72 w-56 my-12 '>
+            <div className='relative bg-card rounded-xl border h-72 w-56 my-12 '>
                 <div className='flex absolute justify-center items-end gap-2 bottom-40 p-6'>
-                    <img src={plant.imageUrl} alt={plant.imageName} className='rounded-xl' />
+                    <img src={plant.imageUrl} alt={plant.imageName} className='rounded-xl' height={"200px"} width={"180px"}/>
                 </div>
                 <div className='mt-32 flex w-full justify-around items-start '>
                     <div className="flex flex-col justify-center items-start w-full mx-6">
@@ -104,7 +104,7 @@ const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
                         </div>
                         <div className="w-full mt-2">
 
-                            <Button variant={"secondary"} onClick={() => { navigate(`/dashboard/plant/${plant.id}`) }} className="w-full mt-2">Manage</Button>
+                            <Button variant={"secondary"} onClick={() => { navigate(`/dashboard/plant/${plant.id}`) }} className="w-full mt-2 text-primary">Manage</Button>
 
                         </div>
                     </div>

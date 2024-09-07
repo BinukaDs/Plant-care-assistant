@@ -8,6 +8,7 @@ export interface PlantDataTypes {
   environment: string;
   growthLogs: {
     imageUrl: string;
+    imageName: string;
     date: string;
     notes: string;
     height: number;

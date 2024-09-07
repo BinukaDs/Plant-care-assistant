@@ -15,7 +15,7 @@ interface DataType {
   id: string;
   username: string;
 }
-const SideBar = () => {
+const SideBar = ({visible, show}) => {
   const cookies = new Cookies();
   const location = useLocation()
   const currentDate = {
@@ -33,8 +33,10 @@ const SideBar = () => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setIsCollapsed(true);
+        show(false)
       } else {
         setIsCollapsed(false);
+        show(true)
       }
     };
 
@@ -64,6 +66,7 @@ const SideBar = () => {
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
+    show(!visible)
   };
 
   const listItemIcons: { [key: string]: React.ComponentType } = {
@@ -99,7 +102,7 @@ const SideBar = () => {
   ]
   return (
     <aside
-      className={`fixed top-0 left-0 h-full bg-card overflow-hidden transition-all ${isCollapsed ? 'w-24' : 'w-[312px]'
+      className={` z-30 fixed top-0 left-0 h-full bg-card overflow-hidden transition-all ${isCollapsed ? 'w-24' : 'w-[312px]'
         }`}
     >
       <div className='md:flex flex-col h-full w-full px-6 items-center'>

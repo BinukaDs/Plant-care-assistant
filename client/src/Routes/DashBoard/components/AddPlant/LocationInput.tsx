@@ -9,7 +9,7 @@ const LocationInput = ({ onValueChange, defaultValue }: { onValueChange: (locati
 
     const { Locations } = useContext(PlantsContext)
     const [options, setOptions] = useState([]);
-    const [defaultOption, setdefaultOption] = useState()
+    const [defaultOption, setdefaultOption] = useState<{ label: string; value: string } | undefined>(undefined)
     const [value, setValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -67,7 +67,6 @@ const LocationInput = ({ onValueChange, defaultValue }: { onValueChange: (locati
             onCreateOption={handleCreate}
             isDisabled={isLoading}
             value={value}
-           
         />
     )
 }
