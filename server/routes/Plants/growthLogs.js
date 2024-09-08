@@ -74,7 +74,7 @@ const GetLog = async (req, res) => {
   }
 };
 
-const EditLog = async (req, res) => {
+const UpdateLog = async (req, res) => {
   const {
     plantId,
     index,
@@ -184,7 +184,7 @@ const DeleteLog = async (req, res) => {
 
 router.post("/add", AddLog);
 router.post("/get", GetLog);
-router.put("/edit", EditLog);
+router.put("/edit", UpdateLog);
 router.delete("/delete", DeleteLog);
 
 module.exports = router;

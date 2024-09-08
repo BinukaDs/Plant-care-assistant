@@ -45,6 +45,7 @@ const AddPlant = async (req, res) => {
       imageName,
       // careGuide,
       growthLogs: [],
+      favourite: false
     });
 
     if (newPlant) {
@@ -111,7 +112,7 @@ const GetPlants = async (req, res) => {
 
 const UpdatePlant = async (req, res) => {
   const {
-    userId,
+    plantId,
     nickname,
     location,
     species,
@@ -120,25 +121,45 @@ const UpdatePlant = async (req, res) => {
     imageName,
   } = req.body;
 
-  // console.log("data: ",
-  //   userId,
-  //   nickname,
-  //   location,
-  //   species,
-  //   environment,
-  //   imageUrl,
-  //   imageName
-  // );
-  console.log("userId:", req.body);
-  const plant = [nickname, location, species, environment, imageUrl, imageName].every((variable) => Boolean(variable))
+  const plant = [nickname, location, species, environment].every((variable) =>
+    Boolean(variable)
+  );
   if (!plant) {
-    console.log("ℹ️ All fields are required!")
+    console.log("ℹ️ All fields are required!");
     return res.status(400).json({ message: "All fields are required" });
+  } else if (plant) {
+    try {
+      const docRef = db.collection("userPlants").doc(plantId);
+      docRef.get().then(async (doc) => {
+        if (!doc.exists) {
+          console.log("Document does not exist!");
+          return res.status(404).send("Document not found");
+        } else if (doc.exists) {
+          await docRef
+            .update({
+              nickname,
+              location,
+              species,
+              environment,
+              imageUrl,
+              imageName,
+            })
+            .then(() => {
+              return res.status(200).json({
+                message: "plant updated",
+                status: 200,
+              });
+            });
+        }
+      });
+    } catch (error) {
+      console.log("Error updating plant: ", error);
+      return res.status(401).json({
+        message: "Error updating plant",
+        status: 401,
+      });
+    }
   }
-  return res.status(200).json({
-    message: "plant updated",
-    status: "200",
-  });
 };
 
 const GetPlant = async (req, res) => {
@@ -218,6 +239,36 @@ const DeletePlant = async (req, res) => {
       });
     });
 };
+
+const AddToFavourites = async (req, res) => {
+  const { plantId, favourite } = req.body;
+
+  if (!plantId) {
+    return res.status(400).json({
+      message: "All fields are required",
+    });
+  }
+
+  try {
+    db.collection("userPlants")
+      .doc(plantId)
+      .update({
+        favourite: favourite,
+      })
+      .then(() => {
+        return res.status(200).json({
+          message: "Plant added to favourites!",
+          status: 200,
+        });
+      });
+  } catch (error) {
+    console.log("Error adding to favourites: ", error);
+    return res.status(401).json({
+      message: "Error adding to favourites",
+      status: 401,
+    });
+  }
+}
 
 router.post("/add", AddPlant);
 router.post("/", GetPlants);

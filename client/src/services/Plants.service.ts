@@ -40,10 +40,8 @@ export const FetchPlantDetails = (
       return response.json();
     })
     .then((payload) => {
-      if (payload.plant) {
-        console.log(payload);
+        // console.log(payload);
         return payload.plant;
-      }
     })
     .catch((error) => {
       return console.error("Error fetching plant details:", error);
