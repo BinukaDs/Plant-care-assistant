@@ -7,7 +7,7 @@ const { ref, deleteObject } = require("firebase/storage");
 
 const storage = require("../../firebase.js");
 
-router.post("/add", async (req, res) => {
+const AddLog = async (req, res) => {
   const { plantId, imageUrl, date, notes, height, leafCount, imageName } =
     req.body;
 
@@ -46,9 +46,9 @@ router.post("/add", async (req, res) => {
       });
     }
   }
-});
+};
 
-router.post("/get", async (req, res) => {
+const GetLog = async (req, res) => {
   const { plantId, index } = req.body;
 
   try {
@@ -72,9 +72,9 @@ router.post("/get", async (req, res) => {
   } catch (error) {
     console.log("Error fetching plant: ", error);
   }
-});
+};
 
-router.put("/edit", async (req, res) => {
+const UpdateLog = async (req, res) => {
   const {
     plantId,
     index,
@@ -85,6 +85,7 @@ router.put("/edit", async (req, res) => {
     leafCount,
     imageName,
   } = req.body;
+  console.log(req.body);
   const log = [date, imageUrl, imageName, notes, height, leafCount].every(
     (variable) => Boolean(variable)
   );
@@ -116,13 +117,15 @@ router.put("/edit", async (req, res) => {
                 console.log("GrowthLog Updated");
                 return res.status(200).json({
                   message: "GrowthLog Updated Successfully!",
+                  status: 200,
                 });
               })
               .catch((error) => {
                 console.error("Error Updating GrowthLog: ", error);
                 return res.status(400).json({
-                  message: "error updating growthlog!"
-                })
+                  message: "error updating growthlog!",
+                  status: 400,
+                });
               });
           }
         }
@@ -132,9 +135,9 @@ router.put("/edit", async (req, res) => {
       return res.status(500).send("Error updating log");
     }
   }
-});
+};
 
-router.delete("/delete", async (req, res) => {
+const DeleteLog = async (req, res) => {
   const { userId, plantId, index, imageName } = req.body;
 
   try {
@@ -177,6 +180,11 @@ router.delete("/delete", async (req, res) => {
   } catch (error) {
     console.log("Error deleting plant: ", error);
   }
-});
+};
+
+router.post("/add", AddLog);
+router.post("/get", GetLog);
+router.put("/edit", UpdateLog);
+router.delete("/delete", DeleteLog);
 
 module.exports = router;

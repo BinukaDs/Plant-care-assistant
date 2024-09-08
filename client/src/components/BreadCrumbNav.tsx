@@ -8,25 +8,27 @@ import {
 } from "@/components/ui/breadcrumb"
 import { useLocation } from "react-router-dom"
 
-const BreadCrumbNav = () => {
-    const location = useLocation()
-    console.log("location:", location.pathname.split("/"))
+interface BreadCrumbNavProps {
+    className?: string;
+}
 
+const BreadCrumbNav: React.FC<BreadCrumbNavProps> = ({ className }) => {
+    const location = useLocation()
     const breadCrumbLocation = location.pathname.split("/")
     return (
-        <Breadcrumb className="mb-5">
+        <Breadcrumb className={`mb-5`}>
             <BreadcrumbList>
                 {breadCrumbLocation.map((item, index) => {
                     if (item === "") {
                         return null
                     } else {
                         return (
-                            <BreadcrumbItem key={index}>
+                            <BreadcrumbItem key={index} className={className}>
                                 {index == 1 ?
                                     <BreadcrumbLink>
-                                        <a href={`/${item}`}>{item}</a>
+                                        <a href={`/${item}`} >{item}</a>
                                     </BreadcrumbLink> :
-                                    <BreadcrumbPage>{item}</BreadcrumbPage>}
+                                    <BreadcrumbPage className={className}>{item}</BreadcrumbPage>}
                                 <BreadcrumbSeparator />
                             </BreadcrumbItem>
                         )

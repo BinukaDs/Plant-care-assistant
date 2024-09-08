@@ -4,7 +4,7 @@ const gemini = require("../Gemini/gemini.js");
 const { ref, deleteObject } = require("firebase/storage");
 const storage = require("../../firebase.js");
 
-const addPlant = async (req, res) => {
+const AddPlant = async (req, res) => {
   const {
     userId,
     nickname,
@@ -14,25 +14,18 @@ const addPlant = async (req, res) => {
     imageUrl,
     imageName,
   } = req.body;
-  console.log(
+
+  const Plant = [
     userId,
     nickname,
     location,
     species,
     environment,
     imageUrl,
-    imageName
-  );
+    imageName,
+  ].every((variable) => Boolean(variable));
 
-  if (
-    !userId ||
-    !nickname ||
-    !location ||
-    !species ||
-    !environment ||
-    !imageUrl ||
-    !imageName
-  ) {
+  if (!Plant) {
     return res.status(400).json({
       message: "All fields are required",
     });
@@ -50,25 +43,27 @@ const addPlant = async (req, res) => {
       environment,
       imageUrl,
       imageName,
-      //careGuide,
+      // careGuide,
       growthLogs: [],
+      favourite: false
     });
 
     if (newPlant) {
-      //removeBg(imageUrl)
       return res.status(201).json({
-        message: "Plant Created",
+        message: "Plant created successfully!",
+        status: "201",
       });
     }
   } catch (err) {
     console.log("err: ", err);
     return res.status(401).json({
       message: "Error Creating plant",
+      status: "201",
     });
   }
 };
 
-const getPlants = async (req, res) => {
+const GetPlants = async (req, res) => {
   const { UserId } = req.body;
   console.log("userId:", UserId);
 
@@ -76,12 +71,21 @@ const getPlants = async (req, res) => {
     return res.status(400).json({ message: "userId is required" });
   } else if (UserId) {
     try {
-      const getPlants = await db
+      const GetPlants = await db
         .collection("userPlants")
         .where("userId", "==", UserId)
+        .select(
+          "nickname",
+          "location",
+          "species",
+          "environment",
+          "imageUrl",
+          "imageName",
+          "userId"
+        )
         .get();
 
-      const plants = await getPlants.docs.map((doc) => ({
+      const plants = await GetPlants.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -89,7 +93,7 @@ const getPlants = async (req, res) => {
       if (plants.length > 0) {
         return res.status(200).json({
           message: "plants found",
-          status: "200 OK",
+          status: "200",
           plants: plants,
         });
       } else {
@@ -106,7 +110,59 @@ const getPlants = async (req, res) => {
   }
 };
 
-const getPlant = async (req, res) => {
+const UpdatePlant = async (req, res) => {
+  const {
+    plantId,
+    nickname,
+    location,
+    species,
+    environment,
+    imageUrl,
+    imageName,
+  } = req.body;
+
+  const plant = [nickname, location, species, environment].every((variable) =>
+    Boolean(variable)
+  );
+  if (!plant) {
+    console.log("ℹ️ All fields are required!");
+    return res.status(400).json({ message: "All fields are required" });
+  } else if (plant) {
+    try {
+      const docRef = db.collection("userPlants").doc(plantId);
+      docRef.get().then(async (doc) => {
+        if (!doc.exists) {
+          console.log("Document does not exist!");
+          return res.status(404).send("Document not found");
+        } else if (doc.exists) {
+          await docRef
+            .update({
+              nickname,
+              location,
+              species,
+              environment,
+              imageUrl,
+              imageName,
+            })
+            .then(() => {
+              return res.status(200).json({
+                message: "plant updated",
+                status: 200,
+              });
+            });
+        }
+      });
+    } catch (error) {
+      console.log("Error updating plant: ", error);
+      return res.status(401).json({
+        message: "Error updating plant",
+        status: 401,
+      });
+    }
+  }
+};
+
+const GetPlant = async (req, res) => {
   const { plantId, userId } = req.body;
 
   db.collection("userPlants")
@@ -119,12 +175,12 @@ const getPlant = async (req, res) => {
           if (userId !== doc.data().userId) {
             res.status(404).json({
               message: "Unauthorized",
-              status: "404 Not Found",
+              status: "401 User Unauthorized",
             });
             console.log("Unauthorized");
             return;
           } else if (userId === doc.data().userId) {
-            console.log("plantfound:", doc.data());
+            // console.log("plantfound:", doc.data());
             return res.status(200).json({
               message: "plant found",
               status: "200 OK",
@@ -143,7 +199,7 @@ const getPlant = async (req, res) => {
     });
 };
 
-const deletePlant = async (req, res) => {
+const DeletePlant = async (req, res) => {
   const { userId, plantId, imageName } = req.body;
   console.log("PlantId: ", plantId);
 
@@ -153,13 +209,13 @@ const deletePlant = async (req, res) => {
     });
   }
 
-  db.collection("userPlants")
-    .doc(plantId)
-    .delete()
+  const imageRef = ref(storage, `images/${userId}/${imageName}`);
+  // Delete the file
+  deleteObject(imageRef)
     .then(() => {
-      const imageRef = ref(storage, `images/${userId}/${imageName}`);
-      // Delete the file
-      deleteObject(imageRef)
+      db.collection("userPlants")
+        .doc(plantId)
+        .delete()
         .then(() => {
           return res.status(200).json({
             message: "Plant Deleted!",
@@ -167,26 +223,57 @@ const deletePlant = async (req, res) => {
           });
         })
         .catch((error) => {
-          console.log("Error deleting Image: ", error);
+          console.log("Error deleting Plant: ", error);
           return res.status(401).json({
-            message: "Error deleting Image",
+            message: "Error deleting Plant",
             fileName: imageName,
             status: 401,
           });
         });
     })
     .catch((error) => {
-      console.log("Error deleting document: ", error);
+      console.log("Error deleting Image: ", error);
       return res.status(401).json({
-        message: "Error deleting plant",
+        message: "Error deleting Image",
         status: 401,
       });
     });
 };
 
-router.post("/add", addPlant);
-router.post("/", getPlants);
-router.post("/plant", getPlant);
-router.delete("/plant/delete", deletePlant);
+const AddToFavourites = async (req, res) => {
+  const { plantId, favourite } = req.body;
+
+  if (!plantId) {
+    return res.status(400).json({
+      message: "All fields are required",
+    });
+  }
+
+  try {
+    db.collection("userPlants")
+      .doc(plantId)
+      .update({
+        favourite: favourite,
+      })
+      .then(() => {
+        return res.status(200).json({
+          message: "Plant added to favourites!",
+          status: 200,
+        });
+      });
+  } catch (error) {
+    console.log("Error adding to favourites: ", error);
+    return res.status(401).json({
+      message: "Error adding to favourites",
+      status: 401,
+    });
+  }
+}
+
+router.post("/add", AddPlant);
+router.post("/", GetPlants);
+router.post("/plant", GetPlant);
+router.put("/plant/update", UpdatePlant);
+router.delete("/plant/delete", DeletePlant);
 
 module.exports = router;

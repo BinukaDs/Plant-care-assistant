@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { PlusIcon } from "@radix-ui/react-icons"
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -10,56 +11,39 @@ import {
     DialogTrigger,
     DialogFooter
 } from "@/components/ui/dialog"
-import { PuffLoader } from 'react-spinners'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import uploadImage from "@/services/imageHandle";
+import uploadImage from "@/services/Images.service";
 import { useContext } from "react"
 import { UserContext } from "@/App"
-import { AddPlant } from "@/services/PlantService"
-import { PlantsContext } from "../../DashBoard"
-import { FetchPlants } from "@/services/PlantService"
+import { AddPlant } from "@/services/Plants.service"
+import { PlantsContext } from "@/App"
+import { responseDataTypes } from "@/types/Plant"
 import LocationInput from "./LocationInput"
+import { addLocation } from "@/services/Locations.service"
+import { tailspin } from 'ldrs'
+tailspin.register()
 
-
-
-const AddPlantComponent = ({ userId }: { userId: string }) => {
+const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapsed: boolean }) => {
     const BASE = useContext(UserContext);
-    const { setData } = useContext(PlantsContext)
-    const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "Indoor", imageUrl: "", imageName: "" })
-    const [Image, setImage] = useState(null)
+    const { setData, loadFetchPlants } = useContext(PlantsContext)
+    const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "", imageUrl: "", imageName: "" })
+    const [Image, setImage] = useState<File | null>(null)
+    const [open, setOpen] = useState(false)
+    const [isLocationAvailable, setisLocationAvailable] = useState(false)
     const [isLoading, setisLoading] = useState(false)
 
 
-    const onValueChange = (e) => {
+    const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...Values, userId: userId, [e.target.id]: e.target.value })
-    }
-
-    //fetch Plants
-    const loadFetchPlants = async () => {
-        try {
-            setisLoading(true)
-            const data = await FetchPlants(BASE, userId);
-            if (data) {
-                setisLoading(true)
-                await setData(data)
-                setisLoading(false)
-            } else return setisLoading(false)
-        } catch (error) {
-            console.error(error)
-            setisLoading(false)
-        }
     }
 
     //handle imageUpload
     async function handleUpload() {
         try {
             setisLoading(true)
-            const { imageUrl, fileName } = await uploadImage(userId, Image);
-            // console.log("image: ", imageUrl)
-            // console.log(fileName)
+            const { imageUrl, fileName } = await uploadImage(userId, Image) as { imageUrl: string, fileName: string };
             setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName as string })
-            console.log(Values)
             setisLoading(false)
 
         } catch (error) {
@@ -73,39 +57,58 @@ const AddPlantComponent = ({ userId }: { userId: string }) => {
         if (Values.imageUrl) {
             const addPlant = async () => {
                 setisLoading(true)
+                if (isLocationAvailable == false) {
+                    const response: responseDataTypes = await addLocation(BASE, Values.location, Values.environment)
+                    if (response.status != 201) {
+                        console.log("ℹ️", response.message)
+                    }
+                }
                 const response = await AddPlant(BASE, Values)
                 setisLoading(false)
-                if (response.status === 201) {
-                    console.log("✅ Plant Addded successfully")
+                if (response.status == 201) {
+                    console.log("✅", response.message)
+                    setOpen(!open)
                     toast.success(response.message)
-                    loadFetchPlants()
-                } else if (response.status) {
-                    console.log("ℹ️ Error adding plant")
+                    return loadFetchPlants()
+                } else if (response.status != 201) {
+                    console.log("ℹ️", response.message)
+                    setOpen(!open)
                     toast.error(response.message)
-                    loadFetchPlants()
+                    return loadFetchPlants()
                 }
             }
             addPlant()
         }
     }, [Values.imageUrl])
 
-    const handleLocationChange = (value: string[] | null) => {
-        if (value.value) {
-            setValues({ ...Values, location: value.value })
+
+    const handleLocationChange = (location: string, environment: string | null) => {
+      
+        setValues((prevValues) => ({
+            ...prevValues,
+            location: location,
+            ...(environment && { environment: environment })
+        }));
+
+        if (environment) {
+            setisLocationAvailable(true)
+        } else {
+            setisLocationAvailable(false)
         }
+
     }
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
             setImage(file)
         }
     }
     return (
         <div>
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger className="w-full">
-                    <Button className="w-full">Add Plant</Button>
+                    <Button className="w-full">{!isCollapsed ? "Add Plant" : <PlusIcon />}</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
@@ -131,12 +134,6 @@ const AddPlantComponent = ({ userId }: { userId: string }) => {
                                 <Label htmlFor="location" >
                                     Location
                                 </Label>
-                                {/* <Input
-                                    name='location'
-                                    id="location"
-                                    placeholder='Living Room'
-                                    onChange={(e) => { onValueChange(e) }}
-                                /> */}
                                 <LocationInput onValueChange={handleLocationChange} />
                             </div>
                         </div>
@@ -155,14 +152,22 @@ const AddPlantComponent = ({ userId }: { userId: string }) => {
                             <Label htmlFor="location" >
                                 Environment
                             </Label>
-                            <select name="environment" id="environment" className='flex my-1 p-2 rounded-md border w-full' onChange={(e) => { onValueChange(e) }}>
+                            <select disabled={isLocationAvailable} value={Values.environment} name="environment" id="environment" className='flex my-1 p-2 rounded-md border w-full' onChange={(e) => { onValueChange(e) }}>
                                 <option value="Indoor">Indoor</option>
                                 <option value="Outdoor">Outdoor</option>
                             </select>
                         </div>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button type="submit" onClick={handleUpload} >{isLoading ? <PuffLoader /> : "Save"}</Button>
+                        <Button type="submit" className="w-full" onClick={handleUpload} >{isLoading ?
+
+                            <l-tailspin
+                                size="32"
+                                stroke="5"
+                                speed="0.9"
+                                color="white"
+                            ></l-tailspin> : "Save"}
+                        </Button>
                     </DialogFooter>
 
                 </DialogContent>

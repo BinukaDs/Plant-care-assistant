@@ -1,22 +1,15 @@
 import { useState, useEffect, useContext, useRef } from "react";
-import { PlantsContext } from "../../DashBoard"
+import { PlantsContext } from "@/App"
 import CreatableSelect from 'react-select/creatable';
-import { addLocation } from "@/services/LocationsService";
-import { UserContext } from "@/App";
-
-interface Option {
-    readonly label: string;
-    readonly value: string;
-}
 
 
-const LocationInput = ({ onValueChange }: { onValueChange: (Value: Option | null) => void }) => {
 
 
-    const { Plants, Locations } = useContext(PlantsContext)
-    const BASE = useContext(UserContext)
-    const defaultOptions = []
+const LocationInput = ({ onValueChange, defaultValue }: { onValueChange: (location: string, environment: string | null) => void, defaultValue?: string | null }) => {
+
+    const { Locations } = useContext(PlantsContext)
     const [options, setOptions] = useState([]);
+    const [defaultOption, setdefaultOption] = useState<{ label: string; value: string } | undefined>(undefined)
     const [value, setValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -27,52 +20,50 @@ const LocationInput = ({ onValueChange }: { onValueChange: (Value: Option | null
 
     const filterLocations = () => {
         const uniqueLocations = [...new Set([...Locations, ...Locations])];
-         console.log(uniqueLocations)
+        //console.log(Locations)
         uniqueLocations.map((Location) => {
-            const newOption = createOption(Location);
+            const newOption = createOption(Location.location);
             setOptions((prev) => [...prev, newOption]);
         })
 
     }
     const handleCreate = async (inputValue: string) => {
         setIsLoading(true);
-        // setTimeout(() => {
-        //     const newOption = createOption(inputValue);
-        //     setIsLoading(false);
-        //     setOptions((prev) => [...prev, newOption]);
-        //     setValue(newOption);
-        // }, 500);
-        console.log("input:", inputValue)
-        await addLocation(BASE, inputValue)
-            .then((response) => {
-                const newOption = createOption(inputValue);
-                setIsLoading(false);
-                setOptions((prev) => [...prev, newOption]);
-                setValue(newOption);
-                console.log(response)
-            })
-            .catch((error) => {
-                console.error("Error adding Location:", error);
-                setIsLoading(false)
-            });
+        //console.log("input:", inputValue)
+        const newOption = createOption(inputValue);
+        setOptions((prev) => [...prev, newOption]);
+        setValue(newOption);
+
     };
 
+
     useEffect(() => {
-        onValueChange(value)
+        const matchingObject = Locations.find((Object) => Object.location === value.label);
+        if (matchingObject) {
+            hasRunfilter.current = true;
+            onValueChange(value.label, matchingObject.environment);
+        } else {
+            onValueChange(value.label, null);
+        }
+
     }, [value])
 
-    const hasRunRef = useRef(false);
+    const hasRunfilter = useRef(false);
 
     useEffect(() => {
-        if (!hasRunRef.current) {
+        if (!hasRunfilter.current) {
             filterLocations();
-            hasRunRef.current = true;
+            hasRunfilter.current = true;
+        }
+        if (defaultValue) {
+            const Value = createOption(defaultValue)
+            setdefaultOption(Value)
         }
     }, []);
     return (
         <CreatableSelect
             options={options}
-            onChange={(newValue) => setValue(newValue)}
+            onChange={(newValue) => { setValue(newValue) }}
             onCreateOption={handleCreate}
             isDisabled={isLoading}
             value={value}

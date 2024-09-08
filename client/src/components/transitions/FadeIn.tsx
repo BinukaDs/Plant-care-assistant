@@ -1,16 +1,25 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
-const FadeIn = ({ children }: any) => {
+const variants = {
+    hidden: { opacity: 0, x: 0, y: 20 },
+    enter: { opacity: 1, x: 0, y: 0 },
+    exit: { opacity: 0, x: -0, y: 20 }
+}
+
+const FadeIn = ({ children }) => {
     return (
-        <AnimatePresence >
-            <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-            >
-                {children}
-            </motion.div>
-        </AnimatePresence>
+
+        <motion.div
+            initial="hidden"
+            animate="enter"
+            exit="exit"
+            variants={variants}
+            transition={{ duration: 0.4, type: "easeInOut" }}
+            style={{ position: 'relative' }}
+        >
+            {children}
+        </motion.div>
+
     )
 }
 

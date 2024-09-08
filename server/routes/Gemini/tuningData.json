@@ -1,0 +1,574 @@
+[
+    {
+      "input": "indoor rose plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "6-8 hours daily, bright indirect sunlight",
+        "Water": "When top inch of soil feels dry",
+        "Temperature": "65-75°F (18-24°C) daytime, 50-60°F (10-16°C) nighttime",
+        "Fertilize": "Every 2-4 weeks during growing season (spring/summer)",
+        "Additional tips": "Deadhead spent blooms regularly. Prune in late winter/early spring."
+      }
+    },
+    {
+      "input": "Outdoor Anthurium plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Filtered sunlight, avoid direct sun",
+        "Water": "When top 1-2 inches of soil feels dry",
+        "Temperature": "65-85°F (18-29°C)",
+        "Fertilize": "Monthly during spring and summer",
+        "Additional tips": "Monitor temperature. Bring indoors if below 60°F (15°C)."
+      }
+    },
+    {
+      "input": "Indoor Lily plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Indirect light",
+        "Water": "Water when top 1-2 inches of soil dry",
+        "Temperature": "60-75°F (15-24°C)",
+        "Fertilize": "Monthly during spring/summer (optional)",
+        "Additional tips": "Wipe leaves with damp cloth for shine. Consider using a humidifier for dry climates."
+      }
+    },
+    {
+      "input": "Outdoor Begonia plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Part shade to filtered sunlight",
+        "Water": "Regularly, allowing soil to dry slightly between waterings",
+        "Temperature": "60-80°F (15-27°C)",
+        "Fertilize": "Balanced fertilizer every 2-4 weeks during spring/summer (optional)",
+        "Additional tips": "Deadhead spent flowers to encourage new blooms. Bring indoors before frost (if in colder climates)."
+      }
+    },
+    {
+      "input": "Indoor Cactus plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright, indirect sunlight",
+        "Water": "Infrequent watering, allow soil to dry completely between waterings",
+        "Temperature": "60-85°F (15-29°C)",
+        "Fertilize": "Monthly during spring/summer with diluted cactus fertilizer",
+        "Additional tips": "Repot every 2-3 years in well-draining cactus soil."
+      }
+    },
+    {
+      "input": "Indoor aloe vera plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or partial shade",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Optional, dilute balanced fertilizer once a month during growing season",
+        "Additional tips": "Cuttings can be used to propagate new plants. Use well-draining soil."
+      }
+    },
+    {
+      "input": "Outdoor boston fern plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or filtered light",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "High humidity is preferred, mist regularly or use a humidifier. Prune to maintain shape."
+      }
+    },
+    {
+      "input": "Indoor peace lily plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Low to medium light",
+        "Water": "Allow top inch of soil to dry out before watering",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Sensitive to fluoride in tap water, use filtered or distilled water. Blooms can last for several weeks."
+      }
+    },
+    {
+      "input": "Outdoor snake plant plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Optional, dilute balanced fertilizer once a month during growing season",
+        "Additional tips": "Tolerant of neglect and drought. Can be propagated from leaf cuttings."
+      }
+    },
+    {
+      "input": "Indoor spider plant plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil evenly moist, not soggy",
+        "Temperature": "60-75°F (15-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Produces 'babies' or plantlets that can be propagated. Prune brown tips regularly."
+      }
+    },
+    {
+      "input": "Outdoor zz plant plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Low to bright indirect sunlight",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "60-75°F (15-24°C)",
+        "Fertilize": "Optional, dilute balanced fertilizer once a month during growing season",
+        "Additional tips": "Tolerant of low light and drought. Wipe leaves with damp cloth to remove dust."
+      }
+    },
+    {
+      "input": "Indoor rubber plant plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "60-75°F (15-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Prune to maintain shape. Wipe leaves with damp cloth to remove dust."
+      }
+    },
+    {
+      "input": "Outdoor parlor palm plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to fluoride in tap water, use filtered or distilled water. Mist regularly for humidity."
+      }
+    },
+    {
+      "input": "Indoor calathea plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to fluoride in tap water, use filtered or distilled water. Mist regularly for humidity."
+      }
+    },
+    {
+      "input": "Outdoor fiddle leaf fig plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow top inch of soil to dry out before watering",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Indoor monstera plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow top inch of soil to dry out before watering",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Prune to maintain shape. Wipe leaves with damp cloth to remove dust."
+      }
+    },
+    {
+      "input": "Outdoor philodendron plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow top inch of soil to dry out before watering",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Prune to maintain shape. Wipe leaves with damp cloth to remove dust."
+      }
+    },
+    {
+      "input": "Indoor english ivy plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "60-75°F (15-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Prune to maintain shape. Mist regularly for humidity."
+      }
+    },
+    {
+      "input": "Outdoor aluminum plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to fluoride in tap water, use filtered or distilled water. Mist regularly for humidity."
+      }
+    },
+    {
+      "input": "Indoor prayer plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to fluoride in tap water, use filtered or distilled water. Mist regularly for humidity."
+      }
+    },
+    {
+      "input": "Outdoor nerve plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to fluoride in tap water, use filtered or distilled water. Mist regularly for humidity."
+      }
+    },
+    {
+      "input": "Indoor peperomia plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow top inch of soil to dry out before watering",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Outdoor string of pearls plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow top inch of soil to dry out before watering",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Indoor pilea plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow top inch of soil to dry out before watering",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Outdoor caladium plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Indoor fittonia plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Outdoor maranta plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Indoor syngonium plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow top inch of soil to dry out before watering",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Outdoor peacock plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Indoor alocasia plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "Outdoor bird of paradise plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Keep soil consistently moist but not soggy",
+        " Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Monthly during spring/summer with balanced fertilizer",
+        "Additional tips": "Sensitive to overwatering, allow soil to dry out between waterings. Wipe leaves with damp cloth."
+      }
+    },
+    {
+      "input": "rubber tree plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Wipe leaves with a damp cloth to remove dust. Can be propagated from cuttings."
+      }
+    },
+    {
+      "input": "fiddle leaf fig plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Avoid sudden temperature changes or drafts. Rotate plant regularly to ensure even growth."
+      }
+    },
+    {
+      "input": "pothos plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Can be grown as a trailing plant or trained to climb a moss pole. Propagate from cuttings easily."
+      }
+    },
+    {
+      "input": "dracaena marginata plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Tolerant of neglect and drought. Can be propagated from cuttings."
+      }
+    },
+    {
+      "input": "african violet plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Water from the bottom to avoid getting the leaves wet",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Avoid overwatering. Propagate from leaf cuttings."
+      }
+    },
+    {
+      "input": "calathea plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Keep soil consistently moist but not soggy",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Sensitive to fluoride in tap water. Use filtered or distilled water. High humidity is preferred."
+      }
+    },
+    {
+      "input": "philodendron plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Can be grown as a trailing plant or trained to climb a moss pole. Propagate from cuttings easily."
+      }
+    },
+    {
+      "input": "begonia plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Sensitive to overwatering. Propagate from cuttings or division."
+      }
+    },
+    {
+      "input": "monstera deliciosa plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Known for its large, split leaves. Propagate from cuttings."
+      }
+    },
+    {
+      "input": "chinese evergreen plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Low to medium light",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Sensitive to cold drafts. Propagate from division or cuttings."
+      }
+    },
+    {
+      "input": "bird of paradise plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-80°F (18-27°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Requires ample space to grow. Propagate from seeds or division."
+      }
+    },
+    {
+      "input": "peperomia plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight or low light",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Tolerant of neglect and drought. Propagate from leaf cuttings or division."
+      }
+    },
+    {
+      "input": "hoya plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Known for its waxy leaves and fragrant flowers. Propagate from cuttings."
+      }
+    },
+    {
+      "input": "echeveria plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Succulent plant with rosette-shaped leaves. Propagate from leaf cuttings."
+      }
+    },
+    {
+      "input": "haworthia plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Succulent plant with rosette-shaped leaves. Propagate from offsets or leaf cuttings."
+      }
+    },
+    {
+      "input": "burro's tail plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Succulent plant with trailing stems and plump leaves. Propagate from leaf cuttings."
+      }
+    },
+    {
+      "input": "jade plant plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Succulent plant with woody stems and fleshy leaves. Propagate from leaf cuttings or stem cuttings."
+      }
+    },
+    {
+      "input": "string of hearts plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Trailing plant with heart-shaped leaves. Propagate from cuttings."
+      }
+    },
+    {
+      "input": "string of pearls plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Trailing plant with pea-sized beads. Propagate from cuttings."
+      }
+    },
+    {
+      "input": "string of dolphins plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out completely between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Trailing plant with dolphin-shaped leaves. Propagate from cuttings."
+      }
+    },
+    {
+      "input": "panda plant plant care guide",
+      "output": {
+        "Feature": "Description",
+        "Light": "Bright indirect sunlight",
+        "Water": "Allow soil to dry out slightly between waterings",
+        "Temperature": "65-75°F (18-24°C)",
+        "Fertilize": "Dilute balanced fertilizer every 2-4 weeks during growing season",
+        "Additional tips": "Compact plant with dark green leaves with silver markings. Propagate from cuttings."
+      }
+    }
+  ]

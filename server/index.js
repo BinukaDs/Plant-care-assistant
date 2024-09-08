@@ -21,7 +21,9 @@ app.use("/register", require("./routes/Authentication/signup.js"));
 app.use("/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
 app.use("/plants", require("./routes/Plants/Plants.js"));
 app.use("/growthlogs", require("./routes/Plants/growthLogs.js"));
-app.use("/locations", require("./routes/Plants/Locations.js"))
+app.use("/locations", require("./routes/Plants/Locations.js"));
+app.use("/gemini", require("./routes/Gemini/gemini.js"))
+app.use("/vertex", require("./routes/Gemini/vertex.js"));
 app.post("/hello", (req, res) => {
   res.json({ message: "Hello World" });
 });

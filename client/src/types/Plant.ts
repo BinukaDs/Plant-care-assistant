@@ -1,15 +1,31 @@
 export interface PlantDataTypes {
-    id: string
-    nickname: string
-    imageUrl: string
-    imageName: string
-    location: string
-    species: string
-    environment: string
-    growthLogs: { imageUrl: string; date: string; notes: string; height: number; leafCount: number; }[]
-    careGuide: string;
+  id: string;
+  nickname: string;
+  imageUrl: string;
+  imageName: string;
+  location: string;
+  species: string;
+  environment: string;
+  growthLogs: {
+    imageUrl: string;
+    imageName: string;
+    date: string;
+    notes: string;
+    height: number;
+    leafCount: number;
+  }[];
+  careGuide: string;
+  userId: string;
 }
 
 export interface PlantsDataTypes {
-    plants: PlantDataTypes[]
+  nickname: ReactNode;
+  species: ReactNode;
+  plants: PlantDataTypes[];
+}
+
+export interface responseDataTypes {
+  message: string;
+  status: number | string;
+  token: string
 }
