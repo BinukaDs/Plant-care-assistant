@@ -7,14 +7,14 @@ import DeleteLog from './components/GrowthLogs/GrowthLogForm/delete'
 import { PlantsContext, UserContext } from '@/App'
 import PlantCareGuide from './components/PlantcareGuide';
 import BreadCrumbNav from '@/components/BreadCrumbNav'
-import { PlantDataTypes } from '@/types/Plant'
+import { PlantDataTypes, responseDataTypes } from '@/types/Plant'
 import { FetchAuthentication } from '@/services/Authentication.service'
 import { FetchPlantDetails, DeletePlant } from '@/services/Plants.service'
 import Cookies from 'universal-cookie'
 import Layout from '../Layout'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { TrashIcon, Pencil1Icon, DotsVerticalIcon, HeightIcon } from '@radix-ui/react-icons'
+import { TrashIcon, HeightIcon } from '@radix-ui/react-icons'
 import { SlLocationPin, SlHeart } from "react-icons/sl";
 import { FaLeaf } from "react-icons/fa";
 import EditPlantComponent from '../components/EditPlant/EditPlant'
@@ -66,7 +66,7 @@ const Plant = () => {
 
   const loadDeletePlant = async () => {
     try {
-      const response = await DeletePlant(BASE, UserId, plantId, PlantData.imageName)
+      const response: responseDataTypes = await DeletePlant(BASE, UserId, plantId, PlantData.imageName)
       console.log('response', response)
       if (response.status == 200) {
         console.log("✅", response.message)
@@ -75,7 +75,7 @@ const Plant = () => {
       } else if (response.status != 200) {
         console.log("ℹ️", response.message)
         navigate("/dashboard")
-        toast.success(response.message)
+        toast.error(response.message)
       }
     } catch (error) {
       navigate("/dashboard")
@@ -126,7 +126,7 @@ const Plant = () => {
                   <div className='flex gap-2'>
                     <h1 className='topic text-2xl font-bold '>{PlantData.nickname}</h1>
                     <div className='flex '>
-                      <EditPlantComponent plant={PlantData} />
+                      <EditPlantComponent plant={PlantData} loadPlant={loadFetchPlantDetails} />
                       <Button variant={"ghost"} className='text-destructive hover:text-destructive' onClick={loadDeletePlant}><TrashIcon /></Button>
                     </div>
                   </div>

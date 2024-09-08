@@ -27,11 +27,11 @@ import { PlantDataTypes, responseDataTypes } from "@/types/Plant"
 
 
 tailspin.register()
-function EditPlantComponent({ plant }: { plant: PlantDataTypes }) {
+function EditPlantComponent({ plant, loadPlant}: { plant: PlantDataTypes, loadPlant: () => void }) {
     const BASE = useContext(UserContext);
     const { plantId } = useParams();
-    const [Values, setValues] = useState({ nickname: plant.nickname, location: plant.location, species: plant.species, environment: plant.environment })
-    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ plantId: plantId, nickname: plant.nickname, location: plant.location, species: plant.species, environment: plant.environment, imageUrl: plant.imageUrl, imageName: plant.imageName })
+    const [Values, setValues] = useState({ nickname: "", location: "", species: "", environment: "" })
+    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ plantId: plantId, nickname: "", location: "", species: "", environment: "", imageUrl: "", imageName: "", userId: "" })
     const [Image, setImage] = useState(null)
     const [open, setOpen] = useState(false)
     const [isLocationAvailable, setisLocationAvailable] = useState(true)
@@ -79,13 +79,13 @@ function EditPlantComponent({ plant }: { plant: PlantDataTypes }) {
         if (response.status == 200) {
             console.log("✅", response.message)
             setOpen(!open)
+            loadPlant()
             toast.success(response.message)
-            return loadFetchPlantDetails()
         } else if (response.status != 200) {
             console.log("ℹ️", response.message)
             setOpen(!open)
+            loadPlant()
             toast.error(response.message)
-            return loadFetchPlantDetails()
         }
 
 
@@ -152,6 +152,11 @@ function EditPlantComponent({ plant }: { plant: PlantDataTypes }) {
         }
     }
 
+    useEffect(() => {
+        setValues({ nickname: plant.nickname, location: plant.location, species: plant.species, environment: plant.environment })
+        setValuesTobeSubmitted({ plantId: plantId, nickname: plant.nickname, location: plant.location, species: plant.species, environment: plant.environment, imageUrl: plant.imageUrl, imageName: plant.imageName, userId: plant.userId })
+    }, [plant])
+
     return (
 
         <Dialog open={open} onOpenChange={setOpen}>
@@ -165,7 +170,7 @@ function EditPlantComponent({ plant }: { plant: PlantDataTypes }) {
 
                     <div className='flex flex-col justify-center items-center'>
                         <div>
-                            <label htmlFor="image" className="btn">{previewUrl ? <img src={previewUrl} alt={Values.imageName} width={200} className="rounded-xl hover:blur-xs transition-all" /> : <img src={plant.imageUrl} alt={Values.imageName} width={200} className="rounded-xl hover:blur-sm transition-all" />}</label>
+                            <label htmlFor="image" className="btn">{previewUrl ? <img src={previewUrl} alt={ValuesTobeSubmitted.imageName} width={200} className="rounded-xl hover:blur-xs transition-all" /> : <img src={plant.imageUrl} alt={ValuesTobeSubmitted.imageName} width={200} className="rounded-xl hover:blur-sm transition-all" />}</label>
                             <input id="image" onChange={handleImageChange} type="file" accept='image' className="hidden justify-center mx-auto" />
                         </div>
                     </div>
