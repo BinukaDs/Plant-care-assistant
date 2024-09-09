@@ -1,6 +1,5 @@
 import LocationBadge from './LocationBadge'
 import { useContext, useEffect, useState } from 'react'
-
 import { UserContext, PlantsContext } from '@/App'
 
 

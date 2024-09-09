@@ -17,8 +17,7 @@ import { Button } from '@/components/ui/button'
 import { TrashIcon, HeightIcon } from '@radix-ui/react-icons'
 import { SlLocationPin, SlHeart } from "react-icons/sl";
 import { FaLeaf } from "react-icons/fa";
-import EditPlantComponent from '../components/EditPlant/EditPlant'
-
+import EditPlantComponent from './components/EditPlant/EditPlant'
 const sampleCareGuide = [
   { feature: 'Watering', details: 'Water twice a week' },
   { feature: 'Sunlight', details: 'Indirect sunlight' },

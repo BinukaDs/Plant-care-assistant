@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom"
 import Cookies from "universal-cookie"
 import { Button } from "./ui/button"
 import { SignOut } from "@/services/Authentication.service"
-import AddPlantComponent from "@/Routes/DashBoard/components/AddPlant/AddPlant"
+import AddPlantComponent from "@/Routes/DashBoard/Plant/components/AddPlant/AddPlant"
 
 interface DataType {
   id: string;
