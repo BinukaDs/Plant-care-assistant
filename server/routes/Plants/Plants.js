@@ -45,7 +45,7 @@ const AddPlant = async (req, res) => {
       imageName,
       // careGuide,
       growthLogs: [],
-      favourite: false
+      favourite: false,
     });
 
     if (newPlant) {
@@ -240,8 +240,9 @@ const DeletePlant = async (req, res) => {
     });
 };
 
-const AddToFavourites = async (req, res) => {
-  const { plantId, favourite } = req.body;
+const setFavourites = async (req, res) => {
+  const { plantId, isFavourite } = req.body;
+  console.log(req.body);
 
   if (!plantId) {
     return res.status(400).json({
@@ -253,7 +254,7 @@ const AddToFavourites = async (req, res) => {
     db.collection("userPlants")
       .doc(plantId)
       .update({
-        favourite: favourite,
+        favourite: isFavourite,
       })
       .then(() => {
         return res.status(200).json({
@@ -268,12 +269,13 @@ const AddToFavourites = async (req, res) => {
       status: 401,
     });
   }
-}
+};
 
 router.post("/add", AddPlant);
 router.post("/", GetPlants);
 router.post("/plant", GetPlant);
 router.put("/plant/update", UpdatePlant);
 router.delete("/plant/delete", DeletePlant);
+router.post("/favourite", setFavourites);
 
 module.exports = router;

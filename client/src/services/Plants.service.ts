@@ -40,15 +40,15 @@ export const FetchPlantDetails = (
       return response.json();
     })
     .then((payload) => {
-        // console.log(payload);
-        return payload.plant;
+      // console.log(payload);
+      return payload.plant;
     })
     .catch((error) => {
       return console.error("Error fetching plant details:", error);
     });
 };
 
-export const AddPlant = async (BASE: string, Values: PlantDataTypes) => {
+export const AddPlant = async (BASE: string, Values: PlantDataTypes): Promise<void> => {
   return await fetch(BASE + "/plants/add", {
     method: "POST",
     headers: {
@@ -109,6 +109,23 @@ export const DeletePlant = async (
     })
     .catch((error) => {
       console.error("Error deleting plant:", error);
+      return error;
+    });
+};
+
+export const setFavourite = async (BASE: string, plantId: string, isFavourite: boolean):Promise<void> => {
+  return await fetch(BASE + "/plants/favourite", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ plantId: plantId, isFavourite: isFavourite }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error setting favourite:", error);
       return error;
     });
 };
