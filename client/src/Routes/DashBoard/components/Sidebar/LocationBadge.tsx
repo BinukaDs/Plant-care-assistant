@@ -1,5 +1,5 @@
 import { PlantsContext } from '@/App'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from "@/components/ui/checkbox"

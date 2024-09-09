@@ -1,5 +1,4 @@
 import "./Css/PlantCareGuide.module.css";
-import MarkdownRenderer from 'react-markdown-renderer';
 import { useState } from "react";
 import { FaTint, FaSun, FaLeaf } from 'react-icons/fa'; // Install react-icons package
 
