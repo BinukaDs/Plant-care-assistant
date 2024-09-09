@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from 'react'
 import AddLog from './components/GrowthLogs/GrowthLogForm/add'
 import EditLog from './components/GrowthLogs/GrowthLogForm/edit'
 import DeleteLog from './components/GrowthLogs/GrowthLogForm/delete'
+import FavouriteComponent from './components/Favourite/FavouriteComponent'
 import { PlantsContext, UserContext } from '@/App'
 import PlantCareGuide from './components/PlantcareGuide';
 import BreadCrumbNav from '@/components/BreadCrumbNav'
@@ -15,8 +16,7 @@ import Layout from '../Layout'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { TrashIcon, HeightIcon } from '@radix-ui/react-icons'
-import { SlLocationPin, SlHeart } from "react-icons/sl";
-import { FaLeaf } from "react-icons/fa";
+import { LiaLeafSolid, LiaMapPinSolid } from "react-icons/lia";
 import EditPlantComponent from './components/EditPlant/EditPlant'
 const sampleCareGuide = [
   { feature: 'Watering', details: 'Water twice a week' },
@@ -107,16 +107,16 @@ const Plant = () => {
                 <div className='ml-64 flex justify-between w-full'>
                   <div className='flex flex-col gap-2'>
                     <div className='flex justify-start items-end gap-2 mt-2'>
-                      <FaLeaf size={24} className='text-primary' />
+                      <LiaLeafSolid size={24} className='text-primary' />
                       <p className='text-sm text-secondary'>{PlantData.species}</p>
                     </div>
                     <div className='flex justify-start items-end gap-2 mt-2'>
-                      <SlLocationPin size={24} className='text-primary' />
+                      <LiaMapPinSolid size={24} className='text-primary' />
                       <p className='text-sm text-secondary'>{PlantData.location}</p>
                     </div>
                   </div>
                   <div>
-                    <Button variant={"ghost"} className='text-destructive'><SlHeart size={24} /></Button>
+                    <FavouriteComponent plantId={plantId} currentState={PlantData.favourite}/>
                   </div>
                 </div>
               </div>

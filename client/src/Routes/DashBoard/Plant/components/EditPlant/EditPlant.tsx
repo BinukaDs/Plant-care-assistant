@@ -52,18 +52,7 @@ function EditPlantComponent({ plant, loadPlant}: { plant: PlantDataTypes, loadPl
         }
     }
 
-    //fetch Plants
-    const loadFetchPlantDetails = async () => {
-        try {
-            const payload = await FetchPlantDetails(BASE, plantId, plant.userId);
-            if (payload) {
-                setValues({ ...Values, nickname: payload.nickname, location: payload.location, species: payload.species, environment: payload.environment })
-                setValuesTobeSubmitted({ ...ValuesTobeSubmitted, nickname: payload.nickname, location: payload.location, species: payload.species, environment: payload.environment, imageName: payload.imageName, imageUrl: payload.imageUrl })
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
+  
 
     async function updatePlant() {
         setisLoading(true)

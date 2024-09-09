@@ -16,6 +16,7 @@ export interface PlantDataTypes {
   }[];
   careGuide: string;
   userId: string;
+  favourite: boolean;
 }
 
 export interface PlantsDataTypes {
