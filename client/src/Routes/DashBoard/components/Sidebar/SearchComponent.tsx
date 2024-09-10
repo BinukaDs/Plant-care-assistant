@@ -14,11 +14,11 @@ const SearchComponent = () => {
     const { setData, Plants } = useContext(PlantsContext)
     const [previewCards, setpreviewCards] = useState<PlantDataTypes[]>()
     const [searchTerm, setSearchTerm] = useState<string>("")
-    const { plantId } = useParams();
+    const { plantId } = useParams()
 
 
     useEffect(() => {
-        setTimeout(async function () {
+        setTimeout(() => {
             if (searchTerm.length >= 2) {
                 //search through Plants
                 let filtered = Plants.filter((plant: PlantDataTypes) => plant.nickname && plant.nickname.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -39,7 +39,7 @@ const SearchComponent = () => {
                 }
             }
         }, 1000)
-    }, [Plants, searchTerm, setData])
+    }, [searchTerm, Plants, setData])
 
     const clearInput = () => {
         setSearchTerm("")
@@ -60,7 +60,6 @@ const SearchComponent = () => {
                 {searchTerm.length > 0 && <button className='mr-3' onClick={clearInput}><Cross2Icon></Cross2Icon></button>}
             </div>
             {previewCards?.length > 0 && previewCards?.map((plant, index) => {
-
                 return (
                     <button onClick={() => HeadTo(plant.id)}>
                         <div key={index} className='flex gap-2 w-full justify-center items-start top-2 bg-white p-1 border-b transition-all hover:bg-primary-foreground'>
