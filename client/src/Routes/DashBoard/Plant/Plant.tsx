@@ -12,7 +12,7 @@ import { PlantDataTypes, responseDataTypes } from '@/types/Plant'
 import { FetchAuthentication } from '@/services/Authentication.service'
 import { FetchPlantDetails, DeletePlant } from '@/services/Plants.service'
 import Cookies from 'universal-cookie'
-import Layout from '../Layout'
+import Layout from './Layout'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { TrashIcon, HeightIcon } from '@radix-ui/react-icons'
@@ -95,10 +95,10 @@ const Plant = () => {
           <div className='absolute h-full w-full backdrop-brightness-50 bg-white/25'>
             <div className='ml-5 mt-5'><BreadCrumbNav className='text-white' /></div>
           </div>
-          {Wallpapers && <img src={Wallpapers[0].urls.full} alt={Wallpapers[0].alt_description} className='' />}
+          {Wallpapers && <img src={Wallpapers[0].urls.full} alt={Wallpapers[0].alt_description} />}
         </div>
         <section className='flex flex-col w-full h-full '>
-          <div className=' bg-white rounded-t-xl relative flex flex-col w-full h-full p-10 mt-48'>
+          <div className='bg-white rounded-t-xl relative flex flex-col w-full h-full p-10 mt-48'>
             <div className='relative bg-card rounded-xl h-full p-10 w-full mb-12'>
               <div className='flex gap-32 '>
                 <div className='flex absolute justify-center items-end gap-2 -top-44 p-6'>
@@ -120,13 +120,13 @@ const Plant = () => {
                   </div>
                 </div>
               </div>
-              <div className='flex justify-start mx-5 mt-4 w-full'>
+              <div className='flex justify-start mx-5 w-full'>
                 <div className='flex flex-col justify-start text-start mx-5'>
                   <div className='flex gap-2'>
-                    <h1 className='topic text-2xl font-bold '>{PlantData.nickname}</h1>
-                    <div className='flex '>
+                    <h1 className='topic text-2xl mt-4'>{PlantData.nickname}</h1>
+                    <div className='flex mt-2'>
                       <EditPlantComponent plant={PlantData} loadPlant={loadFetchPlantDetails} />
-                      <Button variant={"ghost"} className='text-destructive hover:text-destructive' onClick={loadDeletePlant}><TrashIcon /></Button>
+                      <Button variant={"ghost"} className='text-destructive hover:text-destructive ' onClick={loadDeletePlant}><TrashIcon /></Button>
                     </div>
                   </div>
                   <p className='text-secondary mt-2'>Indoor lilies, particularly peace lilies (Spathiphyllum), are popular houseplants known for their elegant white flowers and lush green leaves. These plants thrive in low to moderate light conditions, making them ideal for indoor environments. They prefer consistently moist soil but should not be waterlogged. Peace lilies also improve air quality by filtering toxins like formaldehyde and benzene. They are relatively low-maintenance, requiring minimal care beyond regular watering and occasional fertilizing.</p>
@@ -137,7 +137,7 @@ const Plant = () => {
             <div className='flex flex-row h-full  gap-6'>
               <div className='bg-card rounded-xl basis-2/3  flex flex-col w-full h-full p-10 gap-4'>
                 <div className='flex w-full items-start justify-between'>
-                  <h1 className='topic font-bold'>Growth Logs</h1>
+                  <h1 className='topic'>Growth Logs</h1>
                   <AddLog plantId={plantId} userId={UserId} loadPlant={loadFetchPlantDetails} />
                 </div>
                 {PlantData.growthLogs?.length ? (PlantData.growthLogs?.map((log, index) => {
@@ -150,7 +150,7 @@ const Plant = () => {
                         <div className='flex flex-col w-full h-full justify-between items-center'>
                           <div className='flex w-full justify-between items-center'>
                             <div className='flex flex-col justify-start items-start'>
-                              <h1 className='topic font-bold'>{log.date}</h1>
+                              <h1 className='topic'>{log.date}</h1>
                             </div>
                             <EditLog plantId={plantId} index={index} />
                           </div>
@@ -177,7 +177,7 @@ const Plant = () => {
               </div>
               <div className='bg-card rounded-xl flex flex-col w-full basis-1/3 h-full p-10'>
                 <div className='flex w-full items-start justify-between'>
-                  <h1 className='topic font-bold'>Plant Care Guide</h1>
+                  <h1 className='topic'>Plant Care Guide</h1>
 
                 </div>
                 <PlantCareGuide careGuide={sampleCareGuide} />

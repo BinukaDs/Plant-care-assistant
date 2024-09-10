@@ -8,6 +8,7 @@ import FiltersComponent from "@/Routes/DashBoard/components/Sidebar/FiltersCompo
 import { useLocation } from "react-router-dom"
 import Cookies from "universal-cookie"
 import { Button } from "./ui/button"
+import { useNavigate } from "react-router-dom"
 import { SignOut } from "@/services/Authentication.service"
 import AddPlantComponent from "@/Routes/DashBoard/Plant/components/AddPlant/AddPlant"
 
@@ -15,7 +16,8 @@ interface DataType {
   id: string;
   username: string;
 }
-const SideBar = ({visible, show}) => {
+const SideBar = ({ visible, show }) => {
+  const navigate = useNavigate()
   const cookies = new Cookies();
   const location = useLocation()
   const currentDate = {
@@ -116,7 +118,7 @@ const SideBar = ({visible, show}) => {
                 height={48}
                 className={`${isCollapsed ? "hidden" : "flex"} `}
               />
-              {!isCollapsed && <h1 className='topic'>PlantlY</h1>}
+              {!isCollapsed && <h1 className='topic'>PlantLY</h1>}
             </div>
             <div className=''>
               <Button variant={"ghost"} onClick={toggleSidebar}>
@@ -131,20 +133,20 @@ const SideBar = ({visible, show}) => {
           <div className='flex flex-col gap-6 items-start'>
             <div className='w-full flex flex-col justify-center items-start mt-12 gap-y-3 border-b py-2'>
               {!isCollapsed && (
-                <p className='topic text-secondary font-bold'>Navigation</p>
+                <p className='topic text-secondary'>Navigation</p>
               )}
               <ul className='flex flex-col justify-start items-center text-start w-full'>
                 {listItems.map((item, index) => (
                   <li key={index} className='flex justify-start gap-2 w-full'>
-                    <a
-                      href={item.href}
+                    <button
+                      onClick={() => navigate(item.href)}
                       className={`flex w-full ${isCollapsed ? "justify-center" : "justify-start"} items-center gap-3 p-2 rounded-xl transition-all hover:bg-primary-foreground ${location.pathname === item.href &&
                         'bg-primary-foreground text-primary'
                         }`}
                     >
                       {React.createElement(listItemIcons[item.icon])}
                       {!isCollapsed && item.title}
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -154,7 +156,7 @@ const SideBar = ({visible, show}) => {
             )}
           </div>
         </div>
-        <div className='w-full mb-5'>
+        <div className='w-full my-5'>
           <AddPlantComponent isCollapsed={isCollapsed} userId={UserData.UserId} />
         </div>
         <div className={`w-full border-t border-gray-200 flex justify-between items-center p-2 mb-5 ${isCollapsed && "items-start p-0"}`}>
@@ -171,7 +173,7 @@ const SideBar = ({visible, show}) => {
               </div>
             </>
           )}
-          <Button variant={'ghost'} onClick={SignOut}>
+          <Button variant={"ghost"} onClick={SignOut}>
             <ExitIcon />
           </Button>
         </div>

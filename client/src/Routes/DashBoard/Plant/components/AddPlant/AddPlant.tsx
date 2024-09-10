@@ -11,6 +11,15 @@ import {
     DialogTrigger,
     DialogFooter
 } from "@/components/ui/dialog"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import uploadImage from "@/services/Images.service";
@@ -83,7 +92,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
 
 
     const handleLocationChange = (location: string, environment: string | null) => {
-      
+
         setValues((prevValues) => ({
             ...prevValues,
             location: location,
@@ -156,6 +165,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                                 <option value="Indoor">Indoor</option>
                                 <option value="Outdoor">Outdoor</option>
                             </select>
+
                         </div>
                     </DialogHeader>
                     <DialogFooter>
