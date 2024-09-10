@@ -120,7 +120,7 @@ const SideBar = ({ visible, show }) => {
               />
               {!isCollapsed && <h1 className='topic'>PlantLY</h1>}
             </div>
-            <div className=''>
+            <div>
               
               <Button variant={"ghost"} onClick={toggleSidebar}>
                 {isCollapsed ? <DoubleArrowRightIcon /> : <DoubleArrowLeftIcon />}
@@ -132,7 +132,7 @@ const SideBar = ({ visible, show }) => {
 
         <div className='w-full h-full'>
           <div className='flex flex-col gap-6 items-start'>
-            <div className='w-full flex flex-col justify-center items-start mt-12 gap-y-3 border-b py-2'>
+            <div className='w-full flex flex-col justify-center items-start mt-5 gap-y-3 border-b py-2'>
               {!isCollapsed && (
                 <p className='topic text-secondary'>Navigation</p>
               )}
@@ -160,23 +160,25 @@ const SideBar = ({ visible, show }) => {
         <div className='w-full my-5'>
           <AddPlantComponent isCollapsed={isCollapsed} userId={UserData.UserId} />
         </div>
-        <div className={`w-full border-t border-gray-200 flex justify-between items-center p-2 mb-5 ${isCollapsed && "items-start p-0"}`}>
-          {!isCollapsed && (
-            <>
-              <img
-                src='https://via.placeholder.com/150'
-                alt='User'
-                className={`rounded-full ${isCollapsed ? 'w-8 h-8' : 'w-12 h-12'}`}
-              />
-              <div className='flex flex-col text-start'>
-                <h1 className='text-sm'>{UserData.Username}</h1>
-                <p className='text-sm text-gray-400'>{`${currentDate.date}.${currentDate.month}.${currentDate.year}`}</p>
+        <div className="w-full border-t border-gray-200 ">
+          <div className={`w-full border rounded-xl mt-2 flex justify-between items-center p-2 mb-5 ${isCollapsed && "items-start p-0"}`}>
+            {!isCollapsed && (
+              <div className="flex justify-start w-full items-center gap-x-2">
+                <img
+                  src='https://via.placeholder.com/150'
+                  alt='User'
+                  className={`rounded-full ${isCollapsed ? 'w-8 h-8' : 'w-12 h-12'}`}
+                />
+                <div className='flex flex-col text-start'>
+                  <h1 className='text-sm'>{UserData.Username}</h1>
+                  <p className='text-sm text-gray-400'>{`${currentDate.date}.${currentDate.month}.${currentDate.year}`}</p>
+                </div>
               </div>
-            </>
-          )}
-          <Button variant={"ghost"} onClick={SignOut}>
-            <ExitIcon />
-          </Button>
+            )}
+            <Button variant={"ghost"} onClick={SignOut}>
+              <ExitIcon />
+            </Button>
+          </div>
         </div>
       </div>
 
