@@ -5,6 +5,7 @@ import { PlantsContext } from '@/App'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { PlantDataTypes } from '@/types/Plant'
 import { useParams } from 'react-router-dom'
+import { GoSearch } from "react-icons/go";
 
 
 const SearchComponent = () => {
@@ -24,7 +25,7 @@ const SearchComponent = () => {
                 if (location.pathname === "/dashboard") {
                     return setData(filtered)
                 } else {
-                    filtered = filtered.map((plant:PlantDataTypes) => {
+                    filtered = filtered.map((plant: PlantDataTypes) => {
                         if (plant.id !== plantId) return plant
                         else return []
                     })
@@ -53,8 +54,9 @@ const SearchComponent = () => {
     }
     return (
         <div className='w-full flex flex-col'>
-            <div className='flex border p-1 rounded-xl justify-center items-center w-full focus-visible:ring-1 focus-visible:ring-primary'>
-                <Input type="search" placeholder="Search plants..." className="border-none shadow-none focus-visible:ring-0 bg-card" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} />
+            <div className='flex border px-4 rounded-xl justify-center items-center w-full focus-visible:ring-1 focus-visible:ring-primary'>
+                <GoSearch />
+                <Input type="search" placeholder="Search plants..." className="border-none rounded-xl shadow-none focus-visible:ring-0 bg-card" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} />
                 {searchTerm.length > 0 && <button className='mr-3' onClick={clearInput}><Cross2Icon></Cross2Icon></button>}
             </div>
             {previewCards?.length > 0 && previewCards?.map((plant, index) => {

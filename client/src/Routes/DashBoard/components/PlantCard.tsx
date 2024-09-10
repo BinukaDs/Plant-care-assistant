@@ -1,4 +1,4 @@
-import { SlLocationPin, SlOptionsVertical } from "react-icons/sl";
+import { SlOptionsVertical } from "react-icons/sl";
 import { useNavigate } from "react-router-dom";
 import {
     DropdownMenu,
@@ -23,7 +23,7 @@ import { PlantsContext } from "@/App";
 import { DeletePlant } from "@/services/Plants.service";
 import { PlantDataTypes, responseDataTypes } from "@/types/Plant";
 import "../../../App.css"
-import { FaLeaf } from "react-icons/fa";
+import { LiaLeafSolid, LiaMapPinSolid, LiaArrowRightSolid } from "react-icons/lia";
 
 
 const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
@@ -53,26 +53,25 @@ const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
     }
 
     return (
-        <div className='container relative flex flex-col w-full'>
-
-            <div className='relative bg-card rounded-xl border h-72 w-56 my-12 '>
-                <div className='flex absolute justify-center items-end gap-2 bottom-40 p-6'>
-                    <img src={plant.imageUrl} alt={plant.imageName} className='rounded-xl' height={"200px"} width={"180px"}/>
-                </div>
-                <div className='mt-32 flex w-full justify-around items-start '>
-                    <div className="flex flex-col justify-center items-start w-full mx-6">
-                        <div className="w-full flex justify-start items-start">
-                            <div className="flex flex-col  w-full">
-                                <h1 className='topic text-lg font-bold text-start'>{plant.nickname}</h1>
-                                <div className="flex gap-1 mt-2">
-                                    <FaLeaf className="text-primary" />
-                                    <p className='text-sm'>{plant.species}</p>
-                                </div>
-                                <div className="flex gap-1 mt-2">
-                                    <SlLocationPin className="text-primary" />
-                                    <p className='text-sm'>{plant.location}</p>
-                                </div>
+        <div className='p-3 bg-card rounded-2xl flex flex-col w-full'>
+            <div className='flex  justify-center items-end  pb-4'>
+                <img src={plant.imageUrl} alt={plant.imageName} className='rounded-2xl w-full hover:scale-105 transition-all' height={"200px"} width={"180px"} />
+            </div>
+            <div className='flex w-full justify-around items-start '>
+                <div className="flex flex-col justify-center items-start w-full ">
+                    <div className="w-full flex justify-start items-start">
+                        <div className="flex flex-col w-full">
+                            <h1 className='topic text-xl text-start'>{plant.nickname}</h1>
+                            <div className="flex gap-1 mt-3">
+                                <LiaLeafSolid className="text-primary" />
+                                <p className='text-sm'>{plant.species}</p>
                             </div>
+                            <div className="flex gap-1 mt-2">
+                                <LiaMapPinSolid className="text-primary" />
+                                <p className='text-sm'>{plant.location}</p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col h-full justify-between items-end">
                             <Dialog open={open} onOpenChange={setOpen}>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger>
@@ -101,11 +100,9 @@ const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
                                     </DialogHeader>
                                 </DialogContent>
                             </Dialog >
-                        </div>
-                        <div className="w-full mt-2">
-
-                            <Button variant={"secondary"} onClick={() => { navigate(`/dashboard/plant/${plant.id}`) }} className="w-full mt-2 text-primary">Manage</Button>
-
+                            <div className="w-full mt-5">
+                                <Button onClick={() => { navigate(`/dashboard/plant/${plant.id}`) }} className=" rounded-full"><LiaArrowRightSolid size={24}/></Button>
+                            </div>
                         </div>
                     </div>
                 </div>
