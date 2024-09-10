@@ -121,6 +121,7 @@ const SideBar = ({ visible, show }) => {
               {!isCollapsed && <h1 className='topic'>PlantLY</h1>}
             </div>
             <div className=''>
+              
               <Button variant={"ghost"} onClick={toggleSidebar}>
                 {isCollapsed ? <DoubleArrowRightIcon /> : <DoubleArrowLeftIcon />}
               </Button>

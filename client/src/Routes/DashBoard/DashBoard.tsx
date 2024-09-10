@@ -7,15 +7,7 @@ import BreadCrumbNav from '@/components/BreadCrumbNav'
 import { FetchAuthentication } from '@/services/Authentication.service'
 import Cookies from 'universal-cookie'
 import FadeIn from '@/components/transitions/FadeIn'
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
+import { SortComponent } from './components/Sort/Sortcomponent'
 
 
 const DashBoard = () => {
@@ -70,9 +62,7 @@ const DashBoard = () => {
                                 <p className='text-sm text-secondary'>Manage Your Plants.</p>
                             </div>
                             <div>
-                                <Select>
-                                    
-                                </Select>
+                             <SortComponent />
                             </div>
                         </div>
                         <div className='grid grid-cols-2  lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 w-full my-12 justify-center items-center h-full gap-12'>
