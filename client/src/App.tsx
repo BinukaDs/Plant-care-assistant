@@ -5,7 +5,7 @@ import { FetchAuthentication } from "./services/Authentication.service"
 import { PuffLoader } from 'react-spinners'
 import { BrowserRouter } from 'react-router-dom'
 import { FetchPlants } from '@/services/Plants.service'
-import { PlantsDataTypes } from '@/types/Plant'
+import { LocationDataTypes, PlantsDataTypes } from '@/types/Plant'
 import { fetchLocations } from '@/services/Locations.service'
 import { FetchWallpaper } from "./services/Images.service"
 import './App.css'
@@ -59,14 +59,15 @@ export default function App() {
   //Fetch Locations
   const loadFetchLocations = async () => {
     try {
-      const data = await fetchLocations(BASE)
+      const data = await fetchLocations(BASE, UserId);
       if (data) {
-        data.locations.map((Item: { location: string; environment: string }) => {
-          setLocations((Location) => {
-            const uniqueLocations = [...new Set([...Location, { location: Item.location, environment: Item.environment }])];
-            return uniqueLocations
-          })
-        })
+        // data.locations.map((Item:LocationDataTypes) => {
+        //   setLocations((Location) => {
+        //     const uniqueLocations = [...new Set([...Location, { id:Item.id, location: Item.location, environment: Item.environment }])];
+        //     return uniqueLocations
+        //   })
+        // })
+        setLocations(data)
       }
     } catch (error) {
       console.error(error)

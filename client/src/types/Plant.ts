@@ -20,13 +20,20 @@ export interface PlantDataTypes {
 }
 
 export interface PlantsDataTypes {
-  nickname: ReactNode;
-  species: ReactNode;
+  nickname: string;
+  species: string;
   plants: PlantDataTypes[];
+}
+
+export interface LocationDataTypes {
+  id: string;
+  location:string;
+  environment: string;
 }
 
 export interface responseDataTypes {
   message: string;
   status: number | string;
-  token: string
+  token: string;
+  code?: string;
 }

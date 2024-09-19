@@ -14,7 +14,7 @@ const DashBoard = () => {
     const navigate = useNavigate();
     const cookies = new Cookies()
     const [UserId, setUserId] = useState("");
-    const { Data, loadFetchPlants, loadFetchLocations } = useContext(PlantsContext)
+    const { Data, loadFetchPlants, loadFetchLocations, Plants } = useContext(PlantsContext)
     const BASE = useContext(UserContext);
 
     //fetch Authentication middleware
@@ -37,7 +37,9 @@ const DashBoard = () => {
     const hasRunRef = useRef(false);
     useEffect(() => {
         if (!hasRunRef.current) {
-            loadFetchLocations();
+            if (Plants.length == 0) {
+                loadFetchLocations();
+            }
             hasRunRef.current = true;
         }
     }, [Data])
@@ -62,7 +64,7 @@ const DashBoard = () => {
                                 <p className='text-sm text-secondary'>Manage Your Plants.</p>
                             </div>
                             <div>
-                             <SortComponent />
+                                <SortComponent />
                             </div>
                         </div>
                         <div className='grid grid-cols-2  lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 w-full my-12 justify-center items-center h-full gap-12'>

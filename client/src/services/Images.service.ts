@@ -1,7 +1,15 @@
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+  deleteObject,
+} from "firebase/storage";
 import storage from "../../firebase";
 import axios from "axios";
-export default async function uploadImage(userId, Image) {
+export default async function uploadImage(
+  userId: string,
+  Image: Blob | ArrayBuffer | null
+) {
   if (!Image) {
     throw new Error("No image provided");
   }
@@ -37,9 +45,13 @@ export default async function uploadImage(userId, Image) {
   });
 }
 
-export async function updateImage(userId, Image, ImageName) {
+export async function updateImage(
+  userId: string,
+  Image: Blob | ArrayBuffer,
+  ImageName: string
+) {
   if (!Image) {
-    throw new Error("No image provided");
+    return console.error("No Image Provided")
   }
   const storageRef = ref(storage, `images/${userId}/${ImageName}`);
   const uploadTask = uploadBytesResumable(storageRef, Image);
@@ -70,18 +82,30 @@ export async function updateImage(userId, Image, ImageName) {
   });
 }
 
-export const FetchWallpaper = async (): Promise<string> => {
+export async function deleteImage(
+  userId: string,
+  ImageName: string
+) {
+  const storageRef = ref(storage, `images/${userId}/${ImageName}`);
+  return deleteObject(storageRef)
+    .then(() => {
+      return console.log("Image deleted");
+    })
+    .catch((error) => {
+      return console.error(error);
+    });
+}
+
+export async function FetchWallpaper(): Promise<string> {
   const UNSPLASH_API_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
   const APIURL = `https://api.unsplash.com/search/photos?query=ForestWallpapers&page=1&client_id=${UNSPLASH_API_KEY}`;
   // console.log(import.meta.env.VITE_UNSPLASH_ACCESS_KEY)
 
   try {
     const { data } = await axios.get(APIURL);
-    console.log(data.results)
+    console.log(data.results);
     return data.results;
   } catch (error) {
-    console.log("error fetching wallpaper:", error);
-    return;
+    return console.log("error fetching wallpaper:", error);
   }
-  
-};
+}
