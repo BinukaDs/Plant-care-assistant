@@ -52,14 +52,13 @@ const Settings = () => {
                             <Tabs defaultValue="locations" className="w-full flex flex-col items-start">
                                 <TabsList>
                                     <TabsTrigger value="locations">Locations</TabsTrigger>
-                                    <TabsTrigger value="species" disabled>Species</TabsTrigger>
+                                    <TabsTrigger value="species">Species</TabsTrigger>
                                     <TabsTrigger value="account" disabled>Account</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="locations"><Locations /></TabsContent>
                                 <TabsContent value="species"><Species /></TabsContent>
                                 <TabsContent value="account"><Account /></TabsContent>
                             </Tabs>
-
                         </div>
                     </section>
                 </div>
