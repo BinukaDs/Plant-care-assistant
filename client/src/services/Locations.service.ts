@@ -1,23 +1,50 @@
-export const fetchLocations = (BASE: string): Promise<[]> => {
+export const fetchLocations = (BASE: string, userId: string): Promise<[]> => {
   return fetch(BASE + "/locations", {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({ userId: userId }),
   })
     .then((response) => {
       return response.json();
     })
-    .then((data) => {
-      return data;
+    .then((payload) => {
+      return payload.locations;
     })
     .catch((error) => {
       return console.error("Error fetching locations:", error);
     });
 };
 
+export const updateLocation = (
+  BASE: string,
+  id: string,
+  location: string,
+  environment: string
+): Promise<JSON | string> => {
+  return fetch(BASE + "/locations/update", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      locationId: id,
+      location: location,
+      environment: environment,
+    }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return console.error("Error updating Location:", error);
+    });
+};
+
 export const addLocation = (
   BASE: string,
+  userId: string,
   location: string,
   environment: string
 ): Promise<JSON | string> => {
@@ -26,7 +53,11 @@ export const addLocation = (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ location: location, environment: environment }),
+    body: JSON.stringify({
+      userId: userId,
+      location: location,
+      environment: environment,
+    }),
   })
     .then((response) => {
       return response.json();
@@ -38,14 +69,14 @@ export const addLocation = (
 
 export const deleteLocation = (
   BASE: string,
-  location: string
+  locationId: string
 ): Promise<string> => {
-  return fetch(BASE + "locations/delete", {
+  return fetch(BASE + "/locations/delete", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ Id: location }),
+    body: JSON.stringify({ locationId: locationId }),
   })
     .then((response) => {
       return response.json();

@@ -24,15 +24,13 @@ import { tailspin } from 'ldrs'
 import { Pencil1Icon } from "@radix-ui/react-icons"
 import { PlantDataTypes, responseDataTypes } from "@/types/Plant"
 
-
-
 tailspin.register()
-function EditPlantComponent({ plant, loadPlant}: { plant: PlantDataTypes, loadPlant: () => void }) {
+function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadPlant: () => void }) {
     const BASE = useContext(UserContext);
     const { plantId } = useParams();
     const [Values, setValues] = useState({ nickname: "", location: "", species: "", environment: "" })
     const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ plantId: plantId, nickname: "", location: "", species: "", environment: "", imageUrl: "", imageName: "", userId: "" })
-    const [Image, setImage] = useState(null)
+    const [Image, setImage] = useState<File>()
     const [open, setOpen] = useState(false)
     const [isLocationAvailable, setisLocationAvailable] = useState(true)
     const [isLoading, setisLoading] = useState(false)
@@ -52,12 +50,10 @@ function EditPlantComponent({ plant, loadPlant}: { plant: PlantDataTypes, loadPl
         }
     }
 
-  
-
     async function updatePlant() {
         setisLoading(true)
         if (isLocationAvailable == false) {
-            const response: responseDataTypes = await addLocation(BASE, ValuesTobeSubmitted.location, ValuesTobeSubmitted.environment)
+            const response: responseDataTypes = await addLocation(BASE, plant.userId, ValuesTobeSubmitted.location, ValuesTobeSubmitted.environment)
             if (response.status != 201) {
                 console.log("ℹ️", response.message)
             }
@@ -98,9 +94,6 @@ function EditPlantComponent({ plant, loadPlant}: { plant: PlantDataTypes, loadPl
 
     }
 
-
-
-
     const handleLocationChange = (location: string, environment: string | null) => {
 
         if (location) {
@@ -125,13 +118,13 @@ function EditPlantComponent({ plant, loadPlant}: { plant: PlantDataTypes, loadPl
         }
     }
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files[0];
         if (file) {
             setImage(file)
             const reader = new FileReader()
             reader.onloadend = () => {
-                setPreviewUrl(reader.result)
+                setPreviewUrl(reader.result as string)
             }
 
             reader.readAsDataURL(file)

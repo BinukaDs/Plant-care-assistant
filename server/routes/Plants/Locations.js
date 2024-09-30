@@ -2,8 +2,12 @@ var router = require("express").Router();
 const db = require("../../db.cjs");
 
 const getLocations = async (req, res) => {
+  const { userId } = req.body;
   try {
-    const getLocations = await db.collection("locations").get();
+    const getLocations = await db
+      .collection("userLocations")
+      .where("userId", "==", userId)
+      .get();
 
     const locations = await getLocations.docs.map((doc) => ({
       id: doc.id,
@@ -11,7 +15,6 @@ const getLocations = async (req, res) => {
     }));
 
     if (locations.length > 0) {
-     
       //console.log(locations);
       return res.status(200).json({
         message: "locations found",
@@ -32,18 +35,33 @@ const getLocations = async (req, res) => {
 };
 
 const addLocation = async (req, res) => {
-  const { location, environment } = req.body;
-  //console.log(location);
-  if (!location || !environment) {
-    return res.status(400).json({ message: "location and environment are required" });
+  const { userId, location, environment } = req.body;
+  console.log(location, userId, environment);
+  if (!userId || !location || !environment) {
+    console.log(userId, location, environment);
+    return res.status(400).json({ message: "all fields are required" });
   } else if (location) {
+    const isLocationAvailable = await db
+      .collection("userLocations")
+      .where("userId", "==", userId)
+      .where("locations", "==", location)
+      .get();
+
+    if (isLocationAvailable.docs.length > 0) {
+      return res.status(400).json({
+        message: "Location already exists",
+        status: 400,
+      });
+    }
     try {
-      const addLocation = await db.collection("locations").add({ location, environment });
+      const addLocation = await db
+        .collection("userLocations")
+        .add({ location, environment, userId });
 
       if (addLocation) {
         return res.status(201).json({
           message: "location added!",
-          status: "201 Created",
+          status: 201,
         });
       }
     } catch (error) {
@@ -53,7 +71,69 @@ const addLocation = async (req, res) => {
   }
 };
 
-router.get("/", getLocations);
+const deleteLocation = async (req, res) => {
+  const { locationId } = req.body;
+  if (!locationId) {
+    return res.status(400).json({ message: "all fields are required" });
+  } else if (locationId) {
+    try {
+      const deleteLocation = await db
+        .collection("userLocations")
+        .doc(locationId)
+        .delete();
+
+      if (deleteLocation) {
+        return res.status(201).json({
+          message: "location deleted!",
+          status: 200,
+        });
+      }
+    } catch (error) {
+      console.log("Error deleting location:", error);
+      return res.status(500).send(error);
+    }
+  }
+};
+
+const updateLocation = async (req, res) => {
+  const { locationId, location, environment } = req.body;
+  console.log(locationId, location, environment)
+  if (!locationId || !location || !environment) {
+    return res.status(400).json({ message: "all fields are required" });
+  } else if (locationId) {
+    try {
+      const docRef = db.collection("userLocations").doc(locationId);
+      docRef.get().then(async (doc) => {
+        if (!doc.exists) {
+          console.log("Location does not exist!");
+          return res.status(404).send("Location not found");
+        } else if (doc.exists) {
+          const updateLocation = await db
+            .collection("userLocations")
+            .doc(locationId)
+            .update({
+              location,
+              environment,
+            });
+
+          if (updateLocation) {
+            return res.status(201).json({
+              message: "location updated!",
+              status: 200,
+            });
+          }
+        }
+      });
+    } catch (error) {
+      console.log("Error updating location:", error);
+      return res.status(500).send(error);
+    }
+  }
+};
+
+router.post("/", getLocations);
 router.post("/add", addLocation);
+router.patch("/update", updateLocation);
+router.delete("/delete", deleteLocation);
 
 module.exports = router;

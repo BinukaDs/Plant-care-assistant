@@ -50,7 +50,7 @@ const SignIn = () => {
         if (response.status == 200) {
           setisLoading(false)
           localStorage.setItem("token", response.token);
-          cookies.set("token", response.token, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), secure: true, httpOnly: false })
+          cookies.set("token", response.token, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), httpOnly: false })
           return navigate("/dashboard")
         } else if (response.status != 200) {
           setisLoading(false)

@@ -41,15 +41,15 @@ router.post("/", async (req, res) => {
         });
     }
 
-    if (!validator.isStrongPassword(password)) {
-      console.log("Password is not strong enough");
-      return res
-        .status(400)
-        .json({
-          message: "Password is not strong enough!",
-          status: 400,
-        });
-    }
+    // if (!validator.isStrongPassword(password)) {
+    //   console.log("Password is not strong enough");
+    //   return res
+    //     .status(400)
+    //     .json({
+    //       message: "Password is not strong enough!",
+    //       status: 400,
+    //     });
+    // }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import uploadImage from "@/services/Images.service";
+import uploadImage, { deleteImage } from "@/services/Images.service";
 import { useContext } from "react"
 import { UserContext } from "@/App"
 import { AddPlant } from "@/services/Plants.service"
@@ -40,15 +40,19 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
 
     //handle imageUpload
     async function handleUpload() {
-        try {
-            setisLoading(true)
-            const { imageUrl, fileName } = await uploadImage(userId, Image) as { imageUrl: string, fileName: string };
-            setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName as string })
-            setisLoading(false)
-
-        } catch (error) {
-            console.error("Upload failed", error);
-            setisLoading(false)
+        if(!Values.nickname || !Values.location || !Values.species || !Values.environment || !Image) {
+            return toast.error("Please fill in all the fields")
+        } else {
+            try {
+                setisLoading(true)
+                const { imageUrl, fileName } = await uploadImage(userId, Image) as { imageUrl: string, fileName: string };
+                setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName as string })
+                setisLoading(false)
+    
+            } catch (error) {
+                console.error("Upload failed", error);
+                setisLoading(false)
+            }
         }
 
     }
@@ -58,12 +62,15 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
             const addPlant = async () => {
                 setisLoading(true)
                 if (isLocationAvailable == false) {
-                    const response: responseDataTypes = await addLocation(BASE, Values.location, Values.environment)
-                    if (response.status != 201) {
-                        console.log("ℹ️", response.message)
+                    const response: responseDataTypes = await addLocation(BASE, userId, Values.location, Values.environment)
+                    if (response.status == 201) {
+                        console.log("✅", response.message)
+                    } else if(response.status != 201) {
+                        await deleteImage(userId, Values.imageName)
+                        return console.log("ℹ️", response.message)
                     }
                 }
-                const response = await AddPlant(BASE, Values)
+                const response:responseDataTypes = await AddPlant(BASE, Values)
                 setisLoading(false)
                 if (response.status == 201) {
                     console.log("✅", response.message)
@@ -71,6 +78,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                     toast.success(response.message)
                     return loadFetchPlants()
                 } else if (response.status != 201) {
+                    await deleteImage(userId, Values.imageName)
                     console.log("ℹ️", response.message)
                     setOpen(!open)
                     toast.error(response.message)
@@ -83,7 +91,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
 
 
     const handleLocationChange = (location: string, environment: string | null) => {
-      
+
         setValues((prevValues) => ({
             ...prevValues,
             location: location,
@@ -156,6 +164,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                                 <option value="Indoor">Indoor</option>
                                 <option value="Outdoor">Outdoor</option>
                             </select>
+
                         </div>
                     </DialogHeader>
                     <DialogFooter>

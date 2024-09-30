@@ -5,6 +5,7 @@ import { PlantsContext } from '@/App'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { PlantDataTypes } from '@/types/Plant'
 import { useParams } from 'react-router-dom'
+import { GoSearch } from "react-icons/go";
 
 
 const SearchComponent = () => {
@@ -13,18 +14,18 @@ const SearchComponent = () => {
     const { setData, Plants } = useContext(PlantsContext)
     const [previewCards, setpreviewCards] = useState<PlantDataTypes[]>()
     const [searchTerm, setSearchTerm] = useState<string>("")
-    const { plantId } = useParams();
+    const { plantId } = useParams()
 
 
     useEffect(() => {
-        setTimeout(async function () {
+        setTimeout(() => {
             if (searchTerm.length >= 2) {
                 //search through Plants
                 let filtered = Plants.filter((plant: PlantDataTypes) => plant.nickname && plant.nickname.toLowerCase().includes(searchTerm.toLowerCase()));
                 if (location.pathname === "/dashboard") {
                     return setData(filtered)
                 } else {
-                    filtered = filtered.map((plant:PlantDataTypes) => {
+                    filtered = filtered.map((plant: PlantDataTypes) => {
                         if (plant.id !== plantId) return plant
                         else return []
                     })
@@ -38,7 +39,7 @@ const SearchComponent = () => {
                 }
             }
         }, 1000)
-    }, [Plants, searchTerm, setData])
+    }, [searchTerm, Plants, setData])
 
     const clearInput = () => {
         setSearchTerm("")
@@ -53,12 +54,12 @@ const SearchComponent = () => {
     }
     return (
         <div className='w-full flex flex-col'>
-            <div className='flex border p-1 rounded-xl justify-center items-center w-full focus-visible:ring-1 focus-visible:ring-primary'>
-                <Input type="search" placeholder="Search plants..." className="border-none shadow-none focus-visible:ring-0 bg-card" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} />
+            <div className='flex border px-4 rounded-xl justify-center items-center w-full focus-visible:ring-1 focus-visible:ring-primary'>
+                <GoSearch />
+                <Input type="search" placeholder="Search plants..." className="border-none rounded-xl shadow-none focus-visible:ring-0 bg-card" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} />
                 {searchTerm.length > 0 && <button className='mr-3' onClick={clearInput}><Cross2Icon></Cross2Icon></button>}
             </div>
             {previewCards?.length > 0 && previewCards?.map((plant, index) => {
-
                 return (
                     <button onClick={() => HeadTo(plant.id)}>
                         <div key={index} className='flex gap-2 w-full justify-center items-start top-2 bg-white p-1 border-b transition-all hover:bg-primary-foreground'>

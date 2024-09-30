@@ -28,39 +28,58 @@ const AddPlant = async (req, res) => {
   if (!Plant) {
     return res.status(400).json({
       message: "All fields are required",
+      status: 400
     });
-  }
-  const plant = `${environment} ${species}`;
-  //const careGuide = await gemini(plant);
+  } else if (Plant) {
 
-  // Add plant to database
-  try {
-    const newPlant = await db.collection("userPlants").add({
-      userId,
-      nickname,
-      location,
-      species,
-      environment,
-      imageUrl,
-      imageName,
-      // careGuide,
-      growthLogs: [],
-      favourite: false,
-    });
+    const isNameAvailable = await db
+        .collection("userPlants")
+        .where("nickname", "==", nickname)
+        .select(
+          "nickname",
+        )
+        .get();
 
-    if (newPlant) {
-      return res.status(201).json({
-        message: "Plant created successfully!",
-        status: "201",
+    if(isNameAvailable.docs.length > 0){
+      return res.status(400).json({
+        message: "Nickname already exists",
+        status: 400,
       });
     }
-  } catch (err) {
-    console.log("err: ", err);
-    return res.status(401).json({
-      message: "Error Creating plant",
-      status: "201",
-    });
+    const plant = `${environment} ${species}`;
+    //const careGuide = await gemini(plant);
+  
+    // Add plant to database
+    try {
+      const newPlant = await db.collection("userPlants").add({
+        userId,
+        nickname,
+        location,
+        species,
+        environment,
+        imageUrl,
+        imageName,
+        // careGuide,
+        growthLogs: [],
+        favourite: false,
+      });
+  
+      if (newPlant) {
+        return res.status(201).json({
+          message: "Plant created successfully!",
+          status: 201,
+        });
+      }
+    } catch (err) {
+      console.log("err: ", err);
+      return res.status(401).json({
+        message: "Error Creating plant",
+        status: 401,
+      });
+    }
+
   }
+
 };
 
 const GetPlants = async (req, res) => {
