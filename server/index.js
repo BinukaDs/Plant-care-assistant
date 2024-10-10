@@ -7,26 +7,27 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-const getDevices = async () => {
-  const response = await app.get(`http:localhost:3000/devices`, {
-    headers: { Authorization: `Bearer ${user.token}` },
-  });
-  setDevices(response.data.devices);
-  setLoading(false);
-};
+// const getDevices = async () => {
+//   const response = await app.get(`http:localhost:3000/devices`, {
+//     headers: { Authorization: `Bearer ${user.token}` },
+//   });
+//   setDevices(response.data.devices);
+//   setLoading(false);
+// };
 
-app.use("/users", require("./routes/users.js"));
-app.use("/signin", require("./routes/Authentication/signin.js"));
-app.use("/register", require("./routes/Authentication/signup.js"));
-app.use("/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
-app.use("/plants", require("./routes/Plants/Plants.js"));
-app.use("/growthlogs", require("./routes/Plants/growthLogs.js"));
-app.use("/locations", require("./routes/Plants/Locations.js"));
-app.use("/gemini", require("./routes/Gemini/gemini.js"))
-app.use("/vertex", require("./routes/Gemini/vertex.js"));
-app.post("/hello", (req, res) => {
+app.use("/api/users", require("./routes/users.js"));
+app.use("/api/signin", require("./routes/Authentication/signin.js"));
+app.use("/api/register", require("./routes/Authentication/signup.js"));
+app.use("/api/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
+app.use("/api/plants", require("./routes/Plants/Plants.js"));
+app.use("/api/growthlogs", require("./routes/Plants/growthLogs.js"));
+app.use("/api/locations", require("./routes/Plants/Locations.js"));
+app.use("/api/gemini", require("./routes/Gemini/gemini.js"))
+app.use("/api/vertex", require("./routes/Gemini/vertex.js"));
+app.post("/api/hello", (req, res) => {
   res.json({ message: "Hello World" });
 });
-app.listen(3001, () => {
-  console.log(`App is listening to port: ${3001}`);
-});
+// app.listen(3001, () => {
+//   console.log(`App is listening to port: ${3001}`);
+// });
+module.exports = app;
