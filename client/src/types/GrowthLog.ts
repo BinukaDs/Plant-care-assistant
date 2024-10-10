@@ -1,7 +1,7 @@
 export interface GrowthLogDataTypes {
-  userId: string;
+  userId?: string;
   plantId: string;
-  index: string;
+  index: number;
   imageUrl: string;
   date: string;
   notes: string;

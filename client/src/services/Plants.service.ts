@@ -1,4 +1,4 @@
-import { PlantDataTypes } from "@/types/Plant";
+import { PlantDataTypes, responseDataTypes } from "@/types/Plant";
 import { PlantsDataTypes } from "@/types/Plant";
 
 export const FetchPlants = async (
@@ -48,7 +48,10 @@ export const FetchPlantDetails = (
     });
 };
 
-export const AddPlant = async (BASE: string, Values: PlantDataTypes): Promise<void> => {
+export const AddPlant = async (
+  BASE: string,
+  Values: {userId: string, nickname: string, location: string, species: string, environment: string, imageUrl: string, imageName: string}
+): Promise<responseDataTypes> => {
   return await fetch(BASE + "/plants/add", {
     method: "POST",
     headers: {
@@ -68,8 +71,8 @@ export const AddPlant = async (BASE: string, Values: PlantDataTypes): Promise<vo
 
 export const UpdatePlant = async (
   BASE: string,
-  Values: PlantDataTypes
-): Promise<void> => {
+  Values: { nickname: string; location: string; species: string; environment: string }
+): Promise<responseDataTypes> => {
   return await fetch(BASE + "/plants/plant/update", {
     method: "PUT",
     headers: {
@@ -91,7 +94,7 @@ export const DeletePlant = async (
   UserId: string,
   plantId: string,
   imageName: string
-): Promise<void> => {
+): Promise<responseDataTypes> => {
   return await fetch(BASE + "/plants/plant/delete", {
     method: "DELETE",
     headers: {
@@ -113,7 +116,11 @@ export const DeletePlant = async (
     });
 };
 
-export const setFavourite = async (BASE: string, plantId: string, isFavourite: boolean):Promise<void> => {
+export const setFavourite = async (
+  BASE: string,
+  plantId: string,
+  isFavourite: boolean
+): Promise<responseDataTypes> => {
   return await fetch(BASE + "/plants/favourite", {
     method: "POST",
     headers: {

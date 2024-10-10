@@ -1,16 +1,17 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { PlantsContext } from "@/App"
 import CreatableSelect from 'react-select/creatable';
+import { PlantsContextDataTypes } from "@/types/Plant";
 
 
 
 
-const LocationInput = ({ onValueChange, defaultValue }: { onValueChange: (location: string, environment: string | null) => void, defaultValue?: string | null }) => {
+const LocationInput = ({ onValueChange }: { onValueChange: (location: string, environment: string | null) => void }) => {
 
-    const { Locations } = useContext(PlantsContext)
-    const [options, setOptions] = useState([]);
-    const [defaultOption, setdefaultOption] = useState<{ label: string; value: string } | undefined>(undefined)
-    const [value, setValue] = useState("");
+    const { Locations } = useContext(PlantsContext) as PlantsContextDataTypes
+    const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
+    // const [defaultOption, setdefaultOption] = useState<{ label: string; value: string } | undefined>(undefined)
+    const [value, setValue] = useState({ label: "", value: "" });
     const [isLoading, setIsLoading] = useState(false);
 
     const createOption = (label: string) => ({
@@ -55,15 +56,12 @@ const LocationInput = ({ onValueChange, defaultValue }: { onValueChange: (locati
             filterLocations();
             hasRunfilter.current = true;
         }
-        if (defaultValue) {
-            const Value = createOption(defaultValue)
-            setdefaultOption(Value)
-        }
+      
     }, []);
     return (
         <CreatableSelect
             options={options}
-            onChange={(newValue) => { setValue(newValue) }}
+            onChange={(newValue) => { setValue(newValue as { label: string; value: string }) }}
             onCreateOption={handleCreate}
             isDisabled={isLoading}
             value={value}

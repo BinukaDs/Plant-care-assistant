@@ -1,3 +1,5 @@
+import { responseDataTypes } from "@/types/Plant";
+
 export const fetchLocations = (BASE: string, userId: string): Promise<[]> => {
   return fetch(BASE + "/locations", {
     method: "POST",
@@ -22,7 +24,7 @@ export const updateLocation = (
   id: string,
   location: string,
   environment: string
-): Promise<JSON | string> => {
+): Promise<responseDataTypes> => {
   return fetch(BASE + "/locations/update", {
     method: "PATCH",
     headers: {
@@ -47,7 +49,7 @@ export const addLocation = (
   userId: string,
   location: string,
   environment: string
-): Promise<JSON | string> => {
+): Promise<responseDataTypes> => {
   return fetch(BASE + "/locations/add", {
     method: "POST",
     headers: {
@@ -70,7 +72,7 @@ export const addLocation = (
 export const deleteLocation = (
   BASE: string,
   locationId: string
-): Promise<string> => {
+): Promise<responseDataTypes> => {
   return fetch(BASE + "/locations/delete", {
     method: "DELETE",
     headers: {
