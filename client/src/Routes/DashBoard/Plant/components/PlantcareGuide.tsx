@@ -1,14 +1,14 @@
 import "./Css/PlantCareGuide.module.css";
-import { useState } from "react";
-import { FaTint, FaSun, FaLeaf } from 'react-icons/fa'; // Install react-icons package
 
-const icons = {
-  Watering: <FaTint />,
-  Sunlight: <FaSun />,
-  Soil: <FaLeaf />,
-};
+// import { FaTint, FaSun, FaLeaf } from 'react-icons/fa'; // Install react-icons package
 
-const PlantCareGuide = ({ careGuide }) => {
+// const icons = {
+//   Watering: <FaTint />,
+//   Sunlight: <FaSun />,
+//   Soil: <FaLeaf />,
+// };
+
+const PlantCareGuide = ({ careGuide }: { careGuide: { feature: string, details: string }[] }) => {
   return (
     <div className="care-panel">
       {careGuide.map((item, index) => (

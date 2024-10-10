@@ -17,7 +17,6 @@ import { updateImage } from "@/services/Images.service"
 import { useContext } from "react"
 import { UserContext } from "@/App"
 import { UpdatePlant } from "@/services/Plants.service"
-import { FetchPlantDetails } from "@/services/Plants.service"
 import LocationInput from "../AddPlant/LocationInput"
 import { addLocation } from "@/services/Locations.service"
 import { tailspin } from 'ldrs'
@@ -38,17 +37,17 @@ function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadP
     const [previewUrl, setPreviewUrl] = useState(plant.imageUrl)
 
 
-    const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const inputId = e.target.id
-        if (Values[inputId] !== e.target.value) {
-            if (ValuesTobeSubmitted[inputId] !== e.target.value) {
-                setValuesTobeSubmitted({ ...ValuesTobeSubmitted, [inputId]: e.target.value })
-                setisChanged(true)
+    const onValueChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+            const inputId = e.target.id as keyof typeof Values
+            if (Values[inputId] !== e.target.value) {
+                if (ValuesTobeSubmitted[inputId] !== e.target.value) {
+                    setValuesTobeSubmitted({ ...ValuesTobeSubmitted, [inputId]: e.target.value })
+                    setisChanged(true)
+                }
+            } else {
+                setisChanged(false)
             }
-        } else {
-            setisChanged(false)
         }
-    }
 
     async function updatePlant() {
         setisLoading(true)
@@ -119,7 +118,9 @@ function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadP
     }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files[0];
+        const files = e.target.files;
+        if (!files) return;
+        const file = files[0];
         if (file) {
             setImage(file)
             const reader = new FileReader()

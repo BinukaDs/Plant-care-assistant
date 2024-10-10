@@ -1,7 +1,9 @@
 import SideBar from "../../components/SideBar";
 import FadeIn from "@/components/transitions/FadeIn";
 import { useState } from "react";
-const Layout = ({ children }) => {
+import { ReactNode } from "react";
+
+const Layout = ({ children }: { children: ReactNode }) => {
   const [showNav, setshowNav] = useState(false)
   return (
     <div className="flex w-full h-full ">

@@ -1,7 +1,7 @@
 import React from "react"
 import { useEffect, useState, useContext } from "react"
 import { FetchAuthentication } from "@/services/Authentication.service"
-import { ExitIcon, DashboardIcon, ArchiveIcon, MixIcon, PersonIcon, DesktopIcon, GearIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, MagnifyingGlassIcon, PlusIcon } from '@radix-ui/react-icons'
+import { ExitIcon, DashboardIcon, ArchiveIcon, MixIcon, PersonIcon, DesktopIcon, GearIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { UserContext } from '@/App'
 import SearchComponent from "../Routes/DashBoard/components/Sidebar/SearchComponent"
 import FiltersComponent from "@/Routes/DashBoard/components/Sidebar/FiltersComponent"
@@ -16,7 +16,11 @@ interface DataType {
   id: string;
   username: string;
 }
-const SideBar = ({ visible, show }) => {
+
+const SideBar = ({ visible, show }: {
+  visible: boolean;
+  show: (visible: boolean) => void;
+}) => {
   const navigate = useNavigate()
   const cookies = new Cookies();
   const location = useLocation()
@@ -121,7 +125,7 @@ const SideBar = ({ visible, show }) => {
               {!isCollapsed && <h1 className='topic'>PlantLY</h1>}
             </div>
             <div>
-              
+
               <Button variant={"ghost"} onClick={toggleSidebar}>
                 {isCollapsed ? <DoubleArrowRightIcon /> : <DoubleArrowLeftIcon />}
               </Button>

@@ -1,6 +1,3 @@
-import { Button } from '@/components/ui/button'
-import { LiaPlusSolid } from "react-icons/lia";
-import { fetchLocations } from '@/services/Locations.service';
 import {
   Table,
   TableBody,
@@ -16,11 +13,11 @@ import AddLocation from './AddLocation';
 import { FetchAuthentication } from '@/services/Authentication.service';
 import DeleteLocation from './DeleteLocation';
 import { updateLocation } from '@/services/Locations.service';
-import { LocationDataTypes, PlantDataTypes, responseDataTypes } from '@/types/Plant';
+import { LocationDataTypes, PlantDataTypes, PlantsContextDataTypes, responseDataTypes } from '@/types/Plant';
 import { Input } from '@/components/ui/input';
 import Cookies from 'universal-cookie'
 const Locations = () => {
-  const { Plants, Locations, loadFetchLocations } = useContext(PlantsContext)
+  const { Plants, Locations, loadFetchLocations } = useContext(PlantsContext) as PlantsContextDataTypes
   const cookies = new Cookies()
   const BASE = useContext(UserContext)
   const [plantsCount, setplantsCount] = useState<number[]>([])
@@ -48,9 +45,9 @@ const Locations = () => {
   };
 
 
-const debounce = (func: Function, delay: number) => {
+const debounce = (func: (id:string, value:string, environment:string)=> void, delay: number) => {
   let timeoutId: NodeJS.Timeout;
-  return (...args: any[]) => {
+  return (...args: [string, string, string]) => {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
@@ -118,7 +115,7 @@ const debounce = (func: Function, delay: number) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Locations.length > 0 ? Locations.map((location: LocationDataTypes, index: number) => {
+            {Locations.length > 0 ? Locations.map((location, index) => {
               return (
                 <TableRow key={index}>
                   <TableCell className='text-left'>

@@ -8,13 +8,14 @@ import { FetchAuthentication } from '@/services/Authentication.service'
 import Cookies from 'universal-cookie'
 import FadeIn from '@/components/transitions/FadeIn'
 import { SortComponent } from './components/Sort/Sortcomponent'
+import { PlantsContextDataTypes } from '@/types/Plant'
 
 
 const DashBoard = () => {
     const navigate = useNavigate();
     const cookies = new Cookies()
     const [UserId, setUserId] = useState("");
-    const { Data, loadFetchPlants, loadFetchLocations, Plants } = useContext(PlantsContext)
+    const { Data, loadFetchPlants, loadFetchLocations, Plants } = useContext(PlantsContext) as PlantsContextDataTypes
     const BASE = useContext(UserContext);
 
     //fetch Authentication middleware

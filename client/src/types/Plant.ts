@@ -19,15 +19,34 @@ export interface PlantDataTypes {
   favourite: boolean;
 }
 
-export interface PlantsDataTypes {
-  nickname: string;
-  species: string;
-  plants: PlantDataTypes[];
+export interface PlantsContextDataTypes {
+  setData: React.Dispatch<React.SetStateAction<PlantsDataTypes>>;
+  Data: PlantsDataTypes;
+  Plants: PlantsDataTypes;
+  setPlants: React.Dispatch<React.SetStateAction<PlantsDataTypes>>;
+  Locations: LocationDataTypes[];
+  setLocations: React.Dispatch<React.SetStateAction<LocationDataTypes[]>>;
+  loadFetchPlants: () => Promise<void>;
+  loadFetchLocations: () => Promise<void>;
+  loadAuthentication: () => Promise<void>;
+  isLoading: boolean;
+  Wallpapers: WallpaperDataTypes[];
 }
+
+export interface WallpaperDataTypes {
+  urls: {
+    full: string;
+    thumb: string;
+    small: string;
+  };
+}
+
+export type PlantsDataTypes = PlantDataTypes[];  
+ 
 
 export interface LocationDataTypes {
   id: string;
-  location:string;
+  location: string;
   environment: string;
 }
 

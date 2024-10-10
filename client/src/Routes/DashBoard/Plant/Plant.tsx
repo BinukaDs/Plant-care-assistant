@@ -8,7 +8,7 @@ import FavouriteComponent from './components/Favourite/FavouriteComponent'
 import { PlantsContext, UserContext } from '@/App'
 import PlantCareGuide from './components/PlantcareGuide';
 import BreadCrumbNav from '@/components/BreadCrumbNav'
-import { PlantDataTypes, responseDataTypes } from '@/types/Plant'
+import { PlantDataTypes, PlantsContextDataTypes, responseDataTypes } from '@/types/Plant'
 import { FetchAuthentication } from '@/services/Authentication.service'
 import { FetchPlantDetails, DeletePlant } from '@/services/Plants.service'
 import Cookies from 'universal-cookie'
@@ -26,15 +26,32 @@ const sampleCareGuide = [
 
 const Plant = () => {
   const cookies = new Cookies()
-  const { plantId } = useParams();
   const [UserId, setUserId] = useState("");
   const BASE = useContext(UserContext);
-  const { Wallpapers } = useContext(PlantsContext)
-  const [PlantData, setPlantData] = useState<PlantDataTypes>({})
+  const { Wallpapers } = useContext(PlantsContext) as PlantsContextDataTypes
+  const [PlantData, setPlantData] = useState<PlantDataTypes>({
+    id: '',
+    imageUrl: '',
+    imageName: '',
+    species: '',
+    location: '',
+    nickname: '',
+    favourite: false,
+    growthLogs: [],
+    environment: '',
+    careGuide: '',
+    userId: ''
+  })
   const navigate = useNavigate();
+  const { plantId } = useParams();
+
 
   //authentication middleware
   const loadAuthentication = async () => {
+    if (!plantId) {
+      console.error("Plant ID is undefined");
+      return;
+    }
     try {
       const data = await FetchAuthentication(BASE, cookies.get("token"));
       if (data.id) {
@@ -50,7 +67,12 @@ const Plant = () => {
 
 
   const loadFetchPlantDetails = async () => {
+    if (!plantId) {
+      console.error("Plant ID is undefined");
+      return;
+    }
     try {
+
       const data = await FetchPlantDetails(BASE, plantId, UserId);
       if (data) {
         setPlantData(data)
@@ -64,6 +86,10 @@ const Plant = () => {
   }
 
   const loadDeletePlant = async () => {
+    if (!plantId) {
+      console.error("Plant ID is undefined");
+      return;
+    }
     try {
       const response: responseDataTypes = await DeletePlant(BASE, UserId, plantId, PlantData.imageName)
       console.log('response', response)
@@ -87,7 +113,10 @@ const Plant = () => {
     loadFetchPlantDetails()
   }, [UserId])
 
-
+  if (!plantId) {
+    console.error("Plant ID is undefined");
+    return;
+  }
   return (
     <Layout>
       <div className='w-full h-full'>
@@ -95,7 +124,7 @@ const Plant = () => {
           <div className='absolute h-full w-full backdrop-brightness-50 bg-white/25'>
             <div className='ml-5 mt-5'><BreadCrumbNav className='text-white' /></div>
           </div>
-          {Wallpapers && <img src={Wallpapers[0].urls.full} alt={Wallpapers[0].alt_description} />}
+          {Wallpapers && <img src={Wallpapers[0].urls.full} alt="Wallpaper" />}
         </div>
         <section className='flex flex-col w-full h-full '>
           <div className='bg-white rounded-t-xl relative flex flex-col w-full h-full p-10 mt-48'>
@@ -116,7 +145,7 @@ const Plant = () => {
                     </div>
                   </div>
                   <div>
-                    <FavouriteComponent plantId={plantId} currentState={PlantData.favourite}/>
+                    <FavouriteComponent plantId={plantId} currentState={PlantData.favourite} />
                   </div>
                 </div>
               </div>
@@ -152,7 +181,10 @@ const Plant = () => {
                             <div className='flex flex-col justify-start items-start'>
                               <h1 className='topic'>{log.date}</h1>
                             </div>
-                            <EditLog plantId={plantId} index={index} />
+                            <div className='flex justify-start items-center'>
+                              <EditLog plantId={plantId} index={index} loadPlant={loadFetchPlantDetails} />
+                              <DeleteLog plantId={plantId} index={index} imageName={log.imageUrl} userId={UserId} loadPlant={loadFetchPlantDetails} />
+                            </div>
                           </div>
                           <div className=''>
                             <p className='text-secondary text-start'>{log.notes}</p>

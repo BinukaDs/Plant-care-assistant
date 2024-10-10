@@ -4,11 +4,11 @@ import { TrashIcon } from '@radix-ui/react-icons'
 import { deleteLocation } from '@/services/Locations.service'
 import { useContext } from 'react'
 import { UserContext, PlantsContext } from '@/App'
-import { responseDataTypes } from '@/types/Plant'
+import { PlantsContextDataTypes, responseDataTypes } from '@/types/Plant'
 
 const DeleteLocation = ({ id, plantsCount }: { id: string, plantsCount: number }) => {
   const BASE = useContext(UserContext);
-  const { loadFetchLocations } = useContext(PlantsContext)
+  const { loadFetchLocations } = useContext(PlantsContext) as PlantsContextDataTypes
   const Delete = async () => {
     if (plantsCount > 0) {
       return toast.error("Please delete all plants in this location before deleting the location!")

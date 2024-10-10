@@ -8,20 +8,20 @@ import {
 } from "@/components/ui/select"
 import { useContext,useEffect, useState } from "react"
 import { PlantsContext } from "@/App"
-import { PlantDataTypes } from "@/types/Plant"
+import { PlantsContextDataTypes } from "@/types/Plant"
 export const SortComponent = () => {
     const [sortType, setSortType] = useState<string>("")
-    const { setData, Plants } = useContext(PlantsContext)
+    const { setData, Plants } = useContext(PlantsContext) as PlantsContextDataTypes
     useEffect(() => {
         switch (sortType) {
             case "nickname":
-                setData(Plants.sort((a: PlantDataTypes, b: PlantDataTypes) => (a.nickname >= b.nickname) ? 1 : -1));
+                setData(Plants.sort((a, b) => (a.nickname >= b.nickname) ? 1 : -1));
                 break;
             case "location":
-                setData(Plants.sort((a: PlantDataTypes, b: PlantDataTypes) => (a.location >= b.location) ? 1 : -1));
+                setData(Plants.sort((a, b) => (a.location >= b.location) ? 1 : -1));
                 break;
             case "species":
-                setData(Plants.sort((a: PlantDataTypes, b: PlantDataTypes) => (a.species >= b.species) ? 1 : -1));
+                setData(Plants.sort((a, b) => (a.species >= b.species) ? 1 : -1));
                 break;
             default:
                 break;

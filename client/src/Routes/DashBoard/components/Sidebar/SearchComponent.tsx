@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { PlantsContext } from '@/App'
 import { Cross2Icon } from '@radix-ui/react-icons'
-import { PlantDataTypes } from '@/types/Plant'
+import { PlantDataTypes, PlantsContextDataTypes } from '@/types/Plant'
 import { useParams } from 'react-router-dom'
 import { GoSearch } from "react-icons/go";
 
@@ -11,7 +11,7 @@ import { GoSearch } from "react-icons/go";
 const SearchComponent = () => {
     const location = useLocation()
     const navigate = useNavigate()
-    const { setData, Plants } = useContext(PlantsContext)
+    const { setData, Plants } = useContext(PlantsContext) as PlantsContextDataTypes
     const [previewCards, setpreviewCards] = useState<PlantDataTypes[]>()
     const [searchTerm, setSearchTerm] = useState<string>("")
     const { plantId } = useParams()
@@ -21,14 +21,11 @@ const SearchComponent = () => {
         setTimeout(() => {
             if (searchTerm.length >= 2) {
                 //search through Plants
-                let filtered = Plants.filter((plant: PlantDataTypes) => plant.nickname && plant.nickname.toLowerCase().includes(searchTerm.toLowerCase()));
+                let filtered = Plants.filter((plant) => plant.nickname && plant.nickname.toLowerCase().includes(searchTerm.toLowerCase()));
                 if (location.pathname === "/dashboard") {
                     return setData(filtered)
                 } else {
-                    filtered = filtered.map((plant: PlantDataTypes) => {
-                        if (plant.id !== plantId) return plant
-                        else return []
-                    })
+                    filtered = filtered.filter((plant) => plant.id !== plantId)
                     setpreviewCards(filtered)
                 }
             } else {
@@ -59,7 +56,7 @@ const SearchComponent = () => {
                 <Input type="search" placeholder="Search plants..." className="border-none rounded-xl shadow-none focus-visible:ring-0 bg-card" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} />
                 {searchTerm.length > 0 && <button className='mr-3' onClick={clearInput}><Cross2Icon></Cross2Icon></button>}
             </div>
-            {previewCards?.length > 0 && previewCards?.map((plant, index) => {
+            {previewCards && previewCards.length > 0 && previewCards.map((plant, index) => {
                 return (
                     <button onClick={() => HeadTo(plant.id)}>
                         <div key={index} className='flex gap-2 w-full justify-center items-start top-2 bg-white p-1 border-b transition-all hover:bg-primary-foreground'>

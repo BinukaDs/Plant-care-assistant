@@ -20,19 +20,21 @@ import uploadImage from "@/services/Images.service";
 import { AddGrowthLog } from "@/services/GrowthLog.service";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { UserContext } from "@/App";
+import { responseDataTypes } from "@/types/Plant";
+import { GrowthLogDataTypes } from "@/types/GrowthLog";
 
 
 const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: string, loadPlant: () => Promise<void> }) => {
     const [Values, setValues] = useState({ plantId: plantId, imageUrl: "", imageName: "", date: "", notes: "", height: "", leafCount: "" })
 
     const [isLoading, setisLoading] = useState(false)
-    const [isUploaded, setisUploaded] = useState(false)
-    const [Image, setImage] = useState(null)
+    // const [isUploaded, setisUploaded] = useState(false)
+    const [Image, setImage] = useState<File | null>(null)
     const BASE = useContext(UserContext);
 
 
 
-    const onValueChange = (e) => {
+    const onValueChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setValues({ ...Values, [e.target.id]: e.target.value })
     }
 
@@ -45,7 +47,7 @@ const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: strin
                 toast.error("ℹ️ Please fill all the fields.")
 
             } else if (userId && Image && Values.date && Values.notes && Values.height && Values.leafCount) {
-                const { imageUrl, fileName } = await uploadImage(userId, Image);
+                const { imageUrl, fileName } = await uploadImage(userId, Image) as { imageUrl: string; fileName: string };
                 setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName })
             }
 
@@ -61,7 +63,7 @@ const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: strin
             const postData = async () => {
                 try {
                     setisLoading(true)
-                    const response = await AddGrowthLog(BASE, Values)
+                    const response: responseDataTypes = await AddGrowthLog(BASE, Values as unknown as GrowthLogDataTypes)
                     console.log("Response:", response)
                     if (response.status == 201) {
                         setisLoading(false)
@@ -83,14 +85,14 @@ const AddLog = ({ plantId, userId, loadPlant }: { plantId: string, userId: strin
                 }
             }
             postData()
-            setisUploaded(true)
+            
         }
     }, [Values.imageUrl]);
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file)
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files && files[0]) {
+            setImage(files[0]);
         }
     }
 

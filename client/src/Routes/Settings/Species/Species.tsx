@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Species = () => {
   return (
     <section className='mt-3 w-full'>

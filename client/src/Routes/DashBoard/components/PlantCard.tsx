@@ -21,7 +21,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/App";
 import { PlantsContext } from "@/App";
 import { DeletePlant } from "@/services/Plants.service";
-import { PlantDataTypes, responseDataTypes } from "@/types/Plant";
+import { PlantDataTypes, responseDataTypes,PlantsContextDataTypes } from "@/types/Plant";
 import "../../../App.css"
 import { LiaLeafSolid, LiaMapPinSolid, LiaArrowRightSolid } from "react-icons/lia";
 
@@ -29,7 +29,7 @@ import { LiaLeafSolid, LiaMapPinSolid, LiaArrowRightSolid } from "react-icons/li
 const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
     const BASE = useContext(UserContext);
     const [open, setOpen] = useState(false)
-    const { loadFetchPlants } = useContext(PlantsContext)
+    const { loadFetchPlants } = useContext(PlantsContext) as PlantsContextDataTypes
     const navigate = useNavigate()
 
     async function loadDeletePlant() {
