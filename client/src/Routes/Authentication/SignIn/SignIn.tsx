@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext } from "react"
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { PuffLoader } from "react-spinners"
 import { UserContext } from "@/App";
 import { Input } from "@/components/ui/input";
 import FadeIn from "../../../components/transitions/FadeIn"
@@ -35,7 +34,7 @@ const SignIn = () => {
   }
 
 
-  const loadFetchSignIn = async (e: React.ChangeEvent<HTMLElement>) => {
+  const loadFetchSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!Values.email || !Values.password) {

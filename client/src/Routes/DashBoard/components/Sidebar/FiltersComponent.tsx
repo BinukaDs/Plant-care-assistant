@@ -1,16 +1,16 @@
 import LocationBadge from './LocationBadge'
 import { useContext, useEffect, useState } from 'react'
-import { UserContext, PlantsContext } from '@/App'
+import { PlantsContext } from '@/App'
+import { PlantsContextDataTypes } from '@/types/Plant'
 
 
 const FiltersComponent = () => {
-    const { Data, Plants } = useContext(PlantsContext)
-    const BASE = useContext(UserContext)
-    const [Locations, setLocations] = useState([])
+    const { Plants } = useContext(PlantsContext) as PlantsContextDataTypes
+    const [Locations, setLocations] = useState<string[]>([])
 
     const filterLocation = async () => {
         Plants.map((plant) => {
-            setLocations((prev) => [...new Set([...prev, plant.location])])
+            setLocations((prev) => [...new Set<string>([...prev, plant.location])])
         })
     }
 

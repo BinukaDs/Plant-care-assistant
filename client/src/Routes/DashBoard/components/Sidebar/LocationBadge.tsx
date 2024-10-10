@@ -1,12 +1,12 @@
 import { PlantsContext } from '@/App'
 import { useContext } from 'react'
 import { useState } from 'react'
-import { Badge } from '@/components/ui/badge'
 import { Checkbox } from "@/components/ui/checkbox"
+import { PlantsContextDataTypes } from '@/types/Plant'
 
 const LocationBadge = ({ Location }: { Location: string }) => {
   const [BgState, setBgState] = useState(false)
-  const { setData, Plants } = useContext(PlantsContext)
+  const { setData, Plants } = useContext(PlantsContext) as PlantsContextDataTypes
 
 
   const toggleState = () => {

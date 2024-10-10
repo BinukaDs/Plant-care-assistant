@@ -1,7 +1,10 @@
 import { GrowthLogDataTypes } from "@/types/GrowthLog";
-import { PlantDataTypes } from "@/types/Plant";
+import { responseDataTypes } from "@/types/Plant";
 
-export const AddGrowthLog = (BASE: string, Values: any): Promise<void> => {
+export const AddGrowthLog = (
+  BASE: string,
+  Values: GrowthLogDataTypes
+): Promise<responseDataTypes> => {
   return fetch(BASE + "/growthlogs/add", {
     method: "POST",
     headers: {
@@ -21,7 +24,7 @@ export const AddGrowthLog = (BASE: string, Values: any): Promise<void> => {
 export const GetGrowthLogDetails = (
   BASE: string,
   plantId: string,
-  index: string
+  index: number
 ): Promise<GrowthLogDataTypes> => {
   return fetch(BASE + "/growthlogs/get", {
     method: "POST",
@@ -34,7 +37,7 @@ export const GetGrowthLogDetails = (
       return res.json();
     })
     .then((data) => {
-      return data;
+      return data.growthLog;
     })
     .catch((error) => {
       return error;
@@ -43,8 +46,8 @@ export const GetGrowthLogDetails = (
 
 export const UpdateGrowthLog = async (
   BASE: string,
-  Values: PlantDataTypes
-): Promise<void> => {
+  Values: GrowthLogDataTypes
+): Promise<responseDataTypes> => {
   return await fetch(BASE + "/growthlogs/edit", {
     method: "PUT",
     headers: {
@@ -56,7 +59,7 @@ export const UpdateGrowthLog = async (
       return response.json();
     })
     .catch((error) => {
-      console.error("Error:",error);
+      console.error("Error:", error);
       return error;
     });
 };
@@ -64,10 +67,10 @@ export const UpdateGrowthLog = async (
 export const DeleteGrowthLog = (
   BASE: string,
   plantId: string,
-  index: string,
+  index: number,
   imageName: string,
   userId: string
-): Promise<void> => {
+): Promise<responseDataTypes> => {
   return fetch(BASE + "/growthlogs/delete", {
     method: "DELETE",
     headers: {

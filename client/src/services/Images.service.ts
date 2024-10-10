@@ -6,6 +6,7 @@ import {
 } from "firebase/storage";
 import storage from "../../firebase";
 import axios from "axios";
+// import { PlantDataTypes } from "@/types/Plant";
 export default async function uploadImage(
   userId: string,
   Image: Blob | ArrayBuffer | null
@@ -22,7 +23,7 @@ export default async function uploadImage(
   return new Promise((resolve, reject) => {
     uploadTask.on(
       "state_changed",
-      (snapshot) => {
+      () => {
         // Optional: Handle progress updates
         // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       },
@@ -59,7 +60,7 @@ export async function updateImage(
   return new Promise<void>((resolve, reject) => {
     uploadTask.on(
       "state_changed",
-      (snapshot) => {
+      () => {
         // Optional: Handle progress updates
         // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       },
@@ -71,7 +72,7 @@ export async function updateImage(
       () => {
         // Handle successful uploads on complete
         getDownloadURL(uploadTask.snapshot.ref)
-          .then((downloadURL) => {
+          .then(() => {
             resolve();
           })
           .catch((error) => {
@@ -96,7 +97,7 @@ export async function deleteImage(
     });
 }
 
-export async function FetchWallpaper(): Promise<string> {
+export async function FetchWallpaper() {
   const UNSPLASH_API_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
   const APIURL = `https://api.unsplash.com/search/photos?query=ForestWallpapers&page=1&client_id=${UNSPLASH_API_KEY}`;
   // console.log(import.meta.env.VITE_UNSPLASH_ACCESS_KEY)
@@ -106,6 +107,7 @@ export async function FetchWallpaper(): Promise<string> {
     console.log(data.results);
     return data.results;
   } catch (error) {
-    return console.log("error fetching wallpaper:", error);
+    console.log("error fetching wallpaper:", error);
+    return "Error fetching wallpaper";
   }
 }

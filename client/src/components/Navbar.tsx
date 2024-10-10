@@ -10,7 +10,7 @@ const Navbar = () => {
     useEffect(() => {
         fetch(BASE + "/isUserAuth", {
             headers: {
-                "x-access-token": localStorage.getItem("token") 
+                "x-access-token": localStorage.getItem("token") || ""
             }
         }).then((res) => {
             return res.json()

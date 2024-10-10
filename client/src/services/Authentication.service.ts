@@ -1,13 +1,16 @@
 import { RegisterDataTypes } from "@/types/Authentication";
 import Cookies from "universal-cookie";
-import { PlantDataTypes } from "@/types/Plant";
+import { responseDataTypes } from "@/types/Plant";
 interface ExportDataTypes {
-  username(username: any): unknown;
+  username: string;
   id: string;
   isLoggedin: boolean;
 }
 
-export const FetchAuthentication = (BASE: string, token:string): Promise<ExportDataTypes> => {
+export const FetchAuthentication = (
+  BASE: string,
+  token: string
+): Promise<ExportDataTypes> => {
   const data = fetch(BASE + "/isUserAuth", {
     headers: {
       "x-access-token": token || "",
@@ -36,8 +39,8 @@ export const FetchAuthentication = (BASE: string, token:string): Promise<ExportD
 
 export const FetchSignIn = (
   BASE: string,
-  Values: PlantDataTypes
-): Promise<string> => {
+  Values: { email: string; password: string }
+): Promise<responseDataTypes> => {
   const response = fetch(BASE + "/signin", {
     method: "POST",
     headers: {
@@ -70,7 +73,7 @@ export const SignOut = () => {
 export const FetchRegister = async (
   BASE: string,
   Values: RegisterDataTypes
-): Promise<string> => {
+): Promise<responseDataTypes> => {
   const response = await fetch(BASE + "/register", {
     method: "POST",
     headers: {

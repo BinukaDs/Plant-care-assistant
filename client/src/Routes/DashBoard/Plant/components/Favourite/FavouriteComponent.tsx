@@ -14,7 +14,7 @@ const FavouriteComponent = ({ plantId, currentState }: { plantId: string, curren
 
         setIsFavourite(!isFavourite)
         try {
-            const response: responseDataTypes = await setFavourite(BASE, plantId, isFavourite)
+            const response: responseDataTypes = await setFavourite(BASE, plantId, isFavourite ?? false)
             if (response.status == 200) {
                 if (isFavourite) {
                     toast.success("Plant added to favourites")

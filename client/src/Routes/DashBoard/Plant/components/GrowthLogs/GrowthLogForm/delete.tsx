@@ -13,12 +13,13 @@ import { toast } from "sonner";
 import { useContext } from "react";
 import { UserContext } from "@/App";
 import { DeleteGrowthLog } from "@/services/GrowthLog.service";
-const DeleteLog = ({ plantId, index, imageName, userId, loadPlant }: { plantId: string, index: string, imageName: string, userId: string, loadPlant: () => Promise<void> }) => {
+import { responseDataTypes } from "@/types/Plant";
+const DeleteLog = ({ plantId, index, imageName, userId, loadPlant }: { plantId: string, index: number, imageName: string, userId: string, loadPlant: () => Promise<void> }) => {
     const BASE = useContext(UserContext);
 
     async function deleteLog() {
         try {
-            const response = await DeleteGrowthLog(BASE, plantId, index, imageName, userId)
+            const response:responseDataTypes = await DeleteGrowthLog(BASE, plantId, index, imageName, userId)
             console.log("response:", response)
             if (response.status == 200) {
                 console.log("✅", response.message)

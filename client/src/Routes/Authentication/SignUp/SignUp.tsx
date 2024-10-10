@@ -8,6 +8,9 @@ import Cookies from 'universal-cookie';
 import { Button } from "@/components/ui/button"
 import { responseDataTypes } from "@/types/Plant";
 import { FetchRegister } from "@/services/Authentication.service";
+import { tailspin } from 'ldrs'
+tailspin.register()
+
 const SignUp = () => {
       const cookies = new Cookies()
       const navigate = useNavigate()
@@ -16,7 +19,7 @@ const SignUp = () => {
       const [isLoading, setisLoading] = useState(false);
 
 
-      const loadFetchRegister = async (e: React.ChangeEvent<HTMLElement>) => {
+      const loadFetchRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             setisLoading(true)
             if (!Values.email || !Values.username || !Values.password || !Values.pwdRepeat) {
@@ -85,7 +88,12 @@ const SignUp = () => {
                                                       <Input id="pwdRepeat" name="pwdRepeat" type="password" placeholder="Repeat-Password" onChange={handleChange} />
                                                 </div>
                                           </div>
-                                          <Button className="w-full topic" onClick={loadFetchRegister}>Sign-Up</Button>
+                                          <Button className="w-full topic" onClick={loadFetchRegister}>{isLoading ? <l-tailspin
+                                                size="28"
+                                                stroke="5"
+                                                speed="0.9"
+                                                color="white"
+                                          ></l-tailspin> : "Sign-Up"}</Button>
                                           <p className="text-sm mt-3">Already have an account <span><a href="/signin" className="text-primary underline">Sign-In</a></span></p>
                                     </div>
                               </div>

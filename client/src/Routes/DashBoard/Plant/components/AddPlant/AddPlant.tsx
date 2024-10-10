@@ -18,7 +18,7 @@ import { useContext } from "react"
 import { UserContext } from "@/App"
 import { AddPlant } from "@/services/Plants.service"
 import { PlantsContext } from "@/App"
-import { responseDataTypes } from "@/types/Plant"
+import { PlantsContextDataTypes, responseDataTypes } from "@/types/Plant"
 import LocationInput from "./LocationInput"
 import { addLocation } from "@/services/Locations.service"
 import { tailspin } from 'ldrs'
@@ -26,7 +26,7 @@ tailspin.register()
 
 const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapsed: boolean }) => {
     const BASE = useContext(UserContext);
-    const { setData, loadFetchPlants } = useContext(PlantsContext)
+    const { loadFetchPlants } = useContext(PlantsContext) as PlantsContextDataTypes
     const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "", imageUrl: "", imageName: "" })
     const [Image, setImage] = useState<File | null>(null)
     const [open, setOpen] = useState(false)
@@ -34,13 +34,13 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
     const [isLoading, setisLoading] = useState(false)
 
 
-    const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({ ...Values, userId: userId, [e.target.id]: e.target.value })
-    }
+    const onValueChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+            setValues({ ...Values, userId: userId, [e.target.id]: e.target.value })
+        }
 
     //handle imageUpload
     async function handleUpload() {
-        if(!Values.nickname || !Values.location || !Values.species || !Values.environment || !Image) {
+        if (!Values.nickname || !Values.location || !Values.species || !Values.environment || !Image) {
             return toast.error("Please fill in all the fields")
         } else {
             try {
@@ -48,7 +48,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                 const { imageUrl, fileName } = await uploadImage(userId, Image) as { imageUrl: string, fileName: string };
                 setValues({ ...Values, imageUrl: imageUrl as string, imageName: fileName as string })
                 setisLoading(false)
-    
+
             } catch (error) {
                 console.error("Upload failed", error);
                 setisLoading(false)
@@ -65,12 +65,12 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                     const response: responseDataTypes = await addLocation(BASE, userId, Values.location, Values.environment)
                     if (response.status == 201) {
                         console.log("✅", response.message)
-                    } else if(response.status != 201) {
+                    } else if (response.status != 201) {
                         await deleteImage(userId, Values.imageName)
                         return console.log("ℹ️", response.message)
                     }
                 }
-                const response:responseDataTypes = await AddPlant(BASE, Values)
+                const response: responseDataTypes = await AddPlant(BASE, Values)
                 setisLoading(false)
                 if (response.status == 201) {
                     console.log("✅", response.message)

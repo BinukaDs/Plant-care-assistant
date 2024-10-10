@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { LiaPlusSolid } from 'react-icons/lia'
-import { responseDataTypes } from "@/types/Plant"
+import { PlantsContextDataTypes, responseDataTypes } from "@/types/Plant"
 import { tailspin } from 'ldrs'
 import { toast } from "sonner"
 
@@ -23,9 +22,9 @@ const AddLocation = ({ userId }: { userId: string }) => {
   const [Values, setValues] = useState({ location: "", environment: "Indoor" })
   const [isLoading, setisLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  const { loadFetchLocations } = useContext(PlantsContext)
+  const { loadFetchLocations } = useContext(PlantsContext) as PlantsContextDataTypes
   const BASE = useContext(UserContext)
-  const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onValueChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
     setValues({ ...Values, [e.target.id]: e.target.value })
   }
 
