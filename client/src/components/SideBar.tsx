@@ -140,9 +140,9 @@ const SideBar = ({ visible, show }: {
               {!isCollapsed && (
                 <p className='topic text-secondary'>Navigation</p>
               )}
-              <ul className='flex flex-col justify-start items-center text-start w-full'>
+              <ul className={`flex flex-col justify-start items-center text-start w-full ${isCollapsed && 'mt-5'}`}>
                 {listItems.map((item, index) => (
-                  <li key={index} className='flex justify-start gap-2 w-full'>
+                  <li key={index} className={`flex justify-start gap-2 w-full ${isCollapsed && 'mb-4'}`}>
                     <button
                       onClick={() => navigate(item.href)}
                       className={`flex w-full ${isCollapsed ? "justify-center" : "justify-start"} items-center gap-3 p-2 rounded-xl transition-all hover:bg-primary-foreground ${location.pathname === item.href &&
