@@ -27,7 +27,7 @@ export default function App() {
   
   const [Locations, setLocations] = useState<LocationDataTypes[]>([])
 
-  //Fetch Plantso
+  //Fetch Plants
   const loadFetchPlants = async () => {
     try {
       setisLoading(true)
