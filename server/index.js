@@ -22,12 +22,11 @@ app.use("/api/isUserAuth", require("./routes/Authentication/isUserAuth.js"));
 app.use("/api/plants", require("./routes/Plants/Plants.js"));
 app.use("/api/growthlogs", require("./routes/Plants/growthLogs.js"));
 app.use("/api/locations", require("./routes/Plants/Locations.js"));
-app.use("/api/gemini", require("./routes/Gemini/gemini.js"))
+app.use("/api/gemini", require("./routes/Gemini/gemini.js"));
 app.use("/api/vertex", require("./routes/Gemini/vertex.js"));
 app.post("/api/hello", (req, res) => {
   res.json({ message: "Hello World" });
 });
-// app.listen(3001, () => {
-//   console.log(`App is listening to port: ${3001}`);
-// });
-module.exports = app;
+
+app.listen(3001);
+
