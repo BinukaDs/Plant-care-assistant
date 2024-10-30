@@ -6,7 +6,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useContext,useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { PlantsContext } from "@/App"
 import { PlantsContextDataTypes } from "@/types/Plant"
 export const SortComponent = () => {
@@ -15,13 +15,13 @@ export const SortComponent = () => {
     useEffect(() => {
         switch (sortType) {
             case "nickname":
-                setData(Plants.sort((a, b) => (a.nickname >= b.nickname) ? 1 : -1));
+                setData([...Plants].sort((a, b) => (a.nickname >= b.nickname) ? 1 : -1));
                 break;
             case "location":
-                setData(Plants.sort((a, b) => (a.location >= b.location) ? 1 : -1));
+                setData([...Plants].sort((a, b) => (a.location >= b.location) ? 1 : -1));
                 break;
             case "species":
-                setData(Plants.sort((a, b) => (a.species >= b.species) ? 1 : -1));
+                setData([...Plants].sort((a, b) => (a.species >= b.species) ? 1 : -1));
                 break;
             default:
                 break;
