@@ -24,7 +24,7 @@ export default function App() {
   const [Plants, setPlants] = useState<PlantsDataTypes>([]);
   const [Wallpapers, setWallpapers] = useState<WallpaperDataTypes[]>([])
   const [isLoading, setisLoading] = useState(false);
-  
+
   const [Locations, setLocations] = useState<LocationDataTypes[]>([])
 
   //Fetch Plants
@@ -57,6 +57,7 @@ export default function App() {
       console.error(error);
     }
   }
+  
   //Fetch Locations
   const loadFetchLocations = async () => {
     try {
@@ -69,10 +70,10 @@ export default function App() {
     }
   }
 
-  const loadFetchWallpapers = async() => {
+  const loadFetchWallpapers = async () => {
     const results = await FetchWallpaper()
     setWallpapers(results)
-  } 
+  }
 
 
 
@@ -84,7 +85,7 @@ export default function App() {
 
   return (
     <>
-      <PlantsContext.Provider value={{ setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading, Wallpapers: Wallpapers! }}>
+      <PlantsContext.Provider value={{ UserId, setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading, Wallpapers: Wallpapers! }}>
         <UserContext.Provider value={BASE}>
           <Toaster />
           <BrowserRouter>

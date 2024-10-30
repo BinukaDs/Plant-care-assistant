@@ -28,19 +28,16 @@ const AddPlant = async (req, res) => {
   if (!Plant) {
     return res.status(400).json({
       message: "All fields are required",
-      status: 400
+      status: 400,
     });
   } else if (Plant) {
-
     const isNameAvailable = await db
-        .collection("userPlants")
-        .where("nickname", "==", nickname)
-        .select(
-          "nickname",
-        )
-        .get();
+      .collection("userPlants")
+      .where("nickname", "==", nickname)
+      .select("nickname")
+      .get();
 
-    if(isNameAvailable.docs.length > 0){
+    if (isNameAvailable.docs.length > 0) {
       return res.status(400).json({
         message: "Nickname already exists",
         status: 400,
@@ -48,7 +45,7 @@ const AddPlant = async (req, res) => {
     }
     const plant = `${environment} ${species}`;
     //const careGuide = await gemini(plant);
-  
+
     // Add plant to database
     try {
       const newPlant = await db.collection("userPlants").add({
@@ -63,7 +60,7 @@ const AddPlant = async (req, res) => {
         growthLogs: [],
         favourite: false,
       });
-  
+
       if (newPlant) {
         return res.status(201).json({
           message: "Plant created successfully!",
@@ -77,9 +74,7 @@ const AddPlant = async (req, res) => {
         status: 401,
       });
     }
-
   }
-
 };
 
 const GetPlants = async (req, res) => {
@@ -95,6 +90,7 @@ const GetPlants = async (req, res) => {
         .where("userId", "==", UserId)
         .select(
           "nickname",
+          "favourite",
           "location",
           "species",
           "environment",
@@ -259,6 +255,55 @@ const DeletePlant = async (req, res) => {
     });
 };
 
+const getFavourites = async (req, res) => {
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({
+      message: "userId is required",
+    });
+  }
+
+  try {
+    const GetFavourites = db
+      .collection("userPlants")
+      .where("userId", "==", UserId)
+      .where("favourite", "==", true)
+      .select(
+        "nickname",
+        "location",
+        "species",
+        "environment",
+        "imageUrl",
+        "imageName",
+        "userId"
+      )
+      .get();
+
+    const plants = await GetFavourites.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    if (plants.length > 0) {
+      return res.status(200).json({
+        message: "plants found",
+        status: "200",
+        plants: plants,
+      });
+    } else {
+      res.status(404).json({
+        message: "no plants were found",
+        status: "404",
+      });
+      return;
+    }
+  } catch (error) {
+    console.log("Error fetching plants: ", error);
+    res.status(500).send(error);
+  }
+};
+
 const setFavourites = async (req, res) => {
   const { plantId, isFavourite } = req.body;
   console.log(req.body);
@@ -295,6 +340,7 @@ router.post("/", GetPlants);
 router.post("/plant", GetPlant);
 router.put("/plant/update", UpdatePlant);
 router.delete("/plant/delete", DeletePlant);
-router.post("/favourite", setFavourites);
+router.post("/favourite/add", setFavourites);
+router.post("/favourites", getFavourites);
 
 module.exports = router;

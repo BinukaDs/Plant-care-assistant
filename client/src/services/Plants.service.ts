@@ -50,7 +50,15 @@ export const FetchPlantDetails = (
 
 export const AddPlant = async (
   BASE: string,
-  Values: {userId: string, nickname: string, location: string, species: string, environment: string, imageUrl: string, imageName: string}
+  Values: {
+    userId: string;
+    nickname: string;
+    location: string;
+    species: string;
+    environment: string;
+    imageUrl: string;
+    imageName: string;
+  }
 ): Promise<responseDataTypes> => {
   return await fetch(BASE + "/plants/add", {
     method: "POST",
@@ -71,7 +79,12 @@ export const AddPlant = async (
 
 export const UpdatePlant = async (
   BASE: string,
-  Values: { nickname: string; location: string; species: string; environment: string }
+  Values: {
+    nickname: string;
+    location: string;
+    species: string;
+    environment: string;
+  }
 ): Promise<responseDataTypes> => {
   return await fetch(BASE + "/plants/plant/update", {
     method: "PUT",
@@ -116,12 +129,35 @@ export const DeletePlant = async (
     });
 };
 
+export const getFavourites = async (
+  BASE: string,
+  userId: string
+): Promise<PlantsDataTypes> => {
+  return await fetch(BASE + "/plants/favourite", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId: userId }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((payload) => {
+      return payload.plants;
+    })
+    .catch((error) => {
+      console.error("Error fetching favourites:", error);
+      return error;
+    });
+};
+
 export const setFavourite = async (
   BASE: string,
   plantId: string,
   isFavourite: boolean
 ): Promise<responseDataTypes> => {
-  return await fetch(BASE + "/plants/favourite", {
+  return await fetch(BASE + "/plants/favourite/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
