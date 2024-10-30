@@ -20,13 +20,15 @@ export interface PlantDataTypes {
 }
 
 export interface PlantsContextDataTypes {
+  UserId: string;
+  BASE: string;
   setData: React.Dispatch<React.SetStateAction<PlantsDataTypes>>;
   Data: PlantsDataTypes;
   Plants: PlantsDataTypes;
   setPlants: React.Dispatch<React.SetStateAction<PlantsDataTypes>>;
   Locations: LocationDataTypes[];
   setLocations: React.Dispatch<React.SetStateAction<LocationDataTypes[]>>;
-  loadFetchPlants: () => Promise<void>;
+  loadFetchPlants: () => Promise<PlantsDataTypes>;
   loadFetchLocations: () => Promise<void>;
   loadAuthentication: () => Promise<void>;
   isLoading: boolean;
@@ -41,8 +43,7 @@ export interface WallpaperDataTypes {
   };
 }
 
-export type PlantsDataTypes = PlantDataTypes[];  
- 
+export type PlantsDataTypes = PlantDataTypes[];
 
 export interface LocationDataTypes {
   id: string;

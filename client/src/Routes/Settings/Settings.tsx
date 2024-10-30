@@ -7,6 +7,7 @@ import Layout from './Layout'
 import FadeIn from '@/components/transitions/FadeIn'
 import BreadCrumbNav from '@/components/BreadCrumbNav'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Favourites from './Favourites/Favourites'
 import Account from './Account/Account'
 import Locations from './Locations/Locations'
 import Species from './Species/Species'
@@ -15,6 +16,7 @@ const Settings = () => {
     const BASE = useContext(UserContext);
     const cookies = new Cookies();
     const navigate = useNavigate();
+  
     //fetch Authentication middleware
     const loadAuthentication = async () => {
         try {
@@ -49,12 +51,14 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className='w-full my-12 justify-start items-start h-full'>
-                            <Tabs defaultValue="locations" className="w-full flex flex-col items-start">
+                            <Tabs defaultValue="favourites" className="w-full flex flex-col items-start">
                                 <TabsList>
+                                    <TabsTrigger value='favourites'>Favourites</TabsTrigger>
                                     <TabsTrigger value="locations">Locations</TabsTrigger>
                                     <TabsTrigger value="species">Species</TabsTrigger>
                                     <TabsTrigger value="account" disabled>Account</TabsTrigger>
                                 </TabsList>
+                                <TabsContent value='favourites'><Favourites /></TabsContent>
                                 <TabsContent value="locations"><Locations /></TabsContent>
                                 <TabsContent value="species"><Species /></TabsContent>
                                 <TabsContent value="account"><Account /></TabsContent>
