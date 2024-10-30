@@ -32,7 +32,7 @@ const FavouriteComponent = ({ plantId, currentState }: { plantId: string, curren
     }
 
     useEffect(() => {
-        setIsFavourite(currentState)
+        setIsFavourite(!currentState)
         setCurrent(currentState)
     }, [currentState])
     return (

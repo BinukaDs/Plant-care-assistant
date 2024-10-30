@@ -37,11 +37,11 @@ const Locations = () => {
   }
 
   const countPlantsByLocation = (locations: LocationDataTypes[], plants: PlantDataTypes[]) => {
-    const counts = locations.map(location => {
+    return locations.map(location => {
       const count = plants.filter(plant => plant.location === location.location).length;
       return count;
     });
-    return counts;
+  
   };
 
 
@@ -85,6 +85,7 @@ const debounce = (func: (id:string, value:string, environment:string)=> void, de
   }
 
   useEffect(() => {
+    loadFetchLocations()
     const counts = countPlantsByLocation(Locations, Plants);
     setplantsCount(counts);
   }, [Locations, Plants]);
