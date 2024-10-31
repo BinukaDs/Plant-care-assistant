@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { TrashIcon, HeightIcon } from '@radix-ui/react-icons'
 import { LiaLeafSolid, LiaMapPinSolid } from "react-icons/lia";
+import { Helmet } from 'react-helmet'
 import EditPlantComponent from './components/EditPlant/EditPlant'
 const sampleCareGuide = [
   { feature: 'Watering', details: 'Water twice a week' },
@@ -119,6 +120,9 @@ const Plant = () => {
   }
   return (
     <Layout>
+      <Helmet>
+        <title>{PlantData.nickname} - PlantLY</title>
+      </Helmet>
       <div className='w-full h-full'>
         <div className='fixed flex flex-col'>
           <div className='absolute h-full w-full backdrop-brightness-50 bg-white/25'>

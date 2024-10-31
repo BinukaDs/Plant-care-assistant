@@ -6,6 +6,7 @@ const SignIn = React.lazy(() => import('../Routes/Authentication/SignIn/SignIn')
 const DashBoard = React.lazy(() => import('../Routes/DashBoard/DashBoard'))
 const Plant = React.lazy(() => import('../Routes/DashBoard/Plant/Plant'))
 const Settings = React.lazy(() => import('../Routes/Settings/Settings'))
+const Profile = React.lazy(() => import('../Routes/Profile/Profile'))
 import { AnimatePresence } from 'framer-motion'
 if (typeof window !== 'undefined') {
     window.history.scrollRestoration = 'manual'
@@ -27,6 +28,7 @@ const AnimatedRoutes = () => {
                 <Route path='/signin' element={<SignIn />}></Route>
                 <Route path='/dashboard' element={<DashBoard />}></Route>
                 <Route path='/settings' element={<Settings />}></Route>
+                <Route path='/profile' element={<Profile />}></Route>
                 <Route path='/dashboard/plant/:plantId' element={<Plant />}></Route>
             </Routes>
         </AnimatePresence >
