@@ -15,7 +15,8 @@ app.use(express.json());
 //   setLoading(false);
 // };
 
-app.use("/api/users", require("./routes/users.js"));
+app.use("/api/users", require("./routes/Users/users.js"));
+app.use("/api/passwords/update", require("./routes/Authentication/password.js"));
 app.use("/api/signin", require("./routes/Authentication/signin.js"));
 app.use("/api/register", require("./routes/Authentication/signup.js"));
 app.use("/api/isUserAuth", require("./routes/Authentication/isUserAuth.js"));

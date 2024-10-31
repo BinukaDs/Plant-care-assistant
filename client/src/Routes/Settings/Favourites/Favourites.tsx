@@ -11,21 +11,17 @@ const Favourites = () => {
         return Plants.filter((plant: PlantDataTypes) => plant.favourite == true)
     }
     const fetchAndLoadFavourites = async () => {
-
-        if (Plants.length > 0) {
-            const favourites = loadFavourites()
-            setFavourites(favourites)
-        } else if (Plants.length == 0) {
+ 
             await loadFetchPlants()
             const favourites = loadFavourites()
             setFavourites(favourites)
 
-        }
+        
     }
 
     useEffect(() => {
         fetchAndLoadFavourites()
-    }, [Plants])
+    }, [])
     return (
         <section className='mt-3 w-full'>
             <div className='flex flex-col items-start w-full border-b pb-2'>

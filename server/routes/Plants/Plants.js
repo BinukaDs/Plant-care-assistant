@@ -180,38 +180,46 @@ const UpdatePlant = async (req, res) => {
 const GetPlant = async (req, res) => {
   const { plantId, userId } = req.body;
 
-  db.collection("userPlants")
-    .doc(plantId)
-    .get()
-    .then((doc) => {
-      if (doc.exists) {
-        // Document found, access data with doc.data()
-        if (userId) {
-          if (userId !== doc.data().userId) {
-            res.status(404).json({
-              message: "Unauthorized",
-              status: "401 User Unauthorized",
-            });
-            console.log("Unauthorized");
-            return;
-          } else if (userId === doc.data().userId) {
-            // console.log("plantfound:", doc.data());
-            return res.status(200).json({
-              message: "plant found",
-              status: "200 OK",
-              plant: doc.data(),
-            });
+  try {
+    db.collection("userPlants")
+      .doc(plantId)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          // Document found, access data with doc.data()
+          if (userId) {
+            if (userId !== doc.data().userId) {
+              res.status(404).json({
+                message: "Unauthorized",
+                status: "401 User Unauthorized",
+              });
+              console.log("Unauthorized");
+              return;
+            } else if (userId === doc.data().userId) {
+              // console.log("plantfound:", doc.data());
+              return res.status(200).json({
+                message: "plant found",
+                status: "200 OK",
+                plant: doc.data(),
+              });
+            }
           }
+        } else {
+          res.status(404).json({
+            message: "couldn't find the plant!",
+            status: "404 Bad Request",
+          });
+          console.log("couldn't find the plant!");
+          return;
         }
-      } else {
-        res.status(404).json({
-          message: "couldn't find the plant!",
-          status: "404 Bad Request",
-        });
-        console.log("couldn't find the plant!");
-        return;
-      }
+      });
+  } catch (error) {
+    console.log("Error fetching plant: ", error);
+    return res.status(500).json({
+      message: "Error fetching plant",
+      status: 500,
     });
+  }
 };
 
 const DeletePlant = async (req, res) => {

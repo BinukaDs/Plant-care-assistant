@@ -7,9 +7,10 @@ const router = require("express").Router();
 const validator = require("validator");
 const AuthenticationErrors = require("../../responseCodes");
 
-const createToken = (_id) => {
-  
-  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+const createToken = (_id, username) => {
+  return jwt.sign({ _id, username }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
 };
 
 router.post("/", async (req, res) => {
@@ -24,21 +25,17 @@ router.post("/", async (req, res) => {
     .get();
   if (checkAvailability.size > 0) {
     console.log("Email already in use");
-    return res
-      .status(400)
-      .json({
-        message: "Email already in use.",
-        status: 400,
-      });
+    return res.status(400).json({
+      message: "Email already in use.",
+      status: 400,
+    });
   } else if (checkAvailability.size === 0) {
     if (!validator.isEmail(email)) {
       console.log("Email is not valid");
-      return res
-        .status(400)
-        .json({
-          message: "Email is not valid!",
-          status: 400,         
-        });
+      return res.status(400).json({
+        message: "Email is not valid!",
+        status: 400,
+      });
     }
 
     // if (!validator.isStrongPassword(password)) {
@@ -58,10 +55,10 @@ router.post("/", async (req, res) => {
       email,
       hashedPassword,
     });
-    const token = createToken(newUser._id);
+    const token = createToken(newUser._id, newUser.username);
     res.status(201).json({
       status: 201,
-      name: newUser.name,
+      username: newUser.username,
       email: newUser.email,
       token: token,
     });

@@ -29,7 +29,7 @@ export default function App() {
   const [Locations, setLocations] = useState<LocationDataTypes[]>([])
 
   //Fetch Plants
-  const loadFetchPlants = async () => {
+  const loadFetchPlants = async (): Promise<PlantsDataTypes | void> => {
     try {
       setisLoading(true)
       const data = await FetchPlants(BASE, UserId);
@@ -86,18 +86,18 @@ export default function App() {
 
   return (
     <>
-     
-        <PlantsContext.Provider value={{ UserId, setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading, Wallpapers: Wallpapers! }}>
-          <UserContext.Provider value={BASE}>
-            <Toaster />
-            <BrowserRouter>
-              <Suspense fallback={<div><PuffLoader /></div>}>
-                <AnimatedRoutes />
-              </Suspense>
-            </BrowserRouter>
-          </UserContext.Provider>
-        </PlantsContext.Provider>
-     
+
+      <PlantsContext.Provider value={{ UserId, setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading, Wallpapers: Wallpapers! }}>
+        <UserContext.Provider value={BASE}>
+          <Toaster />
+          <BrowserRouter>
+            <Suspense fallback={<div><PuffLoader /></div>}>
+              <AnimatedRoutes />
+            </Suspense>
+          </BrowserRouter>
+        </UserContext.Provider>
+      </PlantsContext.Provider>
+
 
     </>
   )

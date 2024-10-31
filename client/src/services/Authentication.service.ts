@@ -21,6 +21,7 @@ export const FetchAuthentication = (
     })
     .then((data) => {
       if (data.id) {
+        console.log("Id:", data)
         return {
           id: data.id,
           isLoggedin: data.isLoggedin,
