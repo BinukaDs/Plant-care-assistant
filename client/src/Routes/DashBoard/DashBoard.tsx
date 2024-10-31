@@ -9,7 +9,7 @@ import Cookies from 'universal-cookie'
 import FadeIn from '@/components/transitions/FadeIn'
 import { SortComponent } from './components/Sort/Sortcomponent'
 import { PlantsContextDataTypes } from '@/types/Plant'
-
+import { Helmet } from 'react-helmet'
 
 const DashBoard = () => {
     const navigate = useNavigate();
@@ -55,6 +55,9 @@ const DashBoard = () => {
     return (
 
         <Layout>
+           <Helmet>
+            <title>DashBoard - PlantLY</title>
+           </Helmet>
             <FadeIn>
                 <div className=' w-full justify-center items-center m-12 gap-y-5'>
                     <section className='flex flex-col w-full justify-center items-start h-full mx-5'>

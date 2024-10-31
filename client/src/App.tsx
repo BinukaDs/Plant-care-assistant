@@ -14,6 +14,7 @@ import Cookies from 'universal-cookie'
 import AnimatedRoutes from './components/AnimatedRoutes'
 export const UserContext = createContext("");
 export const PlantsContext = createContext<PlantsContextDataTypes | undefined>(undefined);
+
 export default function App() {
 
   const cookies = new Cookies()
@@ -57,7 +58,7 @@ export default function App() {
       console.error(error);
     }
   }
-  
+
   //Fetch Locations
   const loadFetchLocations = async () => {
     try {
@@ -85,16 +86,18 @@ export default function App() {
 
   return (
     <>
-      <PlantsContext.Provider value={{ UserId, setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading, Wallpapers: Wallpapers! }}>
-        <UserContext.Provider value={BASE}>
-          <Toaster />
-          <BrowserRouter>
-            <Suspense fallback={<div><PuffLoader /></div>}>
-              <AnimatedRoutes />
-            </Suspense>
-          </BrowserRouter>
-        </UserContext.Provider>
-      </PlantsContext.Provider>
+     
+        <PlantsContext.Provider value={{ UserId, setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading, Wallpapers: Wallpapers! }}>
+          <UserContext.Provider value={BASE}>
+            <Toaster />
+            <BrowserRouter>
+              <Suspense fallback={<div><PuffLoader /></div>}>
+                <AnimatedRoutes />
+              </Suspense>
+            </BrowserRouter>
+          </UserContext.Provider>
+        </PlantsContext.Provider>
+     
 
     </>
   )

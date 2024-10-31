@@ -11,6 +11,7 @@ import Favourites from './Favourites/Favourites'
 import Account from './Account/Account'
 import Locations from './Locations/Locations'
 import Species from './Species/Species'
+import { Helmet } from 'react-helmet'
 const Settings = () => {
     const [UserId, setUserId] = useState("");
     const BASE = useContext(UserContext);
@@ -37,6 +38,9 @@ const Settings = () => {
     }, [UserId])
     return (
         <Layout>
+            <Helmet>
+                <title>Settings - PlantLY</title>
+            </Helmet>
             <FadeIn>
                 <div className=' w-full justify-center items-center m-12 gap-y-5'>
                     <section className='flex flex-col w-full justify-center items-start h-full mx-5'>
