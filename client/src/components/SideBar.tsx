@@ -1,35 +1,33 @@
 import React from "react"
 import { useEffect, useState, useContext } from "react"
-import { FetchAuthentication } from "@/services/Authentication.service"
+import { PlantsContext } from "@/App"
 import { ExitIcon, DashboardIcon, ArchiveIcon, MixIcon, PersonIcon, DesktopIcon, GearIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { UserContext } from '@/App'
 import SearchComponent from "../Routes/DashBoard/components/Sidebar/SearchComponent"
 import FiltersComponent from "@/Routes/DashBoard/components/Sidebar/FiltersComponent"
 import { useLocation } from "react-router-dom"
-import Cookies from "universal-cookie"
+import { FetchUser } from "@/services/Profile.service"
 import { Button } from "./ui/button"
 import { useNavigate } from "react-router-dom"
 import { SignOut } from "@/services/Authentication.service"
 import AddPlantComponent from "@/Routes/DashBoard/Plant/components/AddPlant/AddPlant"
+import { UserDataTypes } from "@/types/User"
+import { PlantsContextDataTypes } from "@/types/Plant"
 
-interface DataType {
-  id: string;
-  username: string;
-}
 
 const SideBar = ({ visible, show }: {
   visible: boolean;
   show: (visible: boolean) => void;
 }) => {
   const navigate = useNavigate()
-  const cookies = new Cookies();
   const location = useLocation()
   const currentDate = {
     date: new Date().getDate(),
     month: new Date().getMonth() + 1,
     year: new Date().getFullYear(),
   };
-  const [UserData, setUserData] = useState({ UserId: "", Username: "" })
+  const { UserId } = useContext(PlantsContext) as PlantsContextDataTypes
+  const [UserData, setUserData] = useState({ UserId: UserId, username: "" })
   const [isCollapsed, setIsCollapsed] = useState(false);
 
 
@@ -60,15 +58,14 @@ const SideBar = ({ visible, show }: {
 
   //authentication middleware
   useEffect(() => {
-    const loadAuthentication = async () => {
-      const data: DataType = await FetchAuthentication(BASE, cookies.get("token"));
-      if (data.id) {
-        setUserData({ UserId: data.id, Username: data.username })
-        return
+    const loadFetchUser = async () => {
+      const data: UserDataTypes = await FetchUser(BASE, UserId)
+      if (data) {
+        setUserData({ UserId: data.id, username: data.username })
       }
     }
-    loadAuthentication();
-  }, [UserData.UserId])
+    loadFetchUser();
+  }, [UserId])
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -174,7 +171,7 @@ const SideBar = ({ visible, show }: {
                   className={`rounded-full ${isCollapsed ? 'w-8 h-8' : 'w-12 h-12'}`}
                 />
                 <div className='flex flex-col text-start'>
-                  <h1 className='text-sm'>{UserData.Username}</h1>
+                  <h1 className='text-sm'>{UserData.username}</h1>
                   <p className='text-sm text-gray-400'>{`${currentDate.date}.${currentDate.month}.${currentDate.year}`}</p>
                 </div>
               </div>
