@@ -26,16 +26,20 @@ const verifyJWT = async (req, res, next) => {
   try {
     const token = extractToken(req);
     if (!token) {
-      return res.status(401).json({ message: "No Token Provided!", isLoggedin: false });
+      return res
+        .status(401)
+        .json({ message: "No Token Provided!", isLoggedin: false });
     }
 
     try {
       const decoded = await verifyToken(token);
-      req.user = { id: decoded.id, username: decoded.username };
+      req.user = { id: decoded.id };
       next();
     } catch (err) {
       console.error("Failed to authenticate", err);
-      res.status(401).json({ auth: false, message: "You failed to authenticate" });
+      res
+        .status(401)
+        .json({ auth: false, message: "You failed to authenticate" });
     }
   } catch (error) {
     console.error("Verify Error:", error);
