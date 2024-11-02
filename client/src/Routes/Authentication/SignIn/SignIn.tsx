@@ -33,6 +33,9 @@ const SignIn = () => {
     }
   }
 
+  const applyDemoCredentials = () => {
+    setValues({ email: "plantly@gmail.com", password: "123" })
+  }
 
   const loadFetchSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -97,11 +100,11 @@ const SignIn = () => {
               <div className="flex flex-col gap-y-4 w-full mb-5">
                 <div className='flex flex-col justify-center items-start text-start w-full'>
                   <label className="text-sm text-secondary mb-2">E-mail</label>
-                  <Input id="email" name="email" type="email" placeholder="email" onChange={handleChange} />
+                  <Input id="email" name="email" type="email" placeholder="email" onChange={handleChange} value={Values.email}/>
                 </div>
                 <div className='flex flex-col justify-center items-start text-start w-full'>
                   <label className="text-sm text-secondary mb-2">Password</label>
-                  <Input id="password" name="password" type="password" placeholder="password" onChange={handleChange} />
+                  <Input id="password" name="password" type="password" placeholder="password" onChange={handleChange} value={Values.password}/>
                 </div>
               </div>
               <Button className="w-full topic" onClick={loadFetchSignIn}>{isLoading ? <l-tailspin
@@ -110,6 +113,7 @@ const SignIn = () => {
                 speed="0.9"
                 color="white"
               ></l-tailspin> : "Sign-in"}</Button>
+              <p className="text-sm text-primary hover:underline hover:cursor-pointer mt-3"><a onClick={applyDemoCredentials}>Use demo credentials</a></p>
               <p className="text-sm mt-3">New here? <span><a href="/register" className="text-primary underline">Sign-Up</a></span></p>
             </div>
           </div>
