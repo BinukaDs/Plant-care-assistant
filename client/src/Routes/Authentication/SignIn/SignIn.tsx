@@ -48,11 +48,12 @@ const SignIn = () => {
       try {
         setisLoading(true)
         const response: responseDataTypes = await FetchSignIn(BASE, Values)
-        console.log("response:", response)
+        // console.log("response:", response)
         if (response.status == 200) {
           setisLoading(false)
           localStorage.setItem("token", response.token);
           cookies.set("token", response.token, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), httpOnly: false })
+          
           return navigate("/dashboard")
         } else if (response.status != 200) {
           setisLoading(false)
