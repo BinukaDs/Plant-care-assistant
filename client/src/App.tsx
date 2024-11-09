@@ -87,7 +87,7 @@ export default function App() {
   return (
     <>
 
-      <PlantsContext.Provider value={{ UserId, setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, isLoading, Wallpapers: Wallpapers! }}>
+      <PlantsContext.Provider value={{ UserId, setData, Data, Plants, setPlants, Locations, setLocations, loadFetchPlants, loadFetchLocations, loadAuthentication, setisLoading, isLoading, Wallpapers: Wallpapers! }}>
         <UserContext.Provider value={BASE}>
           <Toaster />
           <BrowserRouter>

@@ -31,6 +31,7 @@ export interface PlantsContextDataTypes {
   loadFetchPlants: () => Promise<PlantsDataTypes>;
   loadFetchLocations: () => Promise<void>;
   loadAuthentication: () => Promise<void>;
+  setisLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   Wallpapers: WallpaperDataTypes[];
 }

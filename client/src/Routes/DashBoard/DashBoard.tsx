@@ -9,26 +9,33 @@ import Cookies from 'universal-cookie'
 import FadeIn from '@/components/transitions/FadeIn'
 import { SortComponent } from './components/Sort/Sortcomponent'
 import { PlantsContextDataTypes } from '@/types/Plant'
+import PlantSkeleton from "@/components/skeletons/DashBoard-plant-skeleton";
 import { Helmet } from 'react-helmet'
+import { tailspin } from 'ldrs'
+tailspin.register()
+
 
 const DashBoard = () => {
     const navigate = useNavigate();
     const cookies = new Cookies()
     const [UserId, setUserId] = useState("");
-    const { Data, loadFetchPlants, loadFetchLocations, Plants } = useContext(PlantsContext) as PlantsContextDataTypes
+    const { Data, loadFetchPlants, loadFetchLocations, Plants, isLoading, setisLoading } = useContext(PlantsContext) as PlantsContextDataTypes
     const BASE = useContext(UserContext);
 
     //fetch Authentication middleware
     const loadAuthentication = async () => {
         try {
+            setisLoading(true)
             const data = await FetchAuthentication(BASE, cookies.get("token"));
             if (data.id) {
+                setisLoading(false)
                 if (data.isLoggedin === true) {
                     return setUserId(data.id);
                 }
             }
             data.isLoggedin === true ? null : navigate('/signin')
         } catch (error) {
+            setisLoading(false)
             console.error(error);
         }
     }
@@ -55,9 +62,9 @@ const DashBoard = () => {
     return (
 
         <Layout>
-           <Helmet>
-            <title>DashBoard - PlantLY</title>
-           </Helmet>
+            <Helmet>
+                <title>DashBoard - PlantLY</title>
+            </Helmet>
             <FadeIn>
                 <div className=' w-full justify-center items-center m-12 gap-y-5'>
                     <section className='flex flex-col w-full justify-center items-start h-full mx-5'>
@@ -72,12 +79,20 @@ const DashBoard = () => {
                             </div>
                         </div>
                         <div className='grid grid-cols-2  lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 w-full my-12 justify-center items-center h-full gap-12'>
-                            {Data.length > 0 ? Data.map((plant) => {
-                                return (
-                                    <PlantCard key={plant.id} plant={plant} />
-                                )
-                            }) : <p>No Plants...</p>}
+                            {
+                                isLoading ?
+                                    <PlantSkeleton />
+                                    :
+
+                                    Plants.length > 0 ? Plants.map((plant, index) => {
+                                        return <PlantCard key={index} plant={plant} />
+                                    }) : <div className='flex justify-center items-center w-full h-full'>
+                                        <p className='text-secondary text-center'>No Plants Found. Start by Adding your First Plant!</p>
+                                    </div>
+
+                            }
                         </div>
+
                     </section>
                 </div>
             </FadeIn>
