@@ -27,6 +27,7 @@ import { LiaLeafSolid, LiaMapPinSolid, LiaArrowRightSolid } from "react-icons/li
 
 
 const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
+    
     const BASE = useContext(UserContext);
     const [open, setOpen] = useState(false)
     const { loadFetchPlants } = useContext(PlantsContext) as PlantsContextDataTypes

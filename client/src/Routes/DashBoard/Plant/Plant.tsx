@@ -18,6 +18,8 @@ import { Button } from '@/components/ui/button'
 import { TrashIcon, HeightIcon } from '@radix-ui/react-icons'
 import { LiaLeafSolid, LiaMapPinSolid } from "react-icons/lia";
 import { Helmet } from 'react-helmet'
+import { tailspin } from 'ldrs'
+tailspin.register()
 import EditPlantComponent from './components/EditPlant/EditPlant'
 const sampleCareGuide = [
   { feature: 'Watering', details: 'Water twice a week' },
@@ -128,7 +130,7 @@ const Plant = () => {
           <div className='absolute h-full w-full backdrop-brightness-50 bg-white/25'>
             <div className='ml-5 mt-5'><BreadCrumbNav className='text-white' /></div>
           </div>
-          {Wallpapers && <img src={Wallpapers[0].urls.full} alt="Wallpaper" />}
+          {Wallpapers[0] && <img src={Wallpapers[0].urls.full} alt="Wallpaper" />}
         </div>
         <section className='flex flex-col w-full h-full '>
           <div className='bg-white rounded-t-xl relative flex flex-col w-full h-full p-10 mt-48'>
