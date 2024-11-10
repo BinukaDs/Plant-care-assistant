@@ -83,11 +83,10 @@ const DashBoard = () => {
                                 isLoading ?
                                     <PlantSkeleton />
                                     :
-
-                                    Plants.length > 0 ? Plants.map((plant, index) => {
+                                    Data.length > 0 ? Data.map((plant, index) => {
                                         return <PlantCard key={index} plant={plant} />
                                     }) : <div className='flex justify-center items-center w-full h-full'>
-                                        <p className='text-secondary text-center'>No Plants Found. Start by Adding your First Plant!</p>
+                                        <p className='text-secondary text-center'>No Plants were Found. Start by Adding your First Plant!</p>
                                     </div>
 
                             }

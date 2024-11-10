@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { toast } from 'sonner';
-import { useEffect, useState, useContext,useCallback } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import { PlantsContext, UserContext } from '@/App';
 import AddLocation from './AddLocation';
 import { FetchAuthentication } from '@/services/Authentication.service';
@@ -15,9 +15,10 @@ import DeleteLocation from './DeleteLocation';
 import { updateLocation } from '@/services/Locations.service';
 import { LocationDataTypes, PlantDataTypes, PlantsContextDataTypes, responseDataTypes } from '@/types/Plant';
 import { Input } from '@/components/ui/input';
+import LocationSkeleton from "@/components/skeletons/Settings-location-skeleton";
 import Cookies from 'universal-cookie'
 const Locations = () => {
-  const { Plants, Locations, loadFetchLocations } = useContext(PlantsContext) as PlantsContextDataTypes
+  const { Plants, Locations, loadFetchLocations, isLoading } = useContext(PlantsContext) as PlantsContextDataTypes
   const cookies = new Cookies()
   const BASE = useContext(UserContext)
   const [plantsCount, setplantsCount] = useState<number[]>([])
@@ -41,21 +42,21 @@ const Locations = () => {
       const count = plants.filter(plant => plant.location === location.location).length;
       return count;
     });
-  
+
   };
 
 
-const debounce = (func: (id:string, value:string, environment:string)=> void, delay: number) => {
-  let timeoutId: NodeJS.Timeout;
-  return (...args: [string, string, string]) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      func(...args);
-    }, delay);
+  const debounce = (func: (id: string, value: string, environment: string) => void, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: [string, string, string]) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
   };
-};
 
   const debouncedOnValueChange = useCallback(
     debounce((id: string, value: string, environment: string) => {
@@ -66,7 +67,7 @@ const debounce = (func: (id:string, value:string, environment:string)=> void, de
 
   const onValueChange = async (id: string, location: string, environment: string) => {
     if (location && environment && id) {
-      
+
       try {
         const response: responseDataTypes = await updateLocation(BASE, id, location, environment)
         if (response.status == 200) {
@@ -88,7 +89,7 @@ const debounce = (func: (id:string, value:string, environment:string)=> void, de
     loadFetchLocations()
     const counts = countPlantsByLocation(Locations, Plants);
     setplantsCount(counts);
-  }, [Locations, Plants]);
+  }, []);
 
   useEffect(() => {
     loadAuthentication()
@@ -115,43 +116,47 @@ const debounce = (func: (id:string, value:string, environment:string)=> void, de
               <TableHead className='flex justify-center items-center text-right'>Actions</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {Locations.length > 0 ? Locations.map((location, index) => {
-              return (
-                <TableRow key={index}>
-                  <TableCell className='text-left'>
-                    <Input defaultValue={location.location} id="location" onChange={(e) => {
-                      
-                        if(e.target.value.length > 2) {
+          <TableBody className="w-full">
+            {
+              isLoading ? <LocationSkeleton /> : Locations.length > 0 ? Locations.map((location, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell className='text-left'>
+                      <Input defaultValue={location.location} id="location" onChange={(e) => {
+
+                        if (e.target.value.length > 2) {
                           debouncedOnValueChange(location.id, e.target.value, location.environment)
                         }
-                     
-                    }} />
-                  </TableCell>
-                  <TableCell className='text-left'>
-                    <select name="environment" id="environment" className='flex my-1 p-2 rounded-md border w-full' value={location.environment} onChange={(e) => onValueChange(location.id, location.location, e.target.value)}>
-                      <option value="Indoor">Indoor</option>
-                      <option value="Outdoor">Outdoor</option>
-                    </select>
-                  </TableCell>
-                  <TableCell className='text-center px-5'>
-                    <p>{plantsCount[index] > 0 ? plantsCount[index] : "--"}</p>
-                  </TableCell>
-                  <TableCell >
-                    <div className='flex items-center justify-center'>
 
-                      {/* {updateState ? <Button variant={"ghost"} onClick={() => setUpdateState(false)}><LiaCheckSolid /></Button>
-                        : <UpdateLocation id={location.id} setUpdate={setUpdateState} />} */}
-                      <DeleteLocation id={location.id} plantsCount={plantsCount[index]} />
-                    </div>
-                  </TableCell>
+                      }} />
+                    </TableCell>
+                    <TableCell className='text-left'>
+                      <select name="environment" id="environment" className='flex my-1 p-2 rounded-md border w-full' value={location.environment} onChange={(e) => onValueChange(location.id, location.location, e.target.value)}>
+                        <option value="Indoor">Indoor</option>
+                        <option value="Outdoor">Outdoor</option>
+                      </select>
+                    </TableCell>
+                    <TableCell className='text-center px-5'>
+                      <p>{plantsCount[index] > 0 ? plantsCount[index] : "--"}</p>
+                    </TableCell>
+                    <TableCell >
+                      <div className='flex items-center justify-center'>
+
+                        {/* {updateState ? <Button variant={"ghost"} onClick={() => setUpdateState(false)}><LiaCheckSolid /></Button>
+                          : <UpdateLocation id={location.id} setUpdate={setUpdateState} />} */}
+                        <DeleteLocation id={location.id} plantsCount={plantsCount[index]} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )
+              }) : (
+                <TableRow>
+                  <TableCell colSpan={4} className='text-center text-secondary'>No Locations Found! Please Add Locations.</TableCell>
                 </TableRow>
               )
-            }) : (
-              <TableRow>
-                <TableCell colSpan={4} className='text-center text-secondary'>No Locations Found! Please Add Locations.</TableCell>
-              </TableRow>
-            )}
+            }
+
+            { }
           </TableBody>
         </Table>
       </div>
