@@ -12,7 +12,7 @@ const PlantCareGuide = ({ careGuide }: { careGuide: { feature: string, details: 
   return (
     <div className="care-panel">
       {careGuide.map((item, index) => (
-        <div key={index} className="care-section">
+        <div key={index} className="care-section items-start">
           <div className="icon">{[item.feature]}</div>
           <div className="details">
             <h3>{item.feature}</h3>

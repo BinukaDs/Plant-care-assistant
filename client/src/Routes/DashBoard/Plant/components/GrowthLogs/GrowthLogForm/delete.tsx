@@ -40,7 +40,7 @@ const DeleteLog = ({ plantId, index, imageName, userId, loadPlant }: { plantId: 
     return (
         <div>
             <Dialog>
-                <DialogTrigger><TrashIcon /></DialogTrigger>
+                <DialogTrigger><TrashIcon className="text-destructive"/></DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Are you sure?</DialogTitle>
