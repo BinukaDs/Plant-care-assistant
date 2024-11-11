@@ -41,7 +41,7 @@ const DashBoard = () => {
     }
 
 
-    
+
     //make sure the Locations Fetch only once.
     const hasRunRef = useRef(false);
     useEffect(() => {
