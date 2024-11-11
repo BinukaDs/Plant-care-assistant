@@ -41,23 +41,22 @@ const DashBoard = () => {
     }
 
 
-    
-    // const hasRunRef = useRef(false);
-    // useEffect(() => {
-    //     if (!hasRunRef.current) {
-    //         if (Plants.length == 0) {
-    //             loadFetchLocations();
-    //         }
-    //         hasRunRef.current = true;
-    //     }
-    // }, [Data])
+    //make sure the Locations Fetch only once.
+    const hasRunRef = useRef(false);
+    useEffect(() => {
+        if (!hasRunRef.current) {
+            if (Plants.length == 0) {
+                loadFetchLocations();
+            }
+            hasRunRef.current = true;
+        }
+    }, [Data])
 
 
     useEffect(() => {
         loadAuthentication();
         loadFetchPlants();
-        loadFetchLocations();
-    }, [])
+    }, [UserId])
 
 
     return (
