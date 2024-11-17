@@ -54,7 +54,7 @@ export const AddPlant = async (
     userId: string;
     nickname: string;
     location: string;
-    species: string;
+    speciesId: string;
     environment: string;
     imageUrl: string;
     imageName: string;
@@ -172,3 +172,5 @@ export const setFavourite = async (
       return error;
     });
 };
+
+

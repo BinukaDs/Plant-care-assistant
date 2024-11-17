@@ -4,7 +4,7 @@ import { UserContext } from "@/App";
 import { setFavourite } from "@/services/Plants.service";
 import { PlantDataTypes, responseDataTypes } from "@/types/Plant";
 import "../../../App.css"
-import { LiaLeafSolid, LiaMapPinSolid, LiaHeart, LiaHeartSolid } from "react-icons/lia";
+import { LiaMapPinSolid, LiaHeart, LiaHeartSolid } from "react-icons/lia";
 
 const FavouritePlantCard = ({ plant, loadFavourites }: { plant: PlantDataTypes, loadFavourites: () => Promise<void>; }) => {
     const [isFavourite, setIsFavourite] = useState<boolean | undefined>(plant.favourite)
@@ -47,8 +47,7 @@ const FavouritePlantCard = ({ plant, loadFavourites }: { plant: PlantDataTypes, 
                         <div className="flex flex-col w-full justify-between h-full">
                             <h1 className='topic text-xl text-start'>{plant.nickname}</h1>
                             <div className="flex gap-1 mt-3">
-                                <LiaLeafSolid className="text-primary" />
-                                <p className='text-sm'>{plant.species}</p>
+                               
                             </div>
                             <div className="flex gap-1 mt-2">
                                 <LiaMapPinSolid className="text-primary" />

@@ -7,13 +7,6 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-// const getDevices = async () => {
-//   const response = await app.get(`http:localhost:3000/devices`, {
-//     headers: { Authorization: `Bearer ${user.token}` },
-//   });
-//   setDevices(response.data.devices);
-//   setLoading(false);
-// };
 
 app.use("/api/users", require("./routes/Users/users.js"));
 app.use(
@@ -27,8 +20,8 @@ app.use("/api/plants", require("./routes/Plants/Plants.js"));
 app.use("/api/growthlogs", require("./routes/Plants/growthLogs.js"));
 app.use("/api/locations", require("./routes/Plants/Locations.js"));
 app.use("/api/gemini", require("./routes/Gemini/gemini.js"));
-app.use("/api/vertex", require("./routes/Gemini/vertex.js"));
-app.post("/api/hello", (req, res) => {
+app.use("/api/species", require("./routes/Plants/SpeciesData.js"));
+app.post("/api/hello", (req, res) => { 
   res.json({ message: "Hello World" });
 });
 
