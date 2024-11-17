@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react"
 import { PlantsContext } from "@/App"
+import { toast } from "sonner"
 import { PlantDataTypes, PlantsContextDataTypes } from "@/types/Plant"
 import FavouritesSkeleton from "@/components/skeletons/Favourites-plant-skeleton"
 import FavouritePlantCard from "../components/FavouritePlantCard"
@@ -20,6 +21,7 @@ const Favourites = () => {
 
         } catch (error) {
             console.error(error)
+            toast.error("Error loading favourites")
             setisLoading(false)
         }
 

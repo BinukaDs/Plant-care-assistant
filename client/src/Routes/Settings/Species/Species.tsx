@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from "react"
 import { getAllSpecies } from "@/services/Species.service"
-import { SpeciesDataTypes } from "@/types/Plant"
+import { PlantsContextDataTypes, SpeciesDataTypes } from "@/types/Plant"
 import ReactMarkdown from "react-markdown"
-import { UserContext } from "@/App"
+import { PlantsContext, UserContext } from "@/App"
 import { LiaInfoCircleSolid } from "react-icons/lia"
+import SpeciesSkeleton from "@/components/skeletons/Settings-species-skeleton"
 import {
   Card,
   CardContent,
@@ -11,12 +12,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { toast } from "sonner"
 const Species = () => {
   const BASE = useContext(UserContext)
+  const { isLoading, setisLoading } = useContext(PlantsContext) as PlantsContextDataTypes
   const [species, setSpecies] = useState<SpeciesDataTypes[]>([])
   const loadGetAllSpecies = async () => {
-    const payload: SpeciesDataTypes[] = await getAllSpecies(BASE)
-    setSpecies(payload)
+    setisLoading(true)
+    try {
+      const payload: SpeciesDataTypes[] = await getAllSpecies(BASE)
+      setSpecies(payload)
+      setisLoading(false)
+    }
+    catch (error) {
+      console.error(error)
+      toast.error("Error loading species!")
+      setisLoading(false)
+    }
   }
   useEffect(() => {
     loadGetAllSpecies()
@@ -29,9 +41,9 @@ const Species = () => {
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-2 gap-6 mt-5">
-        {species.length > 0 && species.map((doc: SpeciesDataTypes) => (
+        {isLoading ? <SpeciesSkeleton /> : species.length > 0 && species.map((doc: SpeciesDataTypes) => (
           <div key={doc.id}>
-            <Card>
+            <Card className="h-full ">
               <CardHeader>
                 <CardTitle className="text-start text-lg topic w-full flex justify-between">
                   <ReactMarkdown>{doc.scientificName + ` (${doc.name})`}</ReactMarkdown>

@@ -133,10 +133,23 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                         <DialogTitle>Add Plant</DialogTitle>
                         <DialogDescription>Fill in the details below to add a plant</DialogDescription>
 
-                        <div className='justify-center items-center'>
-                            <input onChange={handleImageChange} type="file" accept='image' />
-                        </div>
-                        <div className="flex items-center space-x-2 my-5">
+                     
+
+                            <div className="flex items-center justify-center w-full">
+                                <Label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2  border-dashed rounded-lg cursor-pointer bg-white">
+                                    <div className="flex flex-col items-center justify-center pt-10 pb-12">
+                                        <svg className="w-8 h-8 mb-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                        </svg>
+                                        <p className=" text-sm text-secondary"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                        <Input id="dropzone-file" onChange={handleImageChange} type="file" accept='image' className="text-center border-none bg-white text-secondary shadow-none file:hidden" />
+                                    </div>
+                                </Label>
+                            </div>
+
+
+                        
+                        <div className="flex items-center space-x-2 my-10">
                             <div className="grid flex-1 gap-2">
                                 <Label htmlFor="nickname">
                                     NickName
