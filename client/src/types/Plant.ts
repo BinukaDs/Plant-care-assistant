@@ -4,7 +4,6 @@ export interface PlantDataTypes {
   imageUrl: string;
   imageName: string;
   location: string;
-  species: string;
   environment: string;
   growthLogs: {
     imageUrl: string;
@@ -14,7 +13,13 @@ export interface PlantDataTypes {
     height: number;
     leafCount: number;
   }[];
-  careGuide: string;
+  speciesData: {
+    description: string;
+    careGuide: string;
+    name: string;
+    scientificName: string;
+    id: string;
+  };
   userId: string;
   favourite: boolean;
 }
@@ -57,4 +62,12 @@ export interface responseDataTypes {
   status: number | string;
   token: string;
   code?: string;
+}
+
+export interface SpeciesDataTypes {
+  name: string;
+  scientificName: string;
+  id: string;
+  description?: string;
+  careGuide?: string;
 }
