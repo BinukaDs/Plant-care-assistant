@@ -9,7 +9,7 @@ const AddPlant = async (req, res) => {
     userId,
     nickname,
     location,
-    species,
+    speciesId,
     environment,
     imageUrl,
     imageName,
@@ -19,7 +19,7 @@ const AddPlant = async (req, res) => {
     userId,
     nickname,
     location,
-    species,
+    speciesId,
     environment,
     imageUrl,
     imageName,
@@ -43,8 +43,7 @@ const AddPlant = async (req, res) => {
         status: 400,
       });
     }
-    const plant = `${environment} ${species}`;
-    //const careGuide = await gemini(plant);
+   
 
     // Add plant to database
     try {
@@ -52,7 +51,7 @@ const AddPlant = async (req, res) => {
         userId,
         nickname,
         location,
-        species,
+        speciesId,
         environment,
         imageUrl,
         imageName,
@@ -92,7 +91,7 @@ const GetPlants = async (req, res) => {
           "nickname",
           "favourite",
           "location",
-          "species",
+          "speciesId",
           "environment",
           "imageUrl",
           "imageName",
@@ -184,24 +183,39 @@ const GetPlant = async (req, res) => {
     db.collection("userPlants")
       .doc(plantId)
       .get()
-      .then((doc) => {
-        if (doc.exists) {
+      .then(async (plant) => {
+        if (plant.exists) {
           // Document found, access data with doc.data()
           if (userId) {
-            if (userId !== doc.data().userId) {
+            if (userId !== plant.data().userId) {
               res.status(404).json({
                 message: "Unauthorized",
                 status: "401 User Unauthorized",
               });
               console.log("Unauthorized");
               return;
-            } else if (userId === doc.data().userId) {
-              // console.log("plantfound:", doc.data());
-              return res.status(200).json({
-                message: "plant found",
-                status: "200 OK",
-                plant: doc.data(),
-              });
+            } else if (userId === plant.data().userId) {
+              const fetchSpecies = await db
+                .collection("species")
+                .doc(plant.data().speciesId)
+                .get();
+
+              if (fetchSpecies) {
+                const PlantwithSpeciesData = {
+                  ...plant.data(),
+                  speciesData: fetchSpecies.data(),
+                };
+                return res.status(200).json({
+                  message: "plant found",
+                  status: "200 OK",
+                  plant: PlantwithSpeciesData,
+                });
+              } else if (!fetchSpecies) {
+                return res.status(500).json({
+                  message: "Internal Server Error",
+                  status: 500,
+                });
+              }
             }
           }
         } else {

@@ -21,13 +21,13 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/App";
 import { PlantsContext } from "@/App";
 import { DeletePlant } from "@/services/Plants.service";
-import { PlantDataTypes, responseDataTypes,PlantsContextDataTypes } from "@/types/Plant";
+import { PlantDataTypes, responseDataTypes, PlantsContextDataTypes } from "@/types/Plant";
 import "../../../App.css"
 import { LiaLeafSolid, LiaMapPinSolid, LiaArrowRightSolid } from "react-icons/lia";
 
 
 const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
-    
+
     const BASE = useContext(UserContext);
     const [open, setOpen] = useState(false)
     const { loadFetchPlants } = useContext(PlantsContext) as PlantsContextDataTypes
@@ -64,8 +64,7 @@ const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
                         <div className="flex flex-col w-full justify-between h-full">
                             <h1 className='topic text-xl text-start'>{plant.nickname}</h1>
                             <div className="flex gap-1 mt-3">
-                                <LiaLeafSolid className="text-primary" />
-                                <p className='text-sm'>{plant.species}</p>
+                                
                             </div>
                             <div className="flex gap-1 mt-2">
                                 <LiaMapPinSolid className="text-primary" />
@@ -101,8 +100,8 @@ const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
                                     </DialogHeader>
                                 </DialogContent>
                             </Dialog >
-                            <div className="">
-                                <Button onClick={() => { navigate(`/dashboard/plant/${plant.id}`) }} className=" rounded-full"><LiaArrowRightSolid size={24}/></Button>
+                            <div>
+                                <Button onClick={() => { navigate(`/dashboard/plant/${plant.id}`) }} className=" rounded-full"><LiaArrowRightSolid size={24} /></Button>
                             </div>
                         </div>
                     </div>
