@@ -155,6 +155,7 @@ function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadP
                         <div>
                             <label htmlFor="image" className="btn">{previewUrl ? <img src={previewUrl} alt={ValuesTobeSubmitted.imageName} width={200} className="rounded-xl hover:blur-xs transition-all" /> : <img src={plant.imageUrl} alt={ValuesTobeSubmitted.imageName} width={200} className="rounded-xl hover:blur-sm transition-all" />}</label>
                             <input id="image" onChange={handleImageChange} type="file" accept='image' className="hidden justify-center mx-auto" />
+                            <p className="text-xs text-secondary text-center mt-1">click to upload.</p>
                         </div>
                     </div>
                     <div className="flex items-center space-x-2 my-5">

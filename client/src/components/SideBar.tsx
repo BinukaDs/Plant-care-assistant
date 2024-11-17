@@ -164,7 +164,7 @@ const SideBar = ({ visible, show }: {
             {!isCollapsed && (
               <div className="flex justify-start w-full items-center gap-x-2">
                 <img
-                  src='https://via.placeholder.com/150'
+                  src='../../logo.png'
                   alt='User'
                   className={`rounded-full ${isCollapsed ? 'w-8 h-8' : 'w-12 h-12'}`}
                 />

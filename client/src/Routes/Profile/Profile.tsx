@@ -143,7 +143,7 @@ const Profile = () => {
                 <div className='relative bg-card rounded-xl h-full p-10 w-full mb-12'>
                   <div className='flex gap-32 '>
                     <div className='flex absolute justify-center items-end gap-2 -top-24 py-6'>
-                      <img src={"./profile.webp"} alt={"Profile Image"} width={"100px"} className='rounded-full' />
+                      <img src={"./logo.png"} alt={"Profile Image"} width={"100px"} className='rounded-full bg-white border' />
                     </div>
                   </div>
                   <div className="flex flex-col justify-start w-full">
