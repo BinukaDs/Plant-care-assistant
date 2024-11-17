@@ -1,6 +1,6 @@
-var router = require("express").Router();
-const fs = require("fs");
-const path = require("path");
+const ScientificNameTuningData = require("./TuningData/ScientificName.json");
+const DescriptionTuningData = require("./TuningData/Description.json");
+const CareGuidesTuningData = require("./TuningData/CareGuides.json");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -18,118 +18,64 @@ const generationConfig = {
   maxOutputTokens: 8192,
   responseMimeType: "text/plain",
 };
-const parts = [
-  {
-    input: "indoor rose plant care guide",
-    output: {
-      Feature: "Description",
-      Light: "6-8 hours daily, bright indirect sunlight",
-      Water: "When top inch of soil feels dry",
-      Temperature: "65-75°F (18-24°C) daytime, 50-60°F (10-16°C) nighttime",
-      Fertilize: "Every 2-4 weeks during growing season (spring/summer)",
-      "Additional tips":
-        "Deadhead spent blooms regularly. Prune in late winter/early spring.",
-    },
-  },
-  {
-    input: "Outdoor Anthurium plant care guide",
-    output: {
-      Feature: "Description",
-      Light: "Filtered sunlight, avoid direct sun",
-      Water: "When top 1-2 inches of soil feels dry",
-      Temperature: "65-85°F (18-29°C)",
-      Fertilize: "Monthly during spring and summer",
-      "Additional tips":
-        "Monitor temperature. Bring indoors if below 60°F (15°C).",
-    },
-  },
-  {
-    input: "Indoor Lily plant care guide",
-    output: {
-      Feature: "Description",
-      Light: "Indirect light",
-      Water: "Water when top 1-2 inches of soil dry",
-      Temperature: "60-75°F (15-24°C)",
-      Fertilize: "Monthly during spring/summer (optional)",
-      "Additional tips":
-        "Wipe leaves with damp cloth for shine. Consider using a humidifier for dry climates.",
-    },
-  },
-  {
-    input: "Outdoor Begonia plant care guide",
-    output: {
-      Feature: "Description",
-      Light: "Part shade to filtered sunlight",
-      Water: "Regularly, allowing soil to dry slightly between waterings",
-      Temperature: "60-80°F (15-27°C)",
-      Fertilize:
-        "Balanced fertilizer every 2-4 weeks during spring/summer (optional)",
-      "Additional tips":
-        "Deadhead spent flowers to encourage new blooms. Bring indoors before frost (if in colder climates).",
-    },
-  },
-  {
-    input: "Indoor Cactus plant care guide",
-    output: {
-      Feature: "Description",
-      Light: "Bright, indirect sunlight",
-      Water:
-        "Infrequent watering, allow soil to dry completely between waterings",
-      Temperature: "60-85°F (15-29°C)",
-      Fertilize: "Monthly during spring/summer with diluted cactus fertilizer",
-      "Additional tips": "Repot every 2-3 years in well-draining cactus soil.",
-    },
-  },
-  {
-    input: "Indoor aloe vera plant care guide",
-    output: {
-      Feature: "Description",
-      Light: "Bright indirect sunlight or partial shade",
-      Water: "Allow soil to dry out completely between waterings",
-      Temperature: "65-80°F (18-27°C)",
-      Fertilize:
-        "Optional, dilute balanced fertilizer once a month during growing season",
-      "Additional tips":
-        "Cuttings can be used to propagate new plants. Use well-draining soil.",
-    },
-  },
-];
 
-async function Gemini(search) {
-  const prompt = `Give me an ${search} plant care guide. Don't use any other greeting phrases or sentences. give only these specific details. and if the plant has any special care instructions, give them in short sentence in 10-30 words. at the end of the specific details. I will give you the specific details I need. and give me the answer in markdown format including these details and the special instructions into a table in markdown format.
-
-              Light: (frequency: 5-10 words)
-              water: (frequency: 5-10 words)
-              Temperature: (in F and C : 5-10 words)
-              Fertilize: (5-15 words)
-              Additional tips: (10-30 words)`;
-
-  console.log("search:", prompt);
-  const result = await model.generateContent(prompt, {
-    contents: [{ role: "user", parts }],
-    generationConfig,
+const processTuningData = (tuningData) => {
+  return tuningData.map((guide) => {
+    return {
+      input: guide.input,
+      output: guide.output,
+    };
   });
+};
 
-  const text = result.response.text();
-  console.log(text);
-  return text;
-}
+const GenerateSpecies = async (name) => {
+  let species = {
+    name: name,
+    scientificName: "",
+    description: "",
+    careGuide: "",
+  };
 
-router.post("/", async (req, res) => {
-  const { search } = req.body;
-  console.log("search:", search);
-  try {
-    const response = await Gemini(search);
-    res.status(200).json({
-      message: "Gemini generated",
-      status: "200 OK",
-      response: response,
+  const ScientificNamePrompt = `I will give you a name of a plant. I need you to give me the scientific name of the plant. make the response only included with the species, no any other things(no need to style the response text). Plant: ${name}`;
+  await model
+    .generateContent(ScientificNamePrompt, {
+      contents: [
+        { role: "user", parts: processTuningData(ScientificNameTuningData) },
+      ],
+      generationConfig,
+    })
+    .then(async (result) => {
+      species.scientificName = result.response.text();
+      const DescriptionPrompt = `I will give you a plant species. I need you to write a 60-70 words Intro-Description about that species. I will give you the points to include. Points: 1. Description of the species(10-20 words). 2. The origin of the plant(10-20 words). 3. The uses of the species(20-30 words). make the response only included with the species, no any other things(no need to style the response text). Species: ${result.response.text()}`;
+      await model
+        .generateContent(DescriptionPrompt, {
+          contents: [
+            { role: "user", parts: processTuningData(DescriptionTuningData) },
+          ],
+          generationConfig,
+        })
+        .then(async (result) => {
+          species.description = result.response.text();
+          const CareGuidePrompt = `I will give you a plant species. I need you to write a care guide for that species. I will give you the points to include. Points: 1. Light: (frequency: 5-10 words). 2. water: (frequency: 5-10 words). 3. Temperature: (in F and C : 5-10 words). 4. Fertilize: (5-15 words). 5. Additional tips: (10-30 words). make the whole thing as a description including 3-5 paragraphs with 50-70 words. make the response only included with the careguide as a single description, hightlight the points with their  in the care guide with bolding in markdown format. no any other things(no need to style the response text). Species: ${result.response.text()}`;
+          await model
+            .generateContent(CareGuidePrompt, {
+              contents: [
+                {
+                  role: "user",
+                  parts: processTuningData(CareGuidesTuningData),
+                },
+              ],
+              generationConfig,
+            })
+            .then((result) => {
+              species.careGuide = result.response.text();
+              return species;
+            });
+        });
     });
-  } catch (error) {
-    console.error("Error generating Gemini:", error);
-    res.status(500).send(error);
-  }
-});
 
-module.exports = Gemini;
-module.exports = router;
+  // console.log("species: ",species);
+  return species;
+};
+
+module.exports = GenerateSpecies;

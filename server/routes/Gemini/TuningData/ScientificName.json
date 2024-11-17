@@ -1,0 +1,23 @@
+[
+  {
+    "input": "I will give you a name of a plant. I need you to give me the scientific name of the plant. make the response only included with the species, no any other things(no need to style the response text | no \n characters). Plant: Money Plant",
+    "output": "Epipremnum aureum"
+  },
+  {
+    "input": "I will give you a name of a plant. I need you to give me the scientific name of the plant. make the response only included with the species, no any other things(no need to style the response text | no \n characters). Plant: Rose Plant",
+    "output": "Rosa"
+  },
+  {
+    "input": "I will give you a name of a plant. I need you to give me the scientific name of the plant. make the response only included with the species, no any other things(no need to style the response text | no \n characters). Plant: Lily Plant",
+    "output": "Lilium"
+  },
+  {
+    "input": "I will give you a name of a plant. I need you to give me the scientific name of the plant. make the response only included with the species, no any other things(no need to style the response text | no \n characters). Plant: Palm Plant",
+    "output": "Arecaceae"
+  },
+  {
+    "input": "I will give you a name of a plant. I need you to give me the scientific name of the plant. make the response only included with the species, no any other things(no need to style the response text | no \n characters). Plant: Laceleaf Philodendron",
+    "output": "Philodendron bipennifolium"
+  }
+ 
+]

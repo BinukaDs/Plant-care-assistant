@@ -20,6 +20,7 @@ import { AddPlant } from "@/services/Plants.service"
 import { PlantsContext } from "@/App"
 import { PlantsContextDataTypes, responseDataTypes } from "@/types/Plant"
 import LocationInput from "./LocationInput"
+import SpeciesInput from "./SpeciesInput"
 import { addLocation } from "@/services/Locations.service"
 import { tailspin } from 'ldrs'
 tailspin.register()
@@ -27,7 +28,7 @@ tailspin.register()
 const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapsed: boolean }) => {
     const BASE = useContext(UserContext);
     const { loadFetchPlants } = useContext(PlantsContext) as PlantsContextDataTypes
-    const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", species: "", environment: "", imageUrl: "", imageName: "" })
+    const [Values, setValues] = useState({ userId: userId, nickname: "", location: "", speciesId: "", environment: "", imageUrl: "", imageName: "" })
     const [Image, setImage] = useState<File | null>(null)
     const [open, setOpen] = useState(false)
     const [isLocationAvailable, setisLocationAvailable] = useState(false)
@@ -35,12 +36,12 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
 
 
     const onValueChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-            setValues({ ...Values, userId: userId, [e.target.id]: e.target.value })
-        }
+        setValues({ ...Values, userId: userId, [e.target.id]: e.target.value })
+    }
 
     //handle imageUpload
     async function handleUpload() {
-        if (!Values.nickname || !Values.location || !Values.species || !Values.environment || !Image) {
+        if (!Values.nickname || !Values.location || !Values.speciesId || !Values.environment || !Image) {
             return toast.error("Please fill in all the fields")
         } else {
             try {
@@ -71,6 +72,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                     }
                 }
                 const response: responseDataTypes = await AddPlant(BASE, Values)
+                console.log("UserId", userId)
                 setisLoading(false)
                 if (response.status == 201) {
                     console.log("✅", response.message)
@@ -104,6 +106,14 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
             setisLocationAvailable(false)
         }
 
+    }
+
+    const handleSpeciesChange = (value: string) => {
+        setValues((prevValues) => ({
+            ...prevValues,
+            speciesId: value
+        }))
+        console.log(value)
     }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,12 +159,8 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                             <Label htmlFor="location" >
                                 Species
                             </Label>
-                            <Input
-                                name='species'
-                                id="species"
-                                placeholder='Begonia'
-                                onChange={(e) => { onValueChange(e) }}
-                            />
+                            <SpeciesInput onValueChange={handleSpeciesChange} />
+                            <p className="text-secondary text-xs mt-1">You can add species if you don't find the species of your plant.</p>
                         </div>
                         <div className="w-full">
                             <Label htmlFor="location" >
@@ -168,7 +174,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                         </div>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button type="submit" className="w-full" onClick={handleUpload} >{isLoading ?
+                        <Button type="submit" disabled={isLoading} className="w-full" onClick={handleUpload} >{isLoading ?
 
                             <l-tailspin
                                 size="32"

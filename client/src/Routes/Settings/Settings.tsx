@@ -55,16 +55,16 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className='w-full my-12 justify-start items-start h-full'>
-                            <Tabs defaultValue="favourites" className="w-full flex flex-col items-start">
+                            <Tabs defaultValue="species" className="w-full flex flex-col items-start">
                                 <TabsList>
+                                    <TabsTrigger value="species">Species</TabsTrigger>
                                     <TabsTrigger value='favourites'>Favourites</TabsTrigger>
                                     <TabsTrigger value="locations">Locations</TabsTrigger>
-                                    <TabsTrigger value="species">Species</TabsTrigger>
                                     <TabsTrigger value="account" disabled>Account</TabsTrigger>
                                 </TabsList>
+                                <TabsContent value="species"><Species /></TabsContent>
                                 <TabsContent value='favourites'><Favourites /></TabsContent>
                                 <TabsContent value="locations"><Locations /></TabsContent>
-                                <TabsContent value="species"><Species /></TabsContent>
                                 <TabsContent value="account"><Account /></TabsContent>
                             </Tabs>
                         </div>

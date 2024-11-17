@@ -11,6 +11,7 @@ import { Button } from "./ui/button"
 import { useNavigate } from "react-router-dom"
 import { SignOut } from "@/services/Authentication.service"
 import AddPlantComponent from "@/Routes/DashBoard/Plant/components/AddPlant/AddPlant"
+import AddSpeciesComponent from "@/Routes/DashBoard/Plant/components/AddSpecies/AddSpecies"
 import { UserDataTypes } from "@/types/User"
 import { PlantsContextDataTypes } from "@/types/Plant"
 
@@ -87,11 +88,7 @@ const SideBar = ({ visible, show }: {
       title: "DashBoard",
       href: "/dashboard"
     },
-    {
-      icon: "MixIcon",
-      title: "Home",
-      href: "/home"
-    },
+    
     {
       icon: "PersonIcon",
       title: "Profile",
@@ -158,8 +155,9 @@ const SideBar = ({ visible, show }: {
             )}
           </div>
         </div>
-        <div className='w-full my-5'>
-          <AddPlantComponent isCollapsed={isCollapsed} userId={UserData.UserId} />
+        <div className='flex flex-col gap-3 w-full my-5'>
+          <AddSpeciesComponent isCollapsed={isCollapsed}/>
+          <AddPlantComponent isCollapsed={isCollapsed} userId={UserId} />
         </div>
         <div className="w-full border-t border-gray-200 ">
           <div className={`w-full border rounded-xl mt-2 flex justify-between items-center p-2 mb-5 ${isCollapsed && "items-start p-0"}`}>
