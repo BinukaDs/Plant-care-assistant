@@ -13,12 +13,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
   DialogFooter,
   DialogClose
@@ -52,7 +49,7 @@ const Species = () => {
         <p className='text-secondary text-sm'>Manage Your Plants' Species</p>
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-2 gap-6 mt-5">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 mt-5">
         {isLoading ? <SpeciesSkeleton /> : species.length > 0 ? species.map((doc: SpeciesDataTypes) => (
           <div key={doc.id}>
             <Card className="h-full ">
@@ -64,7 +61,7 @@ const Species = () => {
                     <DialogTrigger asChild>
                       <LiaInfoCircleSolid className="text-primary cursor-pointer" size={24} />
                     </DialogTrigger>
-                    <DialogContent className="w-1/4 h-5/6 ">
+                    <DialogContent className="lg:w-1/2 h-5/6 ">
 
                       <div className="flex flex-col gap-2 mt-2 overflow-y-scroll">
                         <h1 className="topic text-2xl font-semibold"><ReactMarkdown>{doc.scientificName}</ReactMarkdown></h1>
@@ -80,7 +77,7 @@ const Species = () => {
                        
                       </div>
                       <DialogFooter className="w-full">
-                        <DialogClose className="w-full"><Button type="submit" className="w-full">Close</Button></DialogClose>
+                        <DialogClose className="w-full" asChild><Button type="submit" className="w-full">Close</Button></DialogClose>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
