@@ -53,16 +53,16 @@ const AddSpeciesComponent = ({ isCollapsed }: { isCollapsed: boolean }) => {
     return (
         <div>
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger className='w-full'>
+                <DialogTrigger className='w-full' asChild>
                     <Button className="w-full  text-primary" variant={"secondary"}>{!isCollapsed ? "Add Species" : <PlusIcon />}</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Add Species</DialogTitle>
-                        <DialogDescription>Enter the species name</DialogDescription>
+                        <DialogDescription><span className='text-xs flex items-start justify-start gap-x-1 text-secondary'>Powered by <img src="../../Gemini.png" alt="Gemini logo"  width={"35px"} height={"10px"}/></span></DialogDescription>
                     </DialogHeader>
                     <div className='flex flex-col'>
-                        <Input id="species" placeholder="Species" onChange={(e) => setName(e.target.value)} />
+                        <Input id="species" placeholder="Begonia" onChange={(e) => setName(e.target.value)} />
                         <p className='text-sm text-secondary mt-1'>Type the name of the plant in simple-words. The AI in the backend will generate the details.</p>
                     </div>
                     <DialogFooter>

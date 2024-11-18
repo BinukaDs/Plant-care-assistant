@@ -39,9 +39,9 @@ const Favourites = () => {
             <div className='grid grid-cols-2  lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 w-full my-12 justify-center items-center h-full gap-12'>
                 {
                     isLoading ? <FavouritesSkeleton /> :
-                        Favourites.length > 0 ? Favourites.map((plant) => {
+                        Favourites.length > 0 ? Favourites.map((plant, index) => {
                             return (
-                                <FavouritePlantCard plant={plant} loadFavourites={fetchAndLoadFavourites} />
+                                <FavouritePlantCard key={index} plant={plant} loadFavourites={fetchAndLoadFavourites} />
                             )
                         }) : (
                             <div>

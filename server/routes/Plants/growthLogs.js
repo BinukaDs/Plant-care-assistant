@@ -1,7 +1,6 @@
 var router = require("express").Router();
 const db = require("../../db.cjs");
 const firebase = require("firebase-admin");
-const { doc, updateDoc, collection } = require("firebase/firestore");
 const { ref, deleteObject } = require("firebase/storage");
 
 const storage = require("../../firebase.js");

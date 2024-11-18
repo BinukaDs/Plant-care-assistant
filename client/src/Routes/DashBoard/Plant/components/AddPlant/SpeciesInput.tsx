@@ -28,7 +28,7 @@ const SpeciesInput = ({ onValueChange }: { onValueChange: (id: string) => void }
                 </SelectTrigger>
                 <SelectContent>
                     {species.map((species) => {
-                        return <SelectItem key={species.id} value={species.id} ><p className="flex gap-1"><ReactMarkdown>{species.scientificName}</ReactMarkdown> ({species.name})</p></SelectItem>
+                        return <SelectItem key={species.id} value={species.id} ><span className="flex gap-1"><ReactMarkdown>{species.scientificName}</ReactMarkdown> ({species.name})</span></SelectItem>
                     })}
                 </SelectContent>
             </Select>

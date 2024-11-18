@@ -5,6 +5,7 @@ import { PlantsContext } from '@/App'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { PlantDataTypes, PlantsContextDataTypes } from '@/types/Plant'
 import { useParams } from 'react-router-dom'
+import { LiaMapPinSolid } from 'react-icons/lia'
 import { GoSearch } from "react-icons/go";
 
 
@@ -65,7 +66,7 @@ const SearchComponent = () => {
                             </div>
                             <div className='flex flex-col w-full text-start'>
                                 <h1 className='text-lg text start topic'>{plant.nickname}</h1>
-                                <p className='text-start text-sm text-secondary'>{plant.species}</p>
+                                <p className='text-start text-sm text-secondary flex gap-1 items-center '><LiaMapPinSolid size={16}/>{plant.location}</p>
                             </div>
                         </div>
                     </button>

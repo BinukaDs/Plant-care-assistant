@@ -10,6 +10,7 @@ import {
     DialogTrigger,
     DialogFooter
 } from "@/components/ui/dialog"
+import SpeciesInput from "../AddPlant/SpeciesInput"
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useParams } from "react-router-dom"
@@ -27,8 +28,8 @@ tailspin.register()
 function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadPlant: () => void }) {
     const BASE = useContext(UserContext);
     const { plantId } = useParams();
-    const [Values, setValues] = useState({ nickname: "", location: "", species: "", environment: "" })
-    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ plantId: plantId, nickname: "", location: "", species: "", environment: "", imageUrl: "", imageName: "", userId: "" })
+    const [Values, setValues] = useState({ nickname: "", location: "", speciesId: "", environment: "" })
+    const [ValuesTobeSubmitted, setValuesTobeSubmitted] = useState({ plantId: plantId, nickname: "", location: "", speciesId: "", environment: "", imageUrl: "", imageName: "", userId: "" })
     const [Image, setImage] = useState<File>()
     const [open, setOpen] = useState(false)
     const [isLocationAvailable, setisLocationAvailable] = useState(true)
@@ -38,16 +39,16 @@ function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadP
 
 
     const onValueChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-            const inputId = e.target.id as keyof typeof Values
-            if (Values[inputId] !== e.target.value) {
-                if (ValuesTobeSubmitted[inputId] !== e.target.value) {
-                    setValuesTobeSubmitted({ ...ValuesTobeSubmitted, [inputId]: e.target.value })
-                    setisChanged(true)
-                }
-            } else {
-                setisChanged(false)
+        const inputId = e.target.id as keyof typeof Values
+        if (Values[inputId] !== e.target.value) {
+            if (ValuesTobeSubmitted[inputId] !== e.target.value) {
+                setValuesTobeSubmitted({ ...ValuesTobeSubmitted, [inputId]: e.target.value })
+                setisChanged(true)
             }
+        } else {
+            setisChanged(false)
         }
+    }
 
     async function updatePlant() {
         setisLoading(true)
@@ -117,6 +118,13 @@ function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadP
         }
     }
 
+    const handleSpeciesChange = (value: string) => {
+        setValues((prevValues) => ({
+            ...prevValues,
+            speciesId: value
+        }))
+    }
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files) return;
@@ -136,14 +144,14 @@ function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadP
     }
 
     useEffect(() => {
-        setValues({ nickname: plant.nickname, location: plant.location, species: plant.species, environment: plant.environment })
-        setValuesTobeSubmitted({ plantId: plantId, nickname: plant.nickname, location: plant.location, species: plant.species, environment: plant.environment, imageUrl: plant.imageUrl, imageName: plant.imageName, userId: plant.userId })
+        setValues({ nickname: plant.nickname, location: plant.location, speciesId: plant.speciesId, environment: plant.environment })
+        setValuesTobeSubmitted({ plantId: plantId, nickname: plant.nickname, location: plant.location, speciesId: plant.speciesId, environment: plant.environment, imageUrl: plant.imageUrl, imageName: plant.imageName, userId: plant.userId })
     }, [plant])
 
     return (
 
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="w-full">
+            <DialogTrigger className="w-full" asChild>
                 <Button variant={"ghost"}><Pencil1Icon /></Button>
             </DialogTrigger>
             <DialogContent>
@@ -182,13 +190,8 @@ function EditPlantComponent({ plant, loadPlant }: { plant: PlantDataTypes, loadP
                         <Label htmlFor="location" >
                             Species
                         </Label>
-                        <Input
-                            name='species'
-                            id="species"
-                            placeholder='Begonia'
-                            defaultValue={plant.species}
-                            onChange={(e) => { onValueChange(e) }}
-                        />
+                        <SpeciesInput onValueChange={handleSpeciesChange} />
+                        <p className="text-secondary text-xs mt-1">You can add species if you don't find the species of your plant.</p>
                     </div>
                     <div className="w-full">
                         <Label htmlFor="location" >
