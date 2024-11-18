@@ -113,7 +113,6 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
             ...prevValues,
             speciesId: value
         }))
-        console.log(value)
     }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +124,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
     return (
         <div>
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger className="w-full">
+                <DialogTrigger className="w-full" asChild>
                     <Button className="w-full">{!isCollapsed ? "Add Plant" : <PlusIcon />}</Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -139,7 +138,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                                 <Label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2  border-dashed rounded-lg cursor-pointer bg-white">
                                     <div className="flex flex-col items-center justify-center pt-10 pb-12">
                                         <svg className="w-8 h-8 mb-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                         </svg>
                                         <p className=" text-sm text-secondary"><span className="font-semibold">Click to upload</span> or drag and drop</p>
                                         <Input id="dropzone-file" onChange={handleImageChange} type="file" accept='image' className="text-center border-none bg-white text-secondary shadow-none file:hidden" />
@@ -183,7 +182,7 @@ const AddPlantComponent = ({ userId, isCollapsed }: { userId: string, isCollapse
                                 <option value="Indoor">Indoor</option>
                                 <option value="Outdoor">Outdoor</option>
                             </select>
-
+                            <p className="text-secondary text-xs mt-1">You cannot change the environments of predefined locations.</p>
                         </div>
                     </DialogHeader>
                     <DialogFooter>

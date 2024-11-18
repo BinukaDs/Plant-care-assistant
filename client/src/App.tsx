@@ -11,7 +11,6 @@ import './App.css'
 import Base from '../endpoints.config';
 import Cookies from 'universal-cookie'
 import AnimatedRoutes from './components/AnimatedRoutes'
-import { set } from "react-hook-form"
 export const UserContext = createContext("");
 export const PlantsContext = createContext<PlantsContextDataTypes | undefined>(undefined);
 

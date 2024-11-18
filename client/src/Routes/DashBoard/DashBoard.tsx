@@ -8,10 +8,11 @@ import { FetchAuthentication } from '@/services/Authentication.service'
 import Cookies from 'universal-cookie'
 import FadeIn from '@/components/transitions/FadeIn'
 import { SortComponent } from './components/Sort/Sortcomponent'
-import { PlantsContextDataTypes } from '@/types/Plant'
+import { PlantsContextDataTypes, PlantsDataTypes } from '@/types/Plant'
 import PlantSkeleton from "@/components/skeletons/DashBoard-plant-skeleton";
 import { Helmet } from 'react-helmet'
 import { tailspin } from 'ldrs'
+import { FetchPlants } from '@/services/Plants.service'
 tailspin.register()
 
 
@@ -19,7 +20,7 @@ const DashBoard = () => {
     const navigate = useNavigate();
     const cookies = new Cookies()
     const [UserId, setUserId] = useState("");
-    const { Data, loadFetchPlants, loadFetchLocations, Plants, isLoading, setisLoading } = useContext(PlantsContext) as PlantsContextDataTypes
+    const { setData, Data, loadFetchLocations, setPlants, Plants, isLoading, setisLoading } = useContext(PlantsContext) as PlantsContextDataTypes
     const BASE = useContext(UserContext);
 
     //fetch Authentication middleware
@@ -30,7 +31,8 @@ const DashBoard = () => {
             if (data.id) {
                 setisLoading(false)
                 if (data.isLoggedin === true) {
-                    return setUserId(data.id);
+                    setUserId(data.id);
+                    return loadFetchPlants(data.id)
                 }
             }
             data.isLoggedin === true ? null : navigate('/signin')
@@ -41,7 +43,21 @@ const DashBoard = () => {
     }
 
 
-
+    //Fetch Plants
+    const loadFetchPlants = async (UserId:string): Promise<PlantsDataTypes | void> => {
+        setisLoading(true)
+        try {
+            const data = await FetchPlants(BASE, UserId);
+            if (data) {
+                setPlants(data)
+                setData(data)
+                setisLoading(false)
+            } else return setisLoading(false)
+        } catch (error) {
+            console.error(error)
+            setisLoading(false)
+        }
+    }
     //make sure the Locations Fetch only once.
     const hasRunRef = useRef(false);
     useEffect(() => {
@@ -56,7 +72,7 @@ const DashBoard = () => {
 
     useEffect(() => {
         loadAuthentication();
-        loadFetchPlants();
+        
     }, [UserId])
 
 
@@ -87,7 +103,7 @@ const DashBoard = () => {
                                     Data.length > 0 ? Data.map((plant, index) => {
                                         return <PlantCard key={index} plant={plant} />
                                     }) : <div className='flex justify-center items-center w-full h-full'>
-                                        <p className='text-secondary text-center'>No Plants were Found. Start by Adding your First Plant!</p>
+                                        <p className='text-secondary text-center'>No Plants were Found.</p>
                                     </div>
 
                             }

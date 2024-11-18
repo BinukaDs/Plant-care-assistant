@@ -45,13 +45,11 @@ const SideBar = ({ visible, show }: {
       }
     };
 
-    // Initial check
     handleResize();
 
-    // Add event listener to handle window resize
+   
     window.addEventListener('resize', handleResize);
 
-    // Clean up event listener
     return () => {
       window.removeEventListener('resize', handleResize);
     };

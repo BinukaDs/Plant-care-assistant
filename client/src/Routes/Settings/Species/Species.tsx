@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown"
 import { PlantsContext, UserContext } from "@/App"
 import { LiaInfoCircleSolid } from "react-icons/lia"
 import SpeciesSkeleton from "@/components/skeletons/Settings-species-skeleton"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -12,7 +13,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose
+} from "@/components/ui/dialog"
 import { toast } from "sonner"
+import { LiaLeafSolid } from "react-icons/lia"
 const Species = () => {
   const BASE = useContext(UserContext)
   const { isLoading, setisLoading } = useContext(PlantsContext) as PlantsContextDataTypes
@@ -41,14 +53,37 @@ const Species = () => {
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-2 gap-6 mt-5">
-        {isLoading ? <SpeciesSkeleton /> : species.length > 0 && species.map((doc: SpeciesDataTypes) => (
+        {isLoading ? <SpeciesSkeleton /> : species.length > 0 ? species.map((doc: SpeciesDataTypes) => (
           <div key={doc.id}>
             <Card className="h-full ">
               <CardHeader>
                 <CardTitle className="text-start text-lg topic w-full flex justify-between">
                   <ReactMarkdown>{doc.scientificName + ` (${doc.name})`}</ReactMarkdown>
 
-                  <button><LiaInfoCircleSolid className="text-primary" size={24} /></button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <LiaInfoCircleSolid className="text-primary cursor-pointer" size={24} />
+                    </DialogTrigger>
+                    <DialogContent className="w-1/4 h-5/6 ">
+
+                      <div className="flex flex-col gap-2 mt-2 overflow-y-scroll">
+                        <h1 className="topic text-2xl font-semibold"><ReactMarkdown>{doc.scientificName}</ReactMarkdown></h1>
+                        <div className='flex justify-start items-end gap-2 mt-1 mb-1'>
+                          <LiaLeafSolid size={24} className='text-primary' />
+                          <p className='text-sm text-secondary'>{doc.name}</p>
+                        </div>
+                        
+                          <h2 className="font-bold">Description</h2>
+                          <p className="text-secondary">{doc.description}</p>
+                          <h2 className="font-bold mt-5">Care Guide</h2>
+                          <ReactMarkdown className="text-secondary">{doc.careGuide}</ReactMarkdown>
+                       
+                      </div>
+                      <DialogFooter className="w-full">
+                        <DialogClose className="w-full"><Button type="submit" className="w-full">Close</Button></DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </CardTitle>
 
               </CardHeader>
@@ -58,7 +93,7 @@ const Species = () => {
 
             </Card>
           </div>
-        ))}
+        )): <p>No Species Found. Start by adding new species.</p>}
       </div>
     </section>
   )

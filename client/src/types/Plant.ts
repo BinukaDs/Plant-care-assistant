@@ -5,6 +5,7 @@ export interface PlantDataTypes {
   imageName: string;
   location: string;
   environment: string;
+  speciesId:string;
   growthLogs: {
     imageUrl: string;
     imageName: string;

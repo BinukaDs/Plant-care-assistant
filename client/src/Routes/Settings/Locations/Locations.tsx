@@ -118,7 +118,7 @@ const Locations = () => {
           </TableHeader>
           <TableBody className="w-full">
             {
-              isLoading ? <LocationSkeleton /> : Locations.length > 0 ? Locations.map((location, index) => {
+              isLoading ? <TableRow><TableCell><LocationSkeleton /></TableCell></TableRow> : Locations.length > 0 ? Locations.map((location, index) => {
                 return (
                   <TableRow key={index}>
                     <TableCell className='text-left'>
@@ -141,9 +141,6 @@ const Locations = () => {
                     </TableCell>
                     <TableCell >
                       <div className='flex items-center justify-center'>
-
-                        {/* {updateState ? <Button variant={"ghost"} onClick={() => setUpdateState(false)}><LiaCheckSolid /></Button>
-                          : <UpdateLocation id={location.id} setUpdate={setUpdateState} />} */}
                         <DeleteLocation id={location.id} plantsCount={plantsCount[index]} />
                       </div>
                     </TableCell>

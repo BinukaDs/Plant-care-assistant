@@ -82,7 +82,7 @@ export const UpdatePlant = async (
   Values: {
     nickname: string;
     location: string;
-    species: string;
+    speciesId: string;
     environment: string;
   }
 ): Promise<responseDataTypes> => {

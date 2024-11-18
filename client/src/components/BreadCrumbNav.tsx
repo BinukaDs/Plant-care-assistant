@@ -25,7 +25,7 @@ const BreadCrumbNav: React.FC<BreadCrumbNavProps> = ({ className }) => {
                         return (
                             <BreadcrumbItem key={index} className={className}>
                                 {index == 1 ?
-                                    <BreadcrumbLink>
+                                    <BreadcrumbLink asChild>
                                         <a href={`/${item}`} >{item}</a>
                                     </BreadcrumbLink> :
                                     <BreadcrumbPage className={className}>{item}</BreadcrumbPage>}

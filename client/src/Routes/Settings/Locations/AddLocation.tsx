@@ -54,7 +54,7 @@ const AddLocation = ({ userId }: { userId: string }) => {
   }
   return (
     <Dialog>
-      <DialogTrigger><Button variant={"ghost"} className='text-primary transition-all hover:text-black'><LiaPlusSolid size={22} /></Button></DialogTrigger>
+      <DialogTrigger asChild><Button variant={"ghost"} className='text-primary transition-all hover:text-black'><LiaPlusSolid size={22} /></Button></DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Location</DialogTitle>

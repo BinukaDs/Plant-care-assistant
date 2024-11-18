@@ -129,13 +129,12 @@ const UpdatePlant = async (req, res) => {
     plantId,
     nickname,
     location,
-    species,
+    speciesId,
     environment,
     imageUrl,
     imageName,
   } = req.body;
-
-  const plant = [nickname, location, species, environment].every((variable) =>
+  const plant = [nickname, location, speciesId, environment].every((variable) =>
     Boolean(variable)
   );
   if (!plant) {
@@ -153,7 +152,7 @@ const UpdatePlant = async (req, res) => {
             .update({
               nickname,
               location,
-              species,
+              speciesId,
               environment,
               imageUrl,
               imageName,
