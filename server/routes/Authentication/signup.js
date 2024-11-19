@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const router = require("express").Router();
 const validator = require("validator");
-const AuthenticationErrors = require("../../responseCodes");
 
 const createToken = (_id, username) => {
   return jwt.sign({ _id, username }, process.env.JWT_SECRET, {

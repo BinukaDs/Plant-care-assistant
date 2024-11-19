@@ -2,7 +2,6 @@ const db = require("../../db.cjs");
 const dotenv = require("dotenv");
 dotenv.config();
 var router = require("express").Router();
-const AuthenticationErrors = require("../../responseCodes");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
