@@ -23,7 +23,7 @@ import { PlantsContext } from "@/App";
 import { DeletePlant } from "@/services/Plants.service";
 import { PlantDataTypes, responseDataTypes, PlantsContextDataTypes } from "@/types/Plant";
 import "../../../App.css"
-import { LiaLeafSolid, LiaMapPinSolid, LiaArrowRightSolid } from "react-icons/lia";
+import { LiaMapPinSolid, LiaArrowRightSolid } from "react-icons/lia";
 
 
 const PlantCard = ({ plant }: { plant: PlantDataTypes }) => {
