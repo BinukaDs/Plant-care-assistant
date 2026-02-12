@@ -5,8 +5,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import storage from "../../firebase";
-import axios from "axios";
-// import { PlantDataTypes } from "@/types/Plant";
+
 export default async function uploadImage(
   userId: string,
   Image: Blob | ArrayBuffer | null
@@ -14,7 +13,7 @@ export default async function uploadImage(
   if (!Image) {
     throw new Error("No image provided");
   }
-  console.log("id: ", userId);
+  // console.log("id: ", userId);
   const date = new Date();
   const file_name = `${date}`;
   const storageRef = ref(storage, `images/${userId}/${file_name}`);
@@ -97,17 +96,3 @@ export async function deleteImage(
     });
 }
 
-export async function FetchWallpaper() {
-  const UNSPLASH_API_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
-  const APIURL = `https://api.unsplash.com/search/photos?query=ForestWallpapers&page=1&client_id=${UNSPLASH_API_KEY}`;
-  // console.log(import.meta.env.VITE_UNSPLASH_ACCESS_KEY)
-
-  try {
-    const { data } = await axios.get(APIURL);
-    console.log(data.results);
-    return data.results;
-  } catch (error) {
-    console.log("error fetching wallpaper:", error);
-    return "Error fetching wallpaper";
-  }
-}

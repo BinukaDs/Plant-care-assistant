@@ -1,5 +1,9 @@
 import { GrowthLogDataTypes } from "@/types/GrowthLog";
 import { responseDataTypes } from "@/types/Plant";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+const getToken = () => cookies.get("token") || "";
 
 export const AddGrowthLog = (
   BASE: string,
@@ -9,6 +13,7 @@ export const AddGrowthLog = (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify(Values),
   })
@@ -30,6 +35,7 @@ export const GetGrowthLogDetails = (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ plantId: plantId, index: index }),
   })
@@ -52,6 +58,7 @@ export const UpdateGrowthLog = async (
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify(Values),
   })
@@ -75,6 +82,7 @@ export const DeleteGrowthLog = (
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({
       userId: userId,

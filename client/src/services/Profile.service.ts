@@ -1,5 +1,9 @@
 import { responseDataTypes } from "@/types/Plant";
 import { UserDataTypes, UsersDataTypes } from "@/types/User";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+const getToken = () => cookies.get("token") || "";
 
 export const FetchUser = async (
   BASE: string,
@@ -9,6 +13,7 @@ export const FetchUser = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ UserId: UserId }),
   })
@@ -32,6 +37,7 @@ export const UpdateUser = async (
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ UserId: UserId, username: username }),
   })
@@ -52,6 +58,7 @@ export const UpdatePassword = async (
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ UserId: UserId, password: password }),
   })
@@ -62,11 +69,13 @@ export const UpdatePassword = async (
       return console.error("Error Updating user:", error);
     });
 };
+
 export const FetchUsers = async (BASE: string): Promise<UsersDataTypes> => {
   return await fetch(BASE + "/users", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
   })
     .then((response) => {

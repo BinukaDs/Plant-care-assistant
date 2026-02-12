@@ -3,10 +3,11 @@ const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 dotenv.config();
 var router = require("express").Router();
+const authMiddleware = require("../../middleware/requireAuth.js");
 
 const updatePassword = async (req, res) => {
   const { UserId, password } = req.body;
-console.log("UserId: ", UserId, password);
+  // console.log("UserId: ", UserId, password);
   if (!UserId || !password) {
     return res.status(400).json({
       message: "UserId and password are required",
@@ -33,6 +34,6 @@ console.log("UserId: ", UserId, password);
   }
 };
 
-router.patch("/", updatePassword);
+router.patch("/", authMiddleware, updatePassword);
 
 module.exports = router;

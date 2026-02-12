@@ -3,15 +3,15 @@ import { useEffect, useState, useContext } from "react"
 import { PlantsContext } from "@/App"
 import { ExitIcon, DashboardIcon, ArchiveIcon, MixIcon, PersonIcon, DesktopIcon, GearIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { UserContext } from '@/App'
-import SearchComponent from "../Routes/DashBoard/components/Sidebar/SearchComponent"
-import FiltersComponent from "@/Routes/DashBoard/components/Sidebar/FiltersComponent"
+import SearchComponent from "../routes/dashBoard/components/Sidebar/SearchComponent"
+import FiltersComponent from "@/routes/dashBoard/components/Sidebar/FiltersComponent"
 import { useLocation } from "react-router-dom"
 import { FetchUser } from "@/services/Profile.service"
 import { Button } from "./ui/button"
 import { useNavigate } from "react-router-dom"
 import { SignOut } from "@/services/Authentication.service"
-import AddPlantComponent from "@/Routes/DashBoard/Plant/components/AddPlant/AddPlant"
-import AddSpeciesComponent from "@/Routes/DashBoard/Plant/components/AddSpecies/AddSpecies"
+import AddPlantComponent from "@/routes/dashBoard/Plant/components/AddPlant/AddPlant"
+import AddSpeciesComponent from "@/routes/dashBoard/Plant/components/AddSpecies/AddSpecies"
 import { UserDataTypes } from "@/types/User"
 import { PlantsContextDataTypes } from "@/types/Plant"
 
@@ -47,7 +47,7 @@ const SideBar = ({ visible, show }: {
 
     handleResize();
 
-   
+
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -86,7 +86,7 @@ const SideBar = ({ visible, show }: {
       title: "DashBoard",
       href: "/dashboard"
     },
-    
+
     {
       icon: "PersonIcon",
       title: "Profile",
@@ -154,7 +154,7 @@ const SideBar = ({ visible, show }: {
           </div>
         </div>
         <div className='flex flex-col gap-3 w-full my-5'>
-          <AddSpeciesComponent isCollapsed={isCollapsed}/>
+          <AddSpeciesComponent isCollapsed={isCollapsed} />
           <AddPlantComponent isCollapsed={isCollapsed} userId={UserId} />
         </div>
         <div className="w-full border-t border-gray-200 ">

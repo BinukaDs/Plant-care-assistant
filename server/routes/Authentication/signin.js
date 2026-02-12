@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 
 const signIn = async (req, res) => {
   const { email, password } = req.body;
-  
+
   if (!email || !password) {
     return res.status(400).json({
       messsage: "Please fill in all fields!",
@@ -32,7 +32,7 @@ const signIn = async (req, res) => {
   if (!login.empty) {
     const user = login.docs[0].data();
     const isValidPassword = await bcrypt.compare(password, user.hashedPassword);
-console.log("user found")
+    console.log("user found");
     if (!isValidPassword) {
       console.log("Error 401: Invalid password.");
       return res.status(401).json({
@@ -44,7 +44,7 @@ console.log("user found")
     if (isValidPassword) {
       const payload = {
         id: login.docs[0].id,
-        username: user.name,
+        username: user.username,
       };
       jwt.sign(
         payload,

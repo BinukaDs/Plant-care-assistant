@@ -1,10 +1,15 @@
 import { responseDataTypes } from "@/types/Plant";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+const getToken = () => cookies.get("token") || "";
 
 export const fetchLocations = (BASE: string, userId: string): Promise<[]> => {
   return fetch(BASE + "/locations", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ userId: userId }),
   })
@@ -29,6 +34,7 @@ export const updateLocation = (
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({
       locationId: id,
@@ -54,6 +60,7 @@ export const addLocation = (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({
       userId: userId,
@@ -77,6 +84,7 @@ export const deleteLocation = (
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ locationId: locationId }),
   })

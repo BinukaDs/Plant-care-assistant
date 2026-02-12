@@ -3,6 +3,7 @@ const db = require("../../db.cjs");
 const gemini = require("../Gemini/gemini.js");
 const { ref, deleteObject } = require("firebase/storage");
 const storage = require("../../firebase.js");
+const authMiddleware = require("../../middleware/requireAuth.js");
 
 const AddPlant = async (req, res) => {
   const {
@@ -43,7 +44,6 @@ const AddPlant = async (req, res) => {
         status: 400,
       });
     }
-   
 
     // Add plant to database
     try {
@@ -356,7 +356,7 @@ const setFavourites = async (req, res) => {
   }
 };
 
-router.post("/add", AddPlant);
+router.post("/add", authMiddleware, AddPlant);
 router.post("/", GetPlants);
 router.post("/plant", GetPlant);
 router.put("/plant/update", UpdatePlant);

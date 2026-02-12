@@ -1,5 +1,9 @@
 import { PlantDataTypes, responseDataTypes } from "@/types/Plant";
 import { PlantsDataTypes } from "@/types/Plant";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+const getToken = () => cookies.get("token") || "";
 
 export const FetchPlants = async (
   BASE: string,
@@ -9,6 +13,7 @@ export const FetchPlants = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ UserId: UserId }),
   })
@@ -32,6 +37,7 @@ export const FetchPlantDetails = (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ plantId: plantId, userId: UserId }),
   })
@@ -64,6 +70,7 @@ export const AddPlant = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify(Values),
   })
@@ -90,6 +97,7 @@ export const UpdatePlant = async (
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify(Values),
   })
@@ -112,6 +120,7 @@ export const DeletePlant = async (
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({
       userId: UserId,
@@ -137,6 +146,7 @@ export const getFavourites = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ userId: userId }),
   })
@@ -161,6 +171,7 @@ export const setFavourite = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ plantId: plantId, isFavourite: isFavourite }),
   })
@@ -172,5 +183,3 @@ export const setFavourite = async (
       return error;
     });
 };
-
-

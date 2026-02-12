@@ -2,6 +2,7 @@ var router = require("express").Router();
 const { Filter } = require("firebase-admin/firestore");
 const db = require("../../db.cjs");
 const GenerateSpecies = require("../Gemini/gemini");
+const authMiddleware = require("../../middleware/requireAuth.js");
 
 const addSpecies = async (req, res) => {
   const { name } = req.body;
@@ -124,7 +125,7 @@ const getSpeciesFiltered = async (req, res) => {
       .collection("species")
       .select("name", "scientificName")
       .get();
-      
+
     const speciesList = species.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -153,7 +154,7 @@ const getSpeciesFiltered = async (req, res) => {
 
 router.get("/", getAllSpecies);
 router.get("/filtered", getSpeciesFiltered);
-router.post("/species", getSpecies);
-router.post("/add", addSpecies);
+router.post("/species", authMiddleware, getSpecies);
+router.post("/add", authMiddleware, addSpecies);
 
 module.exports = router;

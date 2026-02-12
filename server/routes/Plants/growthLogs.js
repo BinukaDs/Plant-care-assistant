@@ -2,7 +2,7 @@ var router = require("express").Router();
 const db = require("../../db.cjs");
 const firebase = require("firebase-admin");
 const { ref, deleteObject } = require("firebase/storage");
-
+const authMiddleware = require("../../middleware/requireAuth.js");
 const storage = require("../../firebase.js");
 
 const AddLog = async (req, res) => {
@@ -180,9 +180,9 @@ const DeleteLog = async (req, res) => {
   }
 };
 
-router.post("/add", AddLog);
-router.post("/get", GetLog);
-router.put("/edit", UpdateLog);
-router.delete("/delete", DeleteLog);
+router.post("/add", authMiddleware, AddLog);
+router.post("/get", authMiddleware, GetLog);
+router.put("/edit", authMiddleware, UpdateLog);
+router.delete("/delete", authMiddleware, DeleteLog);
 
 module.exports = router;

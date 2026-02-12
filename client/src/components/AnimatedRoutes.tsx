@@ -1,12 +1,12 @@
 import React from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-const SignUp = React.lazy(() => import('../Routes/Authentication/SignUp/SignUp'))
-const Home = React.lazy(() => import('../Routes/Home/Home'))
-const SignIn = React.lazy(() => import('../Routes/Authentication/SignIn/SignIn'))
-const DashBoard = React.lazy(() => import('../Routes/DashBoard/DashBoard'))
-const Plant = React.lazy(() => import('../Routes/DashBoard/Plant/Plant'))
-const Settings = React.lazy(() => import('../Routes/Settings/Settings'))
-const Profile = React.lazy(() => import('../Routes/Profile/Profile'))
+const SignUp = React.lazy(() => import('../routes/authentication/SignUp/SignUp'))
+const Home = React.lazy(() => import('../routes/home/Home'))
+const SignIn = React.lazy(() => import('../routes/authentication/SignIn/SignIn'))
+const DashBoard = React.lazy(() => import('../routes/dashBoard/DashBoard'))
+const Plant = React.lazy(() => import('../routes/dashBoard/Plant/Plant'))
+const Settings = React.lazy(() => import('../routes/settings/Settings'))
+const Profile = React.lazy(() => import('../routes/profile/Profile'))
 import { AnimatePresence } from 'framer-motion'
 if (typeof window !== 'undefined') {
     window.history.scrollRestoration = 'manual'

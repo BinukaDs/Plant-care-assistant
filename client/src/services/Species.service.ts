@@ -1,4 +1,8 @@
 import { responseDataTypes, SpeciesDataTypes } from "@/types/Plant";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+const getToken = () => cookies.get("token") || "";
 
 export const addSpecies = async (
   BASE: string,
@@ -8,6 +12,7 @@ export const addSpecies = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ name: name }),
   })
@@ -28,6 +33,7 @@ export const getSpecies = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: getToken(),
     },
     body: JSON.stringify({ id: id }),
   })

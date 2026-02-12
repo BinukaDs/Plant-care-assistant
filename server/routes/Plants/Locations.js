@@ -1,5 +1,6 @@
 var router = require("express").Router();
 const db = require("../../db.cjs");
+const authMiddleware = require("../../middleware/requireAuth.js");
 
 const getLocations = async (req, res) => {
   const { userId } = req.body;
@@ -97,7 +98,7 @@ const deleteLocation = async (req, res) => {
 
 const updateLocation = async (req, res) => {
   const { locationId, location, environment } = req.body;
-  console.log(locationId, location, environment)
+  console.log(locationId, location, environment);
   if (!locationId || !location || !environment) {
     return res.status(400).json({ message: "all fields are required" });
   } else if (locationId) {
@@ -131,9 +132,9 @@ const updateLocation = async (req, res) => {
   }
 };
 
-router.post("/", getLocations);
-router.post("/add", addLocation);
-router.patch("/update", updateLocation);
-router.delete("/delete", deleteLocation);
+router.post("/", authMiddleware, getLocations);
+router.post("/add", authMiddleware, addLocation);
+router.patch("/update", authMiddleware, updateLocation);
+router.delete("/delete", authMiddleware, deleteLocation);
 
 module.exports = router;
